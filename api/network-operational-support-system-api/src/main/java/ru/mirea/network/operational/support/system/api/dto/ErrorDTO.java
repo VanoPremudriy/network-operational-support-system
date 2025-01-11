@@ -7,7 +7,8 @@ import lombok.extern.jackson.Jacksonized;
 @Data
 @Builder
 @Jacksonized
-public class PointDTO {
-    private Integer x;
-    private Integer y;
+public class ErrorDTO {
+    private Integer code;
+    private String title;
+    private String text;
 }
