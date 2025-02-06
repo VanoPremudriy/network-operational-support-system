@@ -40,13 +40,13 @@ export const Marks = ({ data, points, edges }: MarksProps) => {
     };
 
     return (
-        <svg ref={svgRef} width={2500} height={1600} style={{ border: "1px solid black" }}>
+        <svg ref={svgRef} width={2500} height={5000} style={{ border: "1px solid black" }}>
             <g ref={gRef}>
                 {/* Отображение карты */}
                 {data.features.map((feature: any, i: number) => {
                     const path = pathGenerator(feature);
                     return path ? (
-                        <path key={i} d={path} fill="#ccc" stroke="#333" strokeWidth={0.5} />
+                        <path key={i} d={path} fill="#ccc" stroke="#333" strokeWidth={0.1} />
                     ) : null;
                 })}
 
@@ -67,7 +67,7 @@ export const Marks = ({ data, points, edges }: MarksProps) => {
                                 x2={targetCoords.x}
                                 y2={targetCoords.y}
                                 stroke="#000"
-                                strokeWidth={0.5}
+                                strokeWidth={0.1}
                             />
                         );
                     }
