@@ -12,18 +12,26 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.1</version>
+        <version>3.4.2</version>
     </parent>
 
     <modules>
         <module>api/network-operational-support-system-api</module>
-        <module>back</module>
+        <module>back/network-operational-support-system-back</module>
+        <module>back/network-operational-support-system-gateway</module>
+        <module>back/network-operational-support-system-config</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-boot.version>3.4.1</spring-boot.version>
-        <spring-framework.version>6.2.1</spring-framework.version>
+
+        <!-- SPRING -->
+        <spring-cloud.version>2024.0.0</spring-cloud.version>
+        <spring-boot.version>3.4.2</spring-boot.version>
+        <spring-framework.version>6.2.2</spring-framework.version>
+
+
+        <!-- DEV -->
         <jackson.version>2.18.2</jackson.version>
         <lombok.version>1.18.36</lombok.version>
     </properties>

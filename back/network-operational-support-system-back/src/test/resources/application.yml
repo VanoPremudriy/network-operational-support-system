@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: network-operational-support-system-back
+  cloud:
+    config:
+      enabled: false
+
+calculate:
+  route:
+    url: http://localhost:8080
