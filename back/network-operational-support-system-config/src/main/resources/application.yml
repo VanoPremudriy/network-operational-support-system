@@ -8,6 +8,7 @@ spring:
       enabled: true
       server:
         git:
+          cloneOnStart: true
           uri: https://github.com/VanoPremudriy/network-operational-support-system
           search-paths:
-            - /configs/network-operational-support-system-back
+            - /configs/*
