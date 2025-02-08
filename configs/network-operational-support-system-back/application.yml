@@ -1,3 +1,7 @@
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
 springdoc:
   swagger-ui:
     path: /swagger-ui

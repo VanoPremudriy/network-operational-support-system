@@ -1,0 +1,12 @@
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  cloud:
+    gateway:
+      routes:
+        - id: create-route
+          uri: http://localhost:8080
+          predicates:
+            - Path=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
+          filters:
+            - RewritePath=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute, /v1/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
