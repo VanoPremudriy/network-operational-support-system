@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: network-operational-support-system-back
+  cloud:
+    config:
+      enabled: false

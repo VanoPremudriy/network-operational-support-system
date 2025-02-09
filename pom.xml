@@ -20,6 +20,7 @@
         <module>back/network-operational-support-system-back</module>
         <module>back/network-operational-support-system-gateway</module>
         <module>back/network-operational-support-system-config</module>
+<!--        <module>back/network-operational-support-system-auth-server</module>-->
     </modules>
 
     <properties>
