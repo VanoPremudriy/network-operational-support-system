@@ -1,13 +1,14 @@
 package ru.mirea.network.operational.support.system.auth.repository;
 
-import ru.mirea.network.operational.support.system.auth.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import ru.mirea.network.operational.support.system.auth.domain.model.User;
 
-/**
- * @author: ReLive
- * @date: 2022/8/02 20:20 下午
- */
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+import java.util.Optional;
 
-    UserEntity findUserByUsername(String username);
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByUsername(String username);
+    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
 }
