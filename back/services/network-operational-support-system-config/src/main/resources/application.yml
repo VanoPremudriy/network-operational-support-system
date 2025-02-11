@@ -11,4 +11,4 @@ spring:
           cloneOnStart: true
           uri: https://github.com/VanoPremudriy/network-operational-support-system
           search-paths:
-            - /configs/*
+            - /back/configs/*
