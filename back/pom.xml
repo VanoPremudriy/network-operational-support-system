@@ -16,11 +16,10 @@
     </parent>
 
     <modules>
-        <module>back/api/network-operational-support-system-api</module>
-        <module>back/services/network-operational-support-system-back</module>
-        <module>back/services/network-operational-support-system-gateway</module>
-        <module>back/services/network-operational-support-system-config</module>
-<!--        <module>back/services/network-operational-support-system-auth-server</module>-->
+        <module>api/network-operational-support-system-api</module>
+        <module>services/network-operational-support-system-back</module>
+        <module>services/network-operational-support-system-gateway</module>
+        <module>services/network-operational-support-system-config</module>
     </modules>
 
     <properties>
