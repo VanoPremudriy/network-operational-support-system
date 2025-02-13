@@ -17,6 +17,7 @@
 
     <modules>
         <module>api/network-operational-support-system-api</module>
+
         <module>services/network-operational-support-system-back</module>
         <module>services/network-operational-support-system-gateway</module>
         <module>services/network-operational-support-system-config</module>

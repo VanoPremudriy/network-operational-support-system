@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.mirea.network.operational.support.system.auth.domain.dto.JwtAuthenticationResponse;
-import ru.mirea.network.operational.support.system.auth.domain.dto.SignInRequest;
-import ru.mirea.network.operational.support.system.auth.domain.dto.SignUpRequest;
+import ru.mirea.network.operational.support.system.api.login.JwtAuthenticationResponse;
+import ru.mirea.network.operational.support.system.api.login.SignInRequest;
+import ru.mirea.network.operational.support.system.api.login.SignUpRequest;
 import ru.mirea.network.operational.support.system.auth.service.AuthenticationService;
 
 @RestController

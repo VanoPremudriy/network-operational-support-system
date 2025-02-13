@@ -3,13 +3,13 @@ package ru.mirea.network.operational.support.system.auth.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.mirea.network.operational.support.system.auth.domain.dto.JwtAuthenticationResponse;
-import ru.mirea.network.operational.support.system.auth.domain.dto.SignInRequest;
-import ru.mirea.network.operational.support.system.auth.domain.dto.SignUpRequest;
-import ru.mirea.network.operational.support.system.auth.domain.model.Role;
-import ru.mirea.network.operational.support.system.auth.domain.model.User;
+import ru.mirea.network.operational.support.system.api.login.JwtAuthenticationResponse;
+import ru.mirea.network.operational.support.system.api.login.SignInRequest;
+import ru.mirea.network.operational.support.system.api.login.SignUpRequest;
+import ru.mirea.network.operational.support.system.auth.entity.Employees;
 
 @Service
 @RequiredArgsConstructor
@@ -27,17 +27,18 @@ public class AuthenticationService {
      */
     public JwtAuthenticationResponse signUp(SignUpRequest request) {
 
-        var user = User.builder()
-                .username(request.getUsername())
-                .email(request.getEmail())
+        Employees user = Employees.builder()
+                .login(request.getLogin())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.ROLE_USER)
+                .lastName(request.getLastName())
+                .firstName(request.getFirstName())
+                .middleName(request.getMiddleName())
+                .email(request.getEmail())
                 .build();
 
         userService.create(user);
 
-        var jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+        return new JwtAuthenticationResponse(jwtService.generateToken(user));
     }
 
     /**
@@ -48,15 +49,12 @@ public class AuthenticationService {
      */
     public JwtAuthenticationResponse signIn(SignInRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                request.getUsername(),
+                request.getLogin(),
                 request.getPassword()
         ));
 
-        var user = userService
-                .userDetailsService()
-                .loadUserByUsername(request.getUsername());
+        UserDetails user = userService.userDetailsService().loadUserByUsername(request.getLogin());
 
-        var jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+        return new JwtAuthenticationResponse(jwtService.generateToken(user));
     }
 }

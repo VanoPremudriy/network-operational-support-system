@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: network-operational-support-system-gateway
+    name: network-operational-support-system-auth-server
   config:
     import: optional:configserver:http://localhost:8888
   cloud:

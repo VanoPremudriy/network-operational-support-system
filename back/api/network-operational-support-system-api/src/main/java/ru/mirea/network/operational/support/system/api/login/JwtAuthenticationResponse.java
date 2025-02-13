@@ -1,4 +1,4 @@
-package ru.mirea.network.operational.support.system.auth.domain.dto;
+package ru.mirea.network.operational.support.system.api.login;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
