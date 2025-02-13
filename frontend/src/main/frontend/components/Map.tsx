@@ -1,5 +1,5 @@
 import React from "react";
-import { Marks } from "./Marks";
+import { Marks } from "../components/Marks";
 
 type MapProps = {
   data: any;

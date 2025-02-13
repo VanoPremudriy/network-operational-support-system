@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from "react-dom/client"; // Используем client API
 
-import MainLayout from 'Frontend/src/views/MainLayout';
+import Layout from 'Frontend/views/@layout';
 
 const root = ReactDOM.createRoot(document.getElementById("outlet")!);
 root.render(
   <React.StrictMode>
-    <MainLayout />
+    <Layout />
   </React.StrictMode>
 );
