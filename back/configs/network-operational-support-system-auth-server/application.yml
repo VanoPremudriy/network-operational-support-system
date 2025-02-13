@@ -1,13 +1,10 @@
 spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
   datasource:
     url: jdbc:postgresql://localhost:5432/db
     username: user
     password: postgres
-  config:
-    import: optional:configserver:http://localhost:8888
-  cloud:
-    config:
-      enabled: true
 
 token:
   signing:

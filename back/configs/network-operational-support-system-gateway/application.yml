@@ -9,4 +9,9 @@ spring:
           predicates:
             - Path=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
           filters:
+            - Authentication=true
             - RewritePath=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute, /v1/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
+
+auth-server:
+  url: http://localhost:8083
+  endpoint: /jwt/validation
