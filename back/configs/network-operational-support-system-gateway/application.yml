@@ -9,7 +9,7 @@ spring:
           predicates:
             - Path=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
           filters:
-            - Authentication=false
+            - Authentication=ture
             - RewritePath=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute, /v1/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
 
 auth-server:
