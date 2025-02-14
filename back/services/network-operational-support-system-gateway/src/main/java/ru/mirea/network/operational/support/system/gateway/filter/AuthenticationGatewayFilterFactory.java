@@ -3,6 +3,7 @@ package ru.mirea.network.operational.support.system.gateway.filter;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpStatus;
@@ -18,8 +19,9 @@ import ru.mirea.network.operational.support.system.gateway.dictionary.Constant;
 
 import java.util.List;
 
-@Component
 @Slf4j
+@Component
+@RefreshScope
 public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFactory<AuthenticationGatewayFilterFactory.Config> {
 
     private final String url;

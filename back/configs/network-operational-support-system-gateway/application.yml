@@ -11,6 +11,20 @@ spring:
           filters:
             - Authentication=true
             - RewritePath=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute, /v1/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
+    stream:
+      kafka:
+        binder:
+          brokers:
+            - localhost:19092
+            - localhost:29092
+    bus:
+      enabled: true
+      trace:
+        enabled: true
+      refresh:
+        enabled: true
+      env:
+        enabled: true
 
 auth-server:
   url: http://localhost:8083

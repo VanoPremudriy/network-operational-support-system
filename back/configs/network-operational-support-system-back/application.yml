@@ -1,6 +1,21 @@
 spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers:
+            - localhost:19092
+            - localhost:29092
+    bus:
+      enabled: true
+      trace:
+        enabled: true
+      refresh:
+        enabled: true
+      env:
+        enabled: true
 
 springdoc:
   swagger-ui:

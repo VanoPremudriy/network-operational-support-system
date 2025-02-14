@@ -5,6 +5,21 @@ spring:
     url: jdbc:postgresql://localhost:5432/db
     username: user
     password: postgres
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers:
+            - localhost:19092
+            - localhost:29092
+    bus:
+      enabled: true
+      trace:
+        enabled: true
+      refresh:
+        enabled: true
+      env:
+        enabled: true
 
 token:
   signing:
