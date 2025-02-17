@@ -54,6 +54,7 @@
     "@vaadin/hilla-generator-utils": "24.5.8",
     "@vitejs/plugin-react": "4.3.3",
     "async": "3.2.6",
+    "css-loader": "^7.1.2",
     "glob": "10.4.5",
     "rollup-plugin-brotli": "3.1.0",
     "rollup-plugin-visualizer": "5.12.0",
@@ -126,7 +127,7 @@
       "workbox-core": "7.3.0",
       "workbox-precaching": "7.3.0"
     },
-    "hash": "61ceae549ce874344ffdbf70781536bf6fd65624a57be54716361a40ec337c79"
+    "hash": "30067382e47cc0ab5e47793d7479c5088d43fe6da7a7c02afec447d457a2d01e"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
