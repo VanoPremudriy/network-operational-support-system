@@ -9,7 +9,9 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import ru.mirea.network.operational.support.system.auth.domain.model.User;
+import ru.mirea.network.operational.support.system.api.login.JwtValidationResponse;
+import ru.mirea.network.operational.support.system.auth.dictionary.Constant;
+import ru.mirea.network.operational.support.system.auth.entity.Employees;
 
 import java.security.Key;
 import java.util.Date;
@@ -28,10 +30,13 @@ public class JwtService {
      * @param token токен
      * @return имя пользователя
      */
-    public String extractUserName(String token) {
+    public String extractLogin(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public String trimPrefix(String token) {
+        return token.substring(Constant.BEARER_PREFIX.length());
+    }
     /**
      * Генерация токена
      *
@@ -40,10 +45,12 @@ public class JwtService {
      */
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        if (userDetails instanceof User customUserDetails) {
-            claims.put("id", customUserDetails.getId());
-            claims.put("email", customUserDetails.getEmail());
-            claims.put("role", customUserDetails.getRole());
+        if (userDetails instanceof Employees customEmployeesDetails) {
+            claims.put("id", customEmployeesDetails.getId());
+            claims.put("email", customEmployeesDetails.getEmail());
+            claims.put("first_name", customEmployeesDetails.getFirstName());
+            claims.put("last_name", customEmployeesDetails.getLastName());
+            claims.put("middle_name", customEmployeesDetails.getMiddleName());
         }
         return generateToken(claims, userDetails);
     }
@@ -56,8 +63,28 @@ public class JwtService {
      * @return true, если токен валиден
      */
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String userName = extractUserName(token);
-        return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        final String login = extractLogin(token);
+        return (login.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    }
+
+    /**
+     * Получение данных из токена
+     *
+     * @param token токен
+     * @return JwtValidationResponse, данные токена
+     */
+    public JwtValidationResponse parseToken(String token) {
+        final Claims claims = extractAllClaims(token);
+
+        JwtValidationResponse rs = new JwtValidationResponse();
+
+        rs.setId(claims.get("id", String.class));
+        rs.setEmail(claims.get("email", String.class));
+        rs.setFirstName(claims.get("first_name", String.class));
+        rs.setLastName(claims.get("last_name", String.class));
+        rs.setMiddleName(claims.get("middle_name", String.class));
+
+        return rs;
     }
 
     /**

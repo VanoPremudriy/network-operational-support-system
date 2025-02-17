@@ -1,10 +1,13 @@
 package ru.mirea.network.operational.support.system.auth.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.mirea.network.operational.support.system.auth.domain.model.User;
+import ru.mirea.network.operational.support.system.auth.entity.Employees;
+import ru.mirea.network.operational.support.system.auth.exception.UserAlreadyExistException;
+import ru.mirea.network.operational.support.system.auth.exception.UserNotFoundException;
 import ru.mirea.network.operational.support.system.auth.repository.UserRepository;
 
 @Service
@@ -17,8 +20,8 @@ public class UserService {
      *
      * @return сохраненный пользователь
      */
-    public User save(User user) {
-        return repository.save(user);
+    public Employees save(Employees employees) {
+        return repository.save(employees);
     }
 
     /**
@@ -26,17 +29,12 @@ public class UserService {
      *
      * @return созданный пользователь
      */
-    public User create(User user) {
-        if (repository.existsByUsername(user.getUsername())) {
-            // Заменить на свои исключения
-            throw new RuntimeException("Пользователь с таким именем уже существует");
+    public UserDetails create(Employees employees) {
+        if (repository.existsByLogin(employees.getLogin())) {
+            throw new UserAlreadyExistException("Пользователь с таким именем уже существует");
         }
 
-        if (repository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Пользователь с таким email уже существует");
-        }
-
-        return save(user);
+        return save(employees);
     }
 
     /**
@@ -44,8 +42,8 @@ public class UserService {
      *
      * @return пользователь
      */
-    public User getByUsername(String username) {
-        return repository.findByUsername(username)
+    public UserDetails getByUsername(String username) {
+        return repository.findByLogin(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
     }

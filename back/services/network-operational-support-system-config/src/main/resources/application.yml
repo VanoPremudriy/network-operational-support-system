@@ -4,6 +4,8 @@ spring:
   application:
     name: network-operational-support-system-config
   cloud:
+    bus:
+      enabled: true
     config:
       enabled: true
       server:
@@ -12,3 +14,9 @@ spring:
           uri: https://github.com/VanoPremudriy/network-operational-support-system
           search-paths:
             - /back/configs/*
+    stream:
+      kafka:
+        binder:
+          brokers:
+            - localhost:19092
+            - localhost:29092

@@ -1,6 +1,10 @@
 spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db
+    username: user
+    password: postgres
   cloud:
     stream:
       kafka:
@@ -17,10 +21,6 @@ spring:
       env:
         enabled: true
 
-springdoc:
-  swagger-ui:
-    path: /swagger-ui
-
-calculate:
-  route:
-    url: http://localhost:8080
+token:
+  signing:
+    key: bmV0d29yay1vcGVyYXRpb25hbC1zdXBwb3J0LXN5c3RlbS1hdXRoLXRvcC1zZWNyZXQ=

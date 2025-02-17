@@ -2,42 +2,35 @@ package ru.mirea.network.operational.support.system.auth.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.mirea.network.operational.support.system.api.login.JwtAuthenticationResponse;
-import ru.mirea.network.operational.support.system.api.login.SignInRequest;
-import ru.mirea.network.operational.support.system.api.login.SignUpRequest;
+import ru.mirea.network.operational.support.system.api.login.JwtValidationResponse;
+import ru.mirea.network.operational.support.system.auth.dictionary.Constant;
 import ru.mirea.network.operational.support.system.auth.exception.UserAlreadyExistException;
 import ru.mirea.network.operational.support.system.auth.exception.UserNotFoundException;
-import ru.mirea.network.operational.support.system.auth.service.AuthenticationService;
+import ru.mirea.network.operational.support.system.auth.service.JwtService;
 
 @Slf4j
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/jwt")
 @RequiredArgsConstructor
 @Tag(name = "Аутентификация")
-public class AuthController {
-    private final AuthenticationService authenticationService;
+public class JwtController {
+    private final JwtService jwtService;
 
-    @Operation(summary = "Регистрация пользователя")
-    @PostMapping("/sign-up")
-    public JwtAuthenticationResponse signUp(@RequestBody @Valid SignUpRequest request) {
-        return authenticationService.signUp(request);
-    }
 
     @Operation(summary = "Авторизация пользователя")
-    @PostMapping("/sign-in")
-    public JwtAuthenticationResponse signIn(@RequestBody @Valid SignInRequest request) {
-        return authenticationService.signIn(request);
+    @GetMapping("/validation")
+    public JwtValidationResponse validation(@RequestHeader(Constant.HEADER_AUTHORIZATION) String token) {
+        return jwtService.parseToken(jwtService.trimPrefix(token));
     }
 
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
