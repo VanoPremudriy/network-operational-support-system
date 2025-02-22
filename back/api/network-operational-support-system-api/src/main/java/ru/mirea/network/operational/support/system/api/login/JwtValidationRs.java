@@ -4,15 +4,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
+import lombok.extern.jackson.Jacksonized;
+import ru.mirea.network.operational.support.system.api.dto.BaseRs;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@SuperBuilder
+@Jacksonized
 @Schema(description = "Запрос на регистрацию")
-public class JwtValidationResponse {
+@EqualsAndHashCode(callSuper = true)
+public class JwtValidationRs extends BaseRs {
 
     @Schema(description = "id пользователя", example = "\"c0a86465-9500-1791-8195-00c7ab0e0000\"")
     @Size(max = 50, message = "id пользователя должно содержать до 50 символов")

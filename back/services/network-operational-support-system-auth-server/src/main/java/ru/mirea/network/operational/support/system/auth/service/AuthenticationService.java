@@ -6,10 +6,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.mirea.network.operational.support.system.api.login.JwtAuthenticationResponse;
-import ru.mirea.network.operational.support.system.api.login.SignInRequest;
-import ru.mirea.network.operational.support.system.api.login.SignUpRequest;
-import ru.mirea.network.operational.support.system.auth.entity.Employees;
+import ru.mirea.network.operational.support.system.api.login.JwtAuthRs;
+import ru.mirea.network.operational.support.system.api.login.SignInRq;
+import ru.mirea.network.operational.support.system.api.login.SignUpRq;
+import ru.mirea.network.operational.support.system.auth.entity.EmployeeEntity;
 
 @Service
 @RequiredArgsConstructor
@@ -25,9 +25,8 @@ public class AuthenticationService {
      * @param request данные пользователя
      * @return токен
      */
-    public JwtAuthenticationResponse signUp(SignUpRequest request) {
-
-        Employees user = Employees.builder()
+    public JwtAuthRs signUp(SignUpRq request) {
+        EmployeeEntity user = EmployeeEntity.builder()
                 .login(request.getLogin())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .lastName(request.getLastName())
@@ -38,7 +37,7 @@ public class AuthenticationService {
 
         userService.create(user);
 
-        return new JwtAuthenticationResponse(jwtService.generateToken(user));
+        return JwtAuthRs.builder().token(jwtService.generateToken(user)).build();
     }
 
     /**
@@ -47,7 +46,7 @@ public class AuthenticationService {
      * @param request данные пользователя
      * @return токен
      */
-    public JwtAuthenticationResponse signIn(SignInRequest request) {
+    public JwtAuthRs signIn(SignInRq request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.getLogin(),
                 request.getPassword()
@@ -55,6 +54,6 @@ public class AuthenticationService {
 
         UserDetails user = userService.userDetailsService().loadUserByUsername(request.getLogin());
 
-        return new JwtAuthenticationResponse(jwtService.generateToken(user));
+        return JwtAuthRs.builder().token(jwtService.generateToken(user)).build();
     }
 }

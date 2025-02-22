@@ -117,7 +117,6 @@ public class CreateRouteControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json(jsonMapper.writeValueAsString(CreateRouteRs.builder()
                         .success(false)
                         .error(ErrorDTO.builder()
-                                .code(0)
                                 .title("Непредвиденная ошибка")
                                 .build())
                         .build())));

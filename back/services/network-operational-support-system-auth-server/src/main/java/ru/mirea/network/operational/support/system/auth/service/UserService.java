@@ -3,9 +3,8 @@ package ru.mirea.network.operational.support.system.auth.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.mirea.network.operational.support.system.auth.entity.Employees;
+import ru.mirea.network.operational.support.system.auth.entity.EmployeeEntity;
 import ru.mirea.network.operational.support.system.auth.exception.UserAlreadyExistException;
 import ru.mirea.network.operational.support.system.auth.exception.UserNotFoundException;
 import ru.mirea.network.operational.support.system.auth.repository.UserRepository;
@@ -20,8 +19,8 @@ public class UserService {
      *
      * @return сохраненный пользователь
      */
-    public Employees save(Employees employees) {
-        return repository.save(employees);
+    public EmployeeEntity save(EmployeeEntity employee) {
+        return repository.save(employee);
     }
 
     /**
@@ -29,12 +28,12 @@ public class UserService {
      *
      * @return созданный пользователь
      */
-    public UserDetails create(Employees employees) {
-        if (repository.existsByLogin(employees.getLogin())) {
-            throw new UserAlreadyExistException("Пользователь с таким именем уже существует");
+    public UserDetails create(EmployeeEntity employee) {
+        if (repository.existsByLogin(employee.getLogin())) {
+            throw new UserAlreadyExistException(employee.getLogin(), "Пользователь с таким именем уже существует");
         }
 
-        return save(employees);
+        return save(employee);
     }
 
     /**
@@ -44,7 +43,7 @@ public class UserService {
      */
     public UserDetails getByUsername(String username) {
         return repository.findByLogin(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+                .orElseThrow(() -> new UserNotFoundException(username, "Пользователь не найден"));
 
     }
 

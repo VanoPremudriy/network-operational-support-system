@@ -1,13 +1,12 @@
 package ru.mirea.network.operational.support.system.auth.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-import ru.mirea.network.operational.support.system.auth.entity.Employees;
+import ru.mirea.network.operational.support.system.auth.entity.EmployeeEntity;
 
 import java.util.Optional;
 
-@Repository
-public interface UserRepository extends JpaRepository<Employees, Long> {
-    Optional<Employees> findByLogin(String login);
+public interface UserRepository extends JpaRepository<EmployeeEntity, Long> {
+    Optional<EmployeeEntity> findByLogin(String login);
+
     boolean existsByLogin(String login);
 }

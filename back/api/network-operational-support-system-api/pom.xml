@@ -6,7 +6,7 @@
 
     <groupId>ru.mirea.network.operational.support.system.api</groupId>
     <artifactId>network-operational-support-system-api</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <parent>
         <groupId>ru.mirea.network.operational.support.system</groupId>

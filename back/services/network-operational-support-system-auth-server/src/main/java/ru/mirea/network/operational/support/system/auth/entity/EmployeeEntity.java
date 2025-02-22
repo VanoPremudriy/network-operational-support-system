@@ -1,12 +1,8 @@
 package ru.mirea.network.operational.support.system.auth.entity;
 
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,7 +25,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(schema = "public", name = "employees")
-public class Employees implements UserDetails {
+public class EmployeeEntity implements UserDetails {
     @Id
     @Column(name = "id")
     @UuidGenerator(style = UuidGenerator.Style.TIME)

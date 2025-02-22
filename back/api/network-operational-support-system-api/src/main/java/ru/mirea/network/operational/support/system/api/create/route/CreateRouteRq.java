@@ -8,6 +8,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Jacksonized
 public class CreateRouteRq {
+    private String clientId;
     private String startingPoint;
     private String destinationPoint;
 }

@@ -27,32 +27,8 @@ public class CreateRouteController {
 
     @PostMapping(value = CREATE_ROUTE_ENDPOINT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreateRouteRs> createRoute(@RequestBody @Valid CreateRouteRq rq) {
-        return ResponseEntity.ok().body(createRouteService.createRoute(rq));
+        return ResponseEntity.ok()
+                .body(createRouteService.createRoute(rq));
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({ValidationException.class})
-    public CreateRouteRs validationException(ValidationException exception) {
-        return CreateRouteRs.builder()
-                .success(false)
-                .error(ErrorDTO.builder()
-                        .code(1)
-                        .title("Ошибка валидации")
-                        .text(exception.getMessage())
-                        .build())
-                .build();
-    }
-
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler({Exception.class})
-    public CreateRouteRs defaultException(Exception exception) {
-        return CreateRouteRs.builder()
-                .success(false)
-                .error(ErrorDTO.builder()
-                        .code(0)
-                        .title("Непредвиденная ошибка")
-                        .text(exception.getMessage())
-                        .build())
-                .build();
-    }
 }
