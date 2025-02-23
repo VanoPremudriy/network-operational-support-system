@@ -4,6 +4,18 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: sign-in
+          uri: http://localhost:8083
+          predicates:
+            - Path=/network-operational-support-system-api/auth
+          filters:
+            - RewritePath=/network-operational-support-system-api/auth, /auth/v1/network-operational-support-system-api/auth
+        - id: sign-up
+          uri: http://localhost:8083
+          predicates:
+            - Path=/sign-up
+          filters:
+            - RewritePath=/sign-up, /auth/v1/sign-up
         - id: create-route
           uri: http://localhost:8080
           predicates:
@@ -28,4 +40,4 @@ spring:
 
 auth-server:
   url: http://localhost:8083
-  endpoint: /jwt/validation
+  endpoint: /jwt/v1/validation

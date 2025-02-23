@@ -11,13 +11,16 @@
 
     <groupId>ru.mirea.network.operational.support.system.gateway</groupId>
     <artifactId>network-operational-support-system-gateway</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>network-operational-support-system-gateway</name>
     <packaging>jar</packaging>
 
     <properties>
         <!-- SPRING -->
         <spring-cloud.version>2024.0.0</spring-cloud.version>
+
+        <!-- MIREA -->
+        <login-api.version>1.0.0-SNAPSHOT</login-api.version>
     </properties>
 
     <dependencyManagement>
@@ -35,9 +38,9 @@
     <dependencies>
         <!-- MIREA -->
         <dependency>
-            <groupId>ru.mirea.network.operational.support.system.api</groupId>
-            <artifactId>network-operational-support-system-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>ru.mirea.network.operational.support.system.login.api</groupId>
+            <artifactId>network-operational-support-system-login-api</artifactId>
+            <version>${login-api.version}</version>
         </dependency>
 
         <!-- SPRING -->

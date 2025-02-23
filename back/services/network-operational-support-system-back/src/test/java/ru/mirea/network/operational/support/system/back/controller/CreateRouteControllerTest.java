@@ -21,10 +21,11 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import ru.mirea.network.operational.support.system.api.create.route.CreateRouteRq;
-import ru.mirea.network.operational.support.system.api.create.route.CreateRouteRs;
-import ru.mirea.network.operational.support.system.api.dto.BodyDTO;
-import ru.mirea.network.operational.support.system.api.dto.ErrorDTO;
+import ru.mirea.network.operational.support.system.common.api.BodyDTO;
+import ru.mirea.network.operational.support.system.common.api.ErrorDTO;
+import ru.mirea.network.operational.support.system.route.api.route.calculate.CalculateRouteRq;
+import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRq;
+import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRs;
 
 import java.io.IOException;
 import java.net.URL;
@@ -117,7 +118,6 @@ public class CreateRouteControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json(jsonMapper.writeValueAsString(CreateRouteRs.builder()
                         .success(false)
                         .error(ErrorDTO.builder()
-                                .code(0)
                                 .title("Непредвиденная ошибка")
                                 .build())
                         .build())));

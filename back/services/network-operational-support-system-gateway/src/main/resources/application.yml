@@ -6,6 +6,47 @@ spring:
     name: network-operational-support-system-gateway
   config:
     import: optional:configserver:http://localhost:8888
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
   cloud:
     config:
       enabled: true
+    gateway:
+      routes:
+        - id: sign-in
+          uri: http://localhost:8083
+          predicates:
+            - Path=/network-operational-support-system-api/auth
+          filters:
+            - RewritePath=/network-operational-support-system-api/auth, /auth/v1/network-operational-support-system-api/auth
+        - id: sign-up
+          uri: http://localhost:8083
+          predicates:
+            - Path=/sign-up
+          filters:
+            - RewritePath=/sign-up, /auth/v1/sign-up
+        - id: create-route
+          uri: http://localhost:8080
+          predicates:
+            - Path=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
+          filters:
+            - Authentication=true
+            - RewritePath=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute, /v1/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
+    stream:
+      kafka:
+        binder:
+          brokers:
+            - localhost:19092
+            - localhost:29092
+    bus:
+      enabled: true
+      trace:
+        enabled: true
+      refresh:
+        enabled: true
+      env:
+        enabled: true
+
+auth-server:
+  url: http://localhost:8083
+  endpoint: /jwt/v1/validation

@@ -1,6 +1,20 @@
 spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db
+    username: user
+    password: postgres
+  kafka:
+    bootstrap-servers:
+      - localhost:19092
+      - localhost:29092
+    consumer:
+      group-id: network-operational-support-system-back
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      enable-auto-commit: false
   cloud:
     stream:
       kafka:

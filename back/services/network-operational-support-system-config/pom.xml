@@ -11,7 +11,7 @@
 
 	<groupId>ru.mirea.network.operational.support.system.config</groupId>
 	<artifactId>network-operational-support-system-config</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>network-operational-support-system-config</name>
 
 
