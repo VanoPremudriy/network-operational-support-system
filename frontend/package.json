@@ -26,9 +26,11 @@
     "d3": "^7.9.0",
     "date-fns": "2.29.3",
     "lit": "3.2.1",
+    "lucide-react": "^0.475.0",
     "proj4": "2.12.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "react-icons": "^5.5.0",
     "react-router-dom": "6.28.0",
     "topojson": "^3.0.2",
     "topojson-client": "^3.1.0"
@@ -127,7 +129,7 @@
       "workbox-core": "7.3.0",
       "workbox-precaching": "7.3.0"
     },
-    "hash": "30067382e47cc0ab5e47793d7479c5088d43fe6da7a7c02afec447d457a2d01e"
+    "hash": "b27354c565a03e6f1a490a3775dfa0afb4a6100ae29a88185c3e4f7d6fabf0e8"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
@@ -169,6 +171,8 @@
     "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles",
     "d3": "$d3",
     "topojson": "$topojson",
-    "topojson-client": "$topojson-client"
+    "topojson-client": "$topojson-client",
+    "lucide-react": "$lucide-react",
+    "react-icons": "$react-icons"
   }
 }

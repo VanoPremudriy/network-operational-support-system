@@ -1,8 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from 'react';
 import { useViewConfig } from '@vaadin/hilla-file-router/runtime.js';
 import { signal, effect, Signal } from '@vaadin/hilla-react-signals';
 import { Map } from "Frontend/components/Map";
 import { useMapData } from "Frontend/hooks/useMapData";
+import Header from 'Frontend/components/Header/Header';
+import AuthorizationView from 'Frontend/views/AuthorizationView/AuthorizationView';
+import MainView from 'Frontend/views/MainView/MainView';
 
 // Пример глобального сигнала для заголовка
 const vaadin = window.Vaadin as { documentTitleSignal: Signal<string> };
@@ -44,17 +47,23 @@ export default function Layout() {
   const currentTitle = useViewConfig()?.title ?? '';
   const data = useMapData();
 
-  useEffect(() => {
-    vaadin.documentTitleSignal.value = currentTitle;
-  }, [currentTitle]);
+  // useEffect(() => {
+  //   vaadin.documentTitleSignal.value = currentTitle;
+  // }, [currentTitle]);
+  //
+  // if (!data) {
+  //   return <pre>Loading...</pre>;
+  // }
 
-  if (!data) {
-    return <pre>Loading...</pre>;
-  }
+  const [authorized, setAuthorized] = useState(false);
 
   return (
-    <div>
-      <Map data={data} points={points} edges={edges} width={width} height={height} />
-    </div>
+    <body>
+      {/*{authorized ? <MainView /> : <AuthorizationView />}*/}
+      {/*<AuthorizationView />*/}
+      <MainView/>
+    {/*<Navigation/>*/}
+    {/*<Map data={data} points={points} edges={edges} width={width} height={height} />*/}
+    </body>
   );
 }

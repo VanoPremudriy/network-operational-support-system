@@ -1,0 +1,114 @@
+.div {
+    width: 40em;
+    height: 50em;
+    border-radius: 10px;
+    align-items: center;
+    align-self: center;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    margin-top: 20px;
+}
+
+.headerDiv {
+    width: 100%;
+    justify-content: center;
+    display: flex;
+    height: 30%;
+}
+
+.header {
+    /*margin-top: 5%;*/
+    margin: auto;
+}
+
+
+.loginDiv {
+    width: 100%;
+    /*height: 30px;*/
+    height: 30%;
+    /*justify-content: center;*/
+    align-items: center;
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+}
+
+.loginDiv h5 {
+    width: 90%;
+}
+
+.loginInput {
+    border: solid #D0D5DD 1px;
+    border-radius: 5px;
+    width: 90%;
+    /*height: 100%;*/
+    height: 40px;
+    font-size: 20px;
+
+}
+
+
+.passwordDiv {
+    width: 100%;
+    /*height: 30px;*/
+    height: 30%;
+    /*justify-content: center;*/
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    align-items: center;
+}
+
+.passwordDiv h5 {
+    width: 90%;
+}
+
+.passwordInput {
+    border: solid #D0D5DD 1px;
+    border-radius: 5px;
+    width: 90%;
+    /*height: 100%;*/
+    height: 40px;
+    font-size: 20px;
+}
+
+.loginButtonDiv {
+    width: 100%;
+    /*height: 30px;*/
+    height: 10%;
+    justify-content: center;
+    display: flex;
+    margin: auto;
+}
+
+
+.loginButton {
+    border: none;
+    width: 90%;
+    /*height: 100%;*/
+    height: 40px;
+    background: #3563E9;
+    border-radius: 5px;
+    text-align: center;
+    transition: .4s;
+    color: white;
+    font-size: 20px;
+}
+
+.loginButton:hover {
+    transition: .4s;
+    background: #3f6be8;
+}
+
+.loginButton:active {
+    background: #5679ec;
+    transition: .0s;
+}
+
+.loginButton:focus {
+    outline: none;
+}

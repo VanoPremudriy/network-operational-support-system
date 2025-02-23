@@ -1,0 +1,17 @@
+
+.header {
+    height: 10%;
+    display: flex;
+    width: 100%;
+}
+
+.menu {
+    height: 100%;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-left: 20px;
+}
+
+

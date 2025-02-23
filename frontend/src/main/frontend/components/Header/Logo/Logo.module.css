@@ -1,0 +1,13 @@
+.logo {
+    width: 20%;
+    display: flex;
+}
+
+.logoPic {
+    margin: auto;
+    cursor: pointer;
+}
+
+h1 {
+    color: #3f6be8;
+}
