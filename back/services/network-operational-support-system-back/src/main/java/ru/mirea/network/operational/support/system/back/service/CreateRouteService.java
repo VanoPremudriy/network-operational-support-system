@@ -1,7 +1,7 @@
 package ru.mirea.network.operational.support.system.back.service;
 
-import ru.mirea.network.operational.support.system.api.create.route.CreateRouteRq;
-import ru.mirea.network.operational.support.system.api.create.route.CreateRouteRs;
+import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRq;
+import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRs;
 
 public interface CreateRouteService {
     CreateRouteRs createRoute(CreateRouteRq rq);

@@ -8,10 +8,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.mirea.network.operational.support.system.api.dto.BaseRs;
-import ru.mirea.network.operational.support.system.api.dto.ErrorDTO;
 import ru.mirea.network.operational.support.system.auth.exception.UserAlreadyExistException;
 import ru.mirea.network.operational.support.system.auth.exception.UserNotFoundException;
+import ru.mirea.network.operational.support.system.common.api.BaseRs;
+import ru.mirea.network.operational.support.system.common.api.ErrorDTO;
 
 import java.util.HashMap;
 import java.util.Map;

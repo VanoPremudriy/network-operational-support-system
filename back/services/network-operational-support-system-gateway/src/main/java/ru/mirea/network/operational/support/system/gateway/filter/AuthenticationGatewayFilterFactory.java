@@ -17,11 +17,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-import ru.mirea.network.operational.support.system.api.dto.BaseRs;
-import ru.mirea.network.operational.support.system.api.dto.ErrorDTO;
-import ru.mirea.network.operational.support.system.api.login.JwtValidationRs;
+import ru.mirea.network.operational.support.system.common.api.BaseRs;
+import ru.mirea.network.operational.support.system.common.api.ErrorDTO;
 import ru.mirea.network.operational.support.system.gateway.dictionary.Constant;
 import ru.mirea.network.operational.support.system.gateway.exception.ResponseValidationException;
+import ru.mirea.network.operational.support.system.login.api.JwtValidationRs;
 
 import java.util.List;
 import java.util.Map;

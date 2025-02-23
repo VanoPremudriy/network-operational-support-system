@@ -1,7 +1,7 @@
 package ru.mirea.network.operational.support.system.gateway.exception;
 
 import lombok.Getter;
-import ru.mirea.network.operational.support.system.api.dto.BaseRs;
+import ru.mirea.network.operational.support.system.common.api.BaseRs;
 
 @Getter
 public class ResponseValidationException extends RuntimeException {

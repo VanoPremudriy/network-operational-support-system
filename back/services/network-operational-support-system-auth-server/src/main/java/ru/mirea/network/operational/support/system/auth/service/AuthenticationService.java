@@ -6,10 +6,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.mirea.network.operational.support.system.api.login.JwtAuthRs;
-import ru.mirea.network.operational.support.system.api.login.SignInRq;
-import ru.mirea.network.operational.support.system.api.login.SignUpRq;
 import ru.mirea.network.operational.support.system.auth.entity.EmployeeEntity;
+import ru.mirea.network.operational.support.system.login.api.JwtAuthRs;
+import ru.mirea.network.operational.support.system.login.api.SignInRq;
+import ru.mirea.network.operational.support.system.login.api.SignUpRq;
 
 @Service
 @RequiredArgsConstructor

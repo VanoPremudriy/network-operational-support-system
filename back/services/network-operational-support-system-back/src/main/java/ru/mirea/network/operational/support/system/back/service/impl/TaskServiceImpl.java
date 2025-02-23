@@ -2,7 +2,6 @@ package ru.mirea.network.operational.support.system.back.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.mirea.network.operational.support.system.api.create.route.CreateRouteRq;
 import ru.mirea.network.operational.support.system.back.entity.TaskEntity;
 import ru.mirea.network.operational.support.system.back.repository.TaskRepository;
 import ru.mirea.network.operational.support.system.back.service.TaskService;

@@ -24,7 +24,7 @@
         <swagger.version>2.8.4</swagger.version>
 
         <!-- MIREA -->
-        <api.version>1.0.0-SNAPSHOT</api.version>
+        <login-api.version>1.0.0-SNAPSHOT</login-api.version>
     </properties>
 
     <dependencyManagement>
@@ -42,9 +42,9 @@
     <dependencies>
         <!-- MIREA -->
         <dependency>
-            <groupId>ru.mirea.network.operational.support.system.api</groupId>
-            <artifactId>network-operational-support-system-api</artifactId>
-            <version>${api.version}</version>
+            <groupId>ru.mirea.network.operational.support.system.login.api</groupId>
+            <artifactId>network-operational-support-system-login-api</artifactId>
+            <version>${login-api.version}</version>
         </dependency>
 
         <!-- SPRING -->

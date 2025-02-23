@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import ru.mirea.network.operational.support.system.api.login.JwtValidationRs;
 import ru.mirea.network.operational.support.system.auth.dictionary.Constant;
 import ru.mirea.network.operational.support.system.auth.entity.EmployeeEntity;
+import ru.mirea.network.operational.support.system.login.api.JwtValidationRs;
 
 import java.security.Key;
 import java.util.Date;

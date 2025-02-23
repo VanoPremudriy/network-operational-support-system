@@ -16,7 +16,9 @@
     </parent>
 
     <modules>
-        <module>api/network-operational-support-system-api</module>
+        <module>api/network-operational-support-system-common-api</module>
+        <module>api/network-operational-support-system-login-api</module>
+        <module>api/network-operational-support-system-route-api</module>
 
         <module>services/network-operational-support-system-back</module>
         <module>services/network-operational-support-system-gateway</module>

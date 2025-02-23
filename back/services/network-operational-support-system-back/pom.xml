@@ -25,16 +25,16 @@
         <mapstruct.version>1.6.3</mapstruct.version>
 
         <!-- MIREA -->
-        <api.version>1.0.0-SNAPSHOT</api.version>
+        <route-api.version>1.0.0-SNAPSHOT</route-api.version>
         <thread.version>1.0.0-SNAPSHOT</thread.version>
     </properties>
 
     <dependencies>
         <!-- MIREA -->
         <dependency>
-            <groupId>ru.mirea.network.operational.support.system.api</groupId>
-            <artifactId>network-operational-support-system-api</artifactId>
-            <version>${api.version}</version>
+            <groupId>ru.mirea.network.operational.support.system.route.api</groupId>
+            <artifactId>network-operational-support-system-route-api</artifactId>
+            <version>${route-api.version}</version>
         </dependency>
 
         <dependency>

@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.mirea.network.operational.support.system.api.login.JwtAuthRs;
-import ru.mirea.network.operational.support.system.api.login.SignInRq;
-import ru.mirea.network.operational.support.system.api.login.SignUpRq;
 import ru.mirea.network.operational.support.system.auth.service.AuthenticationService;
+import ru.mirea.network.operational.support.system.login.api.JwtAuthRs;
+import ru.mirea.network.operational.support.system.login.api.SignInRq;
+import ru.mirea.network.operational.support.system.login.api.SignUpRq;
 
 @Slf4j
 @RefreshScope
