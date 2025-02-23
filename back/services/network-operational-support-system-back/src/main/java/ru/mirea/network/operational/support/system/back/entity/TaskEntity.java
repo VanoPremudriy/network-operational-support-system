@@ -33,7 +33,7 @@ public class TaskEntity {
     private Boolean activeFlag;
 
     @Column(name = "client_id", unique = true, nullable = false)
-    private String clientId;
+    private UUID clientId;
 
     @Column(name = "created_time", unique = true, nullable = false)
     private LocalDateTime createdTime;

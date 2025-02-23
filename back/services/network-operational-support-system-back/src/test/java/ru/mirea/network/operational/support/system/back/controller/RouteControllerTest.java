@@ -23,7 +23,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.mirea.network.operational.support.system.common.api.BodyDTO;
 import ru.mirea.network.operational.support.system.common.api.ErrorDTO;
-import ru.mirea.network.operational.support.system.route.api.route.calculate.CalculateRouteRq;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRq;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRs;
 
@@ -31,11 +30,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.stream.Stream;
 
-import static ru.mirea.network.operational.support.system.back.dictionary.Constant.CREATE_ROUTE_ENDPOINT;
-
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CreateRouteControllerTest {
+public class RouteControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -85,7 +82,7 @@ public class CreateRouteControllerTest {
             }
         });
 
-        mockMvc.perform(MockMvcRequestBuilders.post(CREATE_ROUTE_ENDPOINT)
+        mockMvc.perform(MockMvcRequestBuilders.post("/v1/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(jsonMapper.writeValueAsString(CreateRouteRq.builder()
                                 .startingPoint("start")
@@ -108,7 +105,7 @@ public class CreateRouteControllerTest {
             }
         });
 
-        mockMvc.perform(MockMvcRequestBuilders.post(CREATE_ROUTE_ENDPOINT)
+        mockMvc.perform(MockMvcRequestBuilders.post("/v1/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(jsonMapper.writeValueAsString(CreateRouteRq.builder()
                                 .startingPoint("start")

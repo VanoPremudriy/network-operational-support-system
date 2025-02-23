@@ -42,6 +42,19 @@ springdoc:
   swagger-ui:
     path: /swagger-ui
 
-calculate:
-  route:
+listener:
+  topic: routes
+
+controller:
+  create-route: /ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
+
+client:
+  calculate-route:
     url: http://localhost:8080
+    endpoint: /calculations/calculateRoute
+
+zookeeper:
+  url: localhost:22181
+  sleepMsBetweenRetries: 1000
+  maxRetries: 2
+  waitTime: PT10M

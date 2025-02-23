@@ -50,7 +50,7 @@ public class ExceptionApiHandler {
 
     @ResponseStatus(value = HttpStatus.OK)
     @ExceptionHandler({ConstraintViolationException.class})
-    public BaseRs conflict(ConstraintViolationException exception) {
+    public BaseRs validationException(ConstraintViolationException exception) {
         log.error("Ошибка валидации: {}", exception.getMessage());
 
         Map<String, String> infos = exception.getConstraintViolations().stream()
@@ -62,7 +62,7 @@ public class ExceptionApiHandler {
 
     @ResponseStatus(value = HttpStatus.OK)
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public BaseRs conflict(MethodArgumentNotValidException exception) {
+    public BaseRs validationException(MethodArgumentNotValidException exception) {
         log.error("Ошибка валидации: {}", exception.getMessage());
         Map<String, String> infos = new HashMap<>();
 
