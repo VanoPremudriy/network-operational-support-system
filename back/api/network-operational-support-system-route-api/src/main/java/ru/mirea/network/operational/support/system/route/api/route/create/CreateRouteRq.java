@@ -4,11 +4,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+import java.util.UUID;
+
 @Data
 @Builder
 @Jacksonized
 public class CreateRouteRq {
-    private String clientId;
+    private UUID clientId;
     private String startingPoint;
     private String destinationPoint;
 }
