@@ -37,7 +37,7 @@ public class AuthenticationService {
 
         userService.create(user);
 
-        return JwtAuthRs.builder().token(jwtService.generateToken(user)).build();
+        return JwtAuthRs.builder().success(true).token(jwtService.generateToken(user)).build();
     }
 
     /**
@@ -54,6 +54,6 @@ public class AuthenticationService {
 
         UserDetails user = userService.userDetailsService().loadUserByUsername(request.getLogin());
 
-        return JwtAuthRs.builder().token(jwtService.generateToken(user)).build();
+        return JwtAuthRs.builder().success(true).token(jwtService.generateToken(user)).build();
     }
 }
