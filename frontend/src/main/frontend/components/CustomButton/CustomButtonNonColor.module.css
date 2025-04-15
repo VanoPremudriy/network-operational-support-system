@@ -1,4 +1,5 @@
-button {
+.button {
+    width: 100%;
     display: flex;
     align-items: center;  /* Выровняет текст и иконку */
     justify-content: center;
@@ -6,35 +7,32 @@ button {
     border: none;
     background: white;
     height: 40px;
-    color: black;
+    color: gray;
     border-radius: 5px;
     cursor: pointer;
     padding: 0 15px;
     font-size: 16px;
 }
 
-.icon {
-    display: flex;
-    align-items: center;
-    color: #a3a5ac;
+.button:hover {
+    transition: .4s;
+    background: rgba(154, 152, 152, 0.47);
 }
 
-button:hover {
-    color: white;
-    background: #3f6be8;
-}
-button:hover .label {
+.button:hover .icon {
     color: white;
 }
 
-button:hover .icon {
-    color: white;
+.button:active {
+    background: rgba(191, 191, 191, 0.33);
+    transition: .0s;
 }
 
-button:active {
-    background: rgba(63, 107, 232, 0.47);
+.button:focus {
+    outline: none;
 }
 
 .label {
     color: #a3a5ac;
 }
+

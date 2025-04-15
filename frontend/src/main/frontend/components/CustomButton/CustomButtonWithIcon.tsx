@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styles from "Frontend/components/CustomButton/CustomButton.module.css"
+import styles from "Frontend/components/CustomButton/CustomButtonWithIcon.module.css"
 
 interface CustomButtonProps {
   label: string;
@@ -7,7 +7,7 @@ interface CustomButtonProps {
   icon? : React.ReactNode;
 }
 
-const CustomButton: React.FC<CustomButtonProps> = ({label, onClick, icon}) => {
+const CustomButtonWithIcon: React.FC<CustomButtonProps> = ({label, onClick, icon}) => {
 
   return (
     <button onClick={onClick} className={styles.button}>
@@ -17,4 +17,4 @@ const CustomButton: React.FC<CustomButtonProps> = ({label, onClick, icon}) => {
   )
 }
 
-export default CustomButton;
+export default CustomButtonWithIcon;

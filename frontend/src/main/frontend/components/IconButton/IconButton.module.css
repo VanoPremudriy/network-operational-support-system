@@ -1,0 +1,16 @@
+.button {
+    border: solid rgba(163, 165, 172, 0.51) 2px;
+    background: white;
+    border-radius: 100px;
+    padding: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;  /* Выровняет текст и иконку */
+    justify-content: center;
+}
+
+.icon {
+    color: #3D5278;
+    align-items: center;
+    display: flex;
+}

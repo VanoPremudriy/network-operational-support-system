@@ -1,0 +1,40 @@
+.button {
+    display: flex;
+    align-items: center;  /* Выровняет текст и иконку */
+    justify-content: center;
+    gap: 10px;  /* Отступ между иконкой и текстом */
+    border: none;
+    background: white;
+    height: 40px;
+    color: black;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 0 15px;
+    font-size: 16px;
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    color: #a3a5ac;
+}
+
+.button:hover {
+    color: white;
+    background: #3f6be8;
+}
+.button:hover .label {
+    color: white;
+}
+
+.button:hover .icon {
+    color: white;
+}
+
+.button:active {
+    background: rgba(63, 107, 232, 0.47);
+}
+
+.label {
+    color: #a3a5ac;
+}
