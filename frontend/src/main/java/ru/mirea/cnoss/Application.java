@@ -1,9 +1,10 @@
-package org.vaadin.example;
+package ru.mirea.cnoss;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * The entry point of the Spring Boot application.
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * and some desktop browsers.
  *
  */
+@EnableFeignClients
 @SpringBootApplication
 @Theme(value = "skeleton-starter-hilla-react")
 public class Application implements AppShellConfigurator {
