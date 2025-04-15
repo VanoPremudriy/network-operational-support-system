@@ -1,9 +1,10 @@
 import { FeatureCollection } from "geojson";
+import {GeoEndpoint} from "Frontend/generated/endpoints"
 
 export const fetchGeoData = async (): Promise<FeatureCollection> => {
-  const response = await fetch('https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/russia.geojson');
-  if (!response.ok) {
+  const response = await GeoEndpoint.getRussianGeoData();
+  if (!response) {
     throw new Error('Ошибка при загрузке GeoJSON');
   }
-  return await response.json();
+  return  JSON.parse(response) as FeatureCollection;
 };
