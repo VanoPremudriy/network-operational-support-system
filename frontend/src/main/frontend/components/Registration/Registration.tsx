@@ -4,6 +4,7 @@ import CustomButtonColor from 'Frontend/components/CustomButton/CustomButtonColo
 import CustomButtonNonColor from 'Frontend/components/CustomButton/CustomButtonNonColor';
 import { useNavigate } from 'react-router-dom';
 import CustomPasswordInput from 'Frontend/components/CustomInput/CustomPasswordInput';
+import { RoutePath } from 'Frontend/routes';
 
 const Registration = () => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const Registration = () => {
         <CustomInput name={'Фамилия сотрудника'} inputName={'Фамилия сотрудника'} />
         <div className={styles.buttons}>
         <CustomButtonColor label={"Регистрация"} onClick={() => {}}/>
-        <CustomButtonNonColor label={"Авторизация"} onClick={() => {navigate("/")}}/>
+        <CustomButtonNonColor label={"Авторизация"} onClick={() => {navigate(RoutePath.AUTH)}}/>
         </div>
       </div>
     </div>

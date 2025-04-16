@@ -8,6 +8,7 @@ import { RiSettings4Fill } from "react-icons/ri";
 import IconButton from 'Frontend/components/IconButton/IconButton';
 import { IoIosNotifications } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
+import { RoutePath } from 'Frontend/routes';
 
 const Header =() => {
   return (
@@ -39,7 +40,7 @@ const userMenu = () => {
     <div className={styles.userMenu}>
       <IconButton onClick={() => {
         localStorage.removeItem("token");
-        navigate("/")
+        navigate(RoutePath.AUTH)
       }} icon={<RiSettings4Fill size={25}/>}/>
       <IconButton onClick={() => {}} icon={<IoIosNotifications size={25}/>}/>
     </div>
