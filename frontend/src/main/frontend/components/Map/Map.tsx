@@ -39,7 +39,10 @@ export const Map = ({ data, details, points, edges }: MapProps) => {
       .translateExtent([[-1000, -1000], [1000, 1000]])
       .on("zoom", (event) => {
         g.attr("transform", event.transform);
-        setZoomScale(event.transform.k);
+        requestAnimationFrame(() => {
+          setZoomScale(event.transform.k);
+          setTransform(event.transform);
+        });
       });
 
     svg.call(zoomBehavior as any);
@@ -69,33 +72,45 @@ export const Map = ({ data, details, points, edges }: MapProps) => {
     };
   };
 
-  const filteredData = details?.features.filter((feature: any) => {
-    const minZoom = feature.properties.min_zoom || 0;
-    const maxZoom = feature.properties.max_zoom || 100;
+  const filteredData = useMemo(() => {
+    if (!details || !details.features) return [];
 
-    // Проверка масштаба
-    if (zoomScale < minZoom || zoomScale > maxZoom) {
-      return false;
-    }
-
-    // Получаем координаты линии дороги (или многоугольника)
-    const coords = feature.geometry.coordinates;
-    if (!coords) return false;
-
-    // Проверяем, попадает ли хотя бы одна точка дороги в видимую область
     const bounds = getVisibleBounds();
-    return coords.some(([lon, lat]: [number, number]) => {
-      const projected = projection([lon, lat]);
-      if (!projected) return false; // Если проекция null, игнорируем точку
 
-      return (
-        projected[0] >= bounds.xMin &&
-        projected[0] <= bounds.xMax &&
-        projected[1] >= bounds.yMin &&
-        projected[1] <= bounds.yMax
+    return details.features.filter((feature: any) => {
+      const minZoom = feature.properties.min_zoom || 0;
+      const maxZoom = feature.properties.max_zoom || 100;
+
+      if (zoomScale < minZoom || zoomScale > maxZoom) return false;
+
+      let coordinates: any[] = [];
+
+      // Поддержка MultiLineString и LineString
+      if (feature.geometry.type === "LineString") {
+        coordinates = [feature.geometry.coordinates];
+      } else if (feature.geometry.type === "MultiLineString") {
+        coordinates = feature.geometry.coordinates;
+      } else {
+        return false; // пропускаем всё остальное (например, Point)
+      }
+
+      return coordinates.some((segment) =>
+        segment.some(([lon, lat]: [number, number]) => {
+          const projected = projection([lon, lat]);
+          if (!projected) return false;
+
+          const [x, y] = projected;
+
+          return (
+            x >= bounds.xMin &&
+            x <= bounds.xMax &&
+            y >= bounds.yMin &&
+            y <= bounds.yMax
+          );
+        })
       );
     });
-  });
+  }, [details, zoomScale, transform]);
 
   return (
     <svg ref={svgRef} width="100%" height="100%" style={{ border: "1px solid black" }}>
