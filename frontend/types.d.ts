@@ -30,3 +30,19 @@ declare module "*.jpeg" {
   const value: string;
   export default value;
 }
+
+declare module "d3-tile" {
+  export interface TileResult {
+    scale: number;
+    translate: [number, number];
+    zoom: number;
+    tiles: [number, number, number][];
+  }
+
+  export function tile(): {
+    size(size: [number, number]): any;
+    scale(scale: number): any;
+    translate(translate: [number, number]): any;
+    (this: void): TileResult;
+  };
+}

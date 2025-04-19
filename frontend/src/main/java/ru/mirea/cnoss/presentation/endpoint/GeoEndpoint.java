@@ -22,11 +22,19 @@ public class GeoEndpoint {
         return geoDataService.fetchRussiaGeoJson();
     }
 
-    public String getRussianDetails() {
-        try (InputStream is = new ClassPathResource("export.geojson").getInputStream()) {
+    public String getRoads() {
+        try (InputStream is = new ClassPathResource("roads.geojson").getInputStream()) {
             return new String(is.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new UncheckedIOException("Не удалось прочитать russia.geojson", e);
+            throw new UncheckedIOException("Не удалось прочитать roads.geojson", e);
+        }
+    }
+
+    public String getLakes() {
+        try (InputStream is = new ClassPathResource("lakes.geojson").getInputStream()) {
+            return new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Не удалось прочитать lakes.geojson", e);
         }
     }
 }

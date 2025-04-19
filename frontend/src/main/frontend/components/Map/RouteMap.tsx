@@ -1,5 +1,5 @@
 import { Map } from 'Frontend/components/Map/Map';
-import { useDetails, useMapData } from 'Frontend/hooks/useMapData';
+import { useLakes, useMapData, useRoads } from 'Frontend/hooks/useMapData';
 import { useEffect } from 'react';
 
 const RouteMap = () => {
@@ -28,14 +28,20 @@ const RouteMap = () => {
   ];
 
   const data = useMapData();
-  const details = useDetails();
+  const roads = useRoads();
+  const lakes = useLakes();
+
 
   if (!data) {
     return <pre>Loading...</pre>;
   }
 
   return (
-    <Map data={data} details={details} points={points} edges={edges}/>
+    <Map data={data}
+         roads={roads}
+         lakes={lakes}
+         points={points}
+         edges={edges}/>
   )
 }
 

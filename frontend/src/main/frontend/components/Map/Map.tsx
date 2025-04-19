@@ -7,12 +7,13 @@ type Edge = { source: number; target: number };
 
 type MapProps = {
   data: any;
-  details: any;
+  roads: any;
+  lakes: any;
   points: Point[];
   edges: Edge[];
 };
 
-export const Map = ({ data, details, points, edges }: MapProps) => {
+export const Map = ({ data, roads, lakes, points, edges }: MapProps) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const gRef = useRef<SVGGElement | null>(null);
 
@@ -21,7 +22,10 @@ export const Map = ({ data, details, points, edges }: MapProps) => {
 
   const projection = useMemo(() => geoNaturalEarth1(), []);
 
-  const pathGenerator = useMemo(() => geoPath().projection(projection), [projection]);
+  const pathGenerator = useMemo(() =>
+    geoPath().
+    projection(projection),
+    [projection]);
 
   const getCoords = (coordinates: [number, number]) => {
     const projected = projection(coordinates);
@@ -34,21 +38,25 @@ export const Map = ({ data, details, points, edges }: MapProps) => {
     const svg = select(svgRef.current!);
     const g = select(gRef.current!);
 
+    let frame = 0;
     const zoomBehavior = zoom()
       .scaleExtent([1, 100])
       .translateExtent([[-1000, -1000], [1000, 1000]])
       .on("zoom", (event) => {
-        g.attr("transform", event.transform);
-        requestAnimationFrame(() => {
-          setZoomScale(event.transform.k);
-          setTransform(event.transform);
+        const transform = event.transform;
+        g.attr("transform", transform);
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => {
+          setTransform(transform);
+          setZoomScale(transform.k);
         });
       });
 
     svg.call(zoomBehavior as any);
 
-    const initialTransform = zoomIdentity.translate(-2000, 300).scale(4);
+    const initialTransform = zoomIdentity.translate(-2000, 300).scale(3);
     svg.call(zoomBehavior.transform as any, initialTransform);
+    return () => cancelAnimationFrame(frame);
   }, [data]);
 
   const mappedPoints = points.map((p) => ({
@@ -73,11 +81,11 @@ export const Map = ({ data, details, points, edges }: MapProps) => {
   };
 
   const filteredData = useMemo(() => {
-    if (!details || !details.features) return [];
+    if (!roads || !roads.features) return [];
 
     const bounds = getVisibleBounds();
 
-    return details.features.filter((feature: any) => {
+    return roads.features.filter((feature: any) => {
       const minZoom = feature.properties.min_zoom || 0;
       const maxZoom = feature.properties.max_zoom || 100;
 
@@ -110,34 +118,63 @@ export const Map = ({ data, details, points, edges }: MapProps) => {
         })
       );
     });
-  }, [details, zoomScale, transform]);
+  }, [roads, zoomScale, transform]);
+
+  useEffect(() => {
+    const g = select(svgRef.current).select(".roads");
+    g.selectAll("path").remove();
+
+    g.selectAll("path")
+      .data(filteredData)
+      .enter()
+      .append("path")
+      .attr("d", (d: any) => pathGenerator(d) || "")
+      .attr("fill", "none")
+      .attr("stroke", "black")
+      .attr("stroke-width", 1 / zoomScale)
+      .attr("pointer-events", "none");
+  }, [filteredData, zoomScale]);
+
+
+  useEffect(() => {
+    const g = select(svgRef.current).select(".map");
+    g.selectAll("path").remove();
+
+    g.selectAll("path")
+      .data(data?.features || [])
+      .enter()
+      .append("path")
+      .attr("d", (d: any) => pathGenerator(d) || "")  // Генерация пути для каждого feature
+      .attr("fill", "#ccc")
+      .attr("stroke", "#737171")
+      .attr("stroke-width", 1 / zoomScale)
+      .attr("pointer-events", "none");
+  }, [data?.features, zoomScale]);
+
+  useEffect(() => {
+    if (!lakes || !lakes.features) return;
+
+    const g = select(svgRef.current).select(".lakes");
+    g.selectAll("path").remove();
+
+    g.selectAll("path")
+      .data(lakes?.features || [])
+      .enter()
+      .append("path")
+      .attr("d", (d: any) => pathGenerator(d) || "")  // Генерация пути для каждого feature
+      .attr("fill", "none")
+      .attr("stroke", "#0b4d8f")
+      .attr("stroke-width", 1 / zoomScale)
+      .attr("pointer-events", "none");
+  }, [lakes?.features, zoomScale]);
 
   return (
-    <svg ref={svgRef} width="100%" height="100%" style={{ border: "1px solid black" }}>
+    <svg ref={svgRef} width="100%" height="100%" style={{ border: '1px solid black' }}>
       <rect width="100%" height="100%" fill="transparent" pointerEvents="all" />
       <g ref={gRef}>
-        {/* Гео-объекты (карта) */}
-        {data?.features.map((feature: any, i: number) => {
-          const path = pathGenerator(feature);
-          return path ? (
-            <path key={i} d={path} fill="#ccc" stroke="#333" strokeWidth={1 / zoomScale} />
-          ) : null;
-        })}
-
-        {filteredData?.map((feature: any, i: number) => {
-          const path = pathGenerator(feature);
-          return path ? (
-            <path
-              key={i}
-              d={path}
-              fill="none"
-              stroke="black"
-              strokeWidth={1 / zoomScale}
-            />
-          ) : null;
-        })}
-
-        {/* Узлы и связи */}
+        <g className="map" />
+        <g className="roads" />
+        <g className="lakes" />
         <Marks points={mappedPoints} edges={edges} zoomScale={zoomScale} />
       </g>
     </svg>
