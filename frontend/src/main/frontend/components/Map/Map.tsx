@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useMemo, useState } from "react";
 import { select, zoom, geoPath, geoNaturalEarth1, zoomIdentity } from "d3";
 import { Marks } from "./Marks";
+import {useMapZoom} from 'Frontend/hooks/useMapZoom';
+import {useVisibleBounds} from 'Frontend/hooks/useVisibleBounds';
 
 type Point = { id: number; name: string; coordinates: [number, number] };
 type Edge = { source: number; target: number };
@@ -17,10 +19,12 @@ export const Map = ({ data, roads, lakes, points, edges }: MapProps) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const gRef = useRef<SVGGElement | null>(null);
 
-  const [zoomScale, setZoomScale] = useState(1);
-  const [transform, setTransform] = useState(zoomIdentity);
+  // const [zoomScale, setZoomScale] = useState(1);
+  // const [transform, setTransform] = useState(zoomIdentity);
 
   const projection = useMemo(() => geoNaturalEarth1(), []);
+
+  const { transform, zoomScale } = useMapZoom(svgRef, gRef, data, zoomIdentity.translate(-2000, 300).scale(3));
 
   const pathGenerator = useMemo(() =>
     geoPath().
@@ -38,58 +42,17 @@ export const Map = ({ data, roads, lakes, points, edges }: MapProps) => {
     setClearSelectionTrigger((prev) => prev + 1); // Триггер обновления
   };
 
-  useEffect(() => {
-    if (!data) return;
-
-    const svg = select(svgRef.current!);
-    const g = select(gRef.current!);
-
-    let frame = 0;
-    const zoomBehavior = zoom()
-      .scaleExtent([1, 100])
-      .translateExtent([[-1000, -1000], [1000, 1000]])
-      .on("zoom", (event) => {
-        const transform = event.transform;
-        g.attr("transform", transform);
-        cancelAnimationFrame(frame);
-        frame = requestAnimationFrame(() => {
-          setTransform(transform);
-          setZoomScale(transform.k);
-        });
-      });
-
-    svg.call(zoomBehavior as any);
-
-    const initialTransform = zoomIdentity.translate(-2000, 300).scale(3);
-    svg.call(zoomBehavior.transform as any, initialTransform);
-    return () => cancelAnimationFrame(frame);
-  }, [data]);
-
   const mappedPoints = points.map((p) => ({
     ...p,
     ...getCoords(p.coordinates),
   }));
 
-  const getVisibleBounds = () => {
-    const width = svgRef.current?.clientWidth || 800;
-    const height = svgRef.current?.clientHeight || 600;
-
-    // Получаем границы видимой области в screen space (после применения трансформации)
-    const topLeft = transform.invert([0, 0]);
-    const bottomRight = transform.invert([width, height]);
-
-    return {
-      xMin: topLeft[0],
-      yMin: topLeft[1],
-      xMax: bottomRight[0],
-      yMax: bottomRight[1],
-    };
-  };
+  const visibleBounds = useVisibleBounds(svgRef, transform, projection);
 
   const filteredData = useMemo(() => {
     if (!roads || !roads.features) return [];
 
-    const bounds = getVisibleBounds();
+    const bounds = visibleBounds;
 
     return roads.features.filter((feature: any) => {
       const minZoom = feature.properties.min_zoom || 0;
