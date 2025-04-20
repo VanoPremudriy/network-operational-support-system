@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useMemo, useState } from "react";
-import { select, zoom, geoPath, geoNaturalEarth1, zoomIdentity } from "d3";
+import React, {useRef, useMemo, useState } from "react";
+import {geoPath, geoNaturalEarth1, zoomIdentity } from "d3";
 import { Marks } from "./Marks";
 import {useMapZoom} from 'Frontend/hooks/useMapZoom';
 import {useVisibleBounds} from 'Frontend/hooks/useVisibleBounds';
@@ -12,13 +12,11 @@ type Edge = { source: number; target: number };
 
 type MapProps = {
   data: any;
-  roads: any;
-  lakes: any;
   points: Point[];
   edges: Edge[];
 };
 
-export const Map = ({ data, roads, lakes, points, edges }: MapProps) => {
+export const Map = ({ data, points, edges }: MapProps) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const gRef = useRef<SVGGElement | null>(null);
 
@@ -45,8 +43,8 @@ export const Map = ({ data, roads, lakes, points, edges }: MapProps) => {
         <rect width="100%" height="100%" fill="transparent" pointerEvents="all" />
         <g ref={gRef}>
           <BaseMapLayer features={data?.features || []} pathGenerator={pathGenerator} zoomScale={zoomScale} />
-          <RoadsLayer roads={roads} pathGenerator={pathGenerator} zoomScale={zoomScale} bounds={visibleBounds} projection={projection} />
-          <LakesLayer lakes={lakes} pathGenerator={pathGenerator} zoomScale={zoomScale} />
+          <RoadsLayer pathGenerator={pathGenerator} zoomScale={zoomScale} bounds={visibleBounds} projection={projection} />
+          <LakesLayer pathGenerator={pathGenerator} zoomScale={zoomScale} />
           <Marks points={mappedPoints} edges={edges} zoomScale={zoomScale} clearSelectionTrigger={clearSelectionTrigger} />
         </g>
       </svg>

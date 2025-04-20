@@ -1,7 +1,11 @@
 import { select } from "d3";
 import { useEffect } from "react";
+import { useLakes } from 'Frontend/hooks/useMapData';
 
-export const LakesLayer = ({lakes, pathGenerator, zoomScale }: any) => {
+export const LakesLayer = ({pathGenerator, zoomScale }: any) => {
+
+  const lakes = useLakes();
+
   useEffect(() => {
     if (!lakes?.features) return;
     const g = select(".lakes");

@@ -1,7 +1,11 @@
 import { select } from "d3";
 import { useEffect, useMemo } from "react";
+import { useRoads } from 'Frontend/hooks/useMapData';
 
-export const RoadsLayer = ({ roads, pathGenerator, zoomScale, bounds, projection }: any) => {
+export const RoadsLayer = ({pathGenerator, zoomScale, bounds, projection }: any) => {
+
+  const roads = useRoads();
+
   const filteredData = useMemo(() => {
     if (!roads?.features) return [];
     return roads.features.filter((feature: any) => {
