@@ -32,6 +32,12 @@ export const Map = ({ data, roads, lakes, points, edges }: MapProps) => {
     return { x: projected?.[0] || 0, y: projected?.[1] || 0 };
   };
 
+  const [clearSelectionTrigger, setClearSelectionTrigger] = useState(0);
+
+  const handleSvgClick = () => {
+    setClearSelectionTrigger((prev) => prev + 1); // Триггер обновления
+  };
+
   useEffect(() => {
     if (!data) return;
 
@@ -169,14 +175,17 @@ export const Map = ({ data, roads, lakes, points, edges }: MapProps) => {
   }, [lakes?.features, zoomScale]);
 
   return (
-    <svg ref={svgRef} width="100%" height="100%" style={{ border: '1px solid black' }}>
-      <rect width="100%" height="100%" fill="transparent" pointerEvents="all" />
-      <g ref={gRef}>
-        <g className="map" />
-        <g className="roads" />
-        <g className="lakes" />
-        <Marks points={mappedPoints} edges={edges} zoomScale={zoomScale} />
-      </g>
-    </svg>
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+    {/*<MapWithOSM/>*/}
+      <svg ref={svgRef} width="100%" height="100%" style={{ border: '1px solid black' }} onClick={handleSvgClick}>
+        <rect width="100%" height="100%" fill="transparent" pointerEvents="all" />
+        <g ref={gRef}>
+          <g className="map" />
+          <g className="roads" />
+          <g className="lakes" />
+          <Marks points={mappedPoints} edges={edges} zoomScale={zoomScale} clearSelectionTrigger={clearSelectionTrigger}/>
+        </g>
+      </svg>
+    </div>
   );
 };
