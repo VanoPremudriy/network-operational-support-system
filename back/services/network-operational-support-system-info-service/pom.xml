@@ -9,9 +9,9 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <name>network-operational-support-system-back</name>
-    <groupId>ru.mirea.network.operational.support.system.back</groupId>
-    <artifactId>network-operational-support-system-back</artifactId>
+    <name>network-operational-support-system-info-service</name>
+    <groupId>ru.mirea.network.operational.support.system.info.service</groupId>
+    <artifactId>network-operational-support-system-info-service</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -26,7 +26,6 @@
 
         <!-- MIREA -->
         <route-api.version>1.0.0-SNAPSHOT</route-api.version>
-        <thread.version>1.0.0-SNAPSHOT</thread.version>
         <db.version>1.0.0-SNAPSHOT</db.version>
     </properties>
 
@@ -39,28 +38,11 @@
         </dependency>
 
         <dependency>
-            <groupId>ru.mirea.network.operational.support.system.thread</groupId>
-            <artifactId>network-operational-support-system-thread</artifactId>
-            <version>${thread.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>ru.mirea.network.operational.support.system.db</groupId>
             <artifactId>network-operational-support-system-db</artifactId>
             <version>${db.version}</version>
         </dependency>
-
         <!-- DEV -->
-        <dependency>
-            <groupId>org.apache.zookeeper</groupId>
-            <artifactId>zookeeper</artifactId>
-            <version>3.8.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-recipes</artifactId>
-            <version>5.7.1</version>
-        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -103,8 +85,8 @@
             <artifactId>spring-cloud-starter-bus-kafka</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
         <!-- Test -->

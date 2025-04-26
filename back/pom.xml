@@ -24,8 +24,10 @@
         <module>services/network-operational-support-system-gateway</module>
         <module>services/network-operational-support-system-config</module>
         <module>services/network-operational-support-system-auth-server</module>
+        <module>services/network-operational-support-system-info-service</module>
 
         <module>libs/network-operational-support-system-thread</module>
+        <module>libs/network-operational-support-system-db</module>
     </modules>
 
     <properties>

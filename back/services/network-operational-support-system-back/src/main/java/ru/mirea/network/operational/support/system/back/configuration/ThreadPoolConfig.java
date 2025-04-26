@@ -24,4 +24,9 @@ public class ThreadPoolConfig {
     public ThreadPoolTaskExecutor threadPoolFactory() {
         return factory.createExecutor();
     }
+
+    @Bean
+    public ThreadPoolTaskExecutor singleThreadExecutor() {
+        return factory.createFixExecutor(1, "single-thread");
+    }
 }

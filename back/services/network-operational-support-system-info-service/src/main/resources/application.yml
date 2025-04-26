@@ -1,11 +1,18 @@
+server:
+  port: 8089
+
 spring:
-  jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
+  config:
+    import: optional:configserver:http://localhost:8888
+  application:
+    name: network-operational-support-system-info-service
   datasource:
     url: jdbc:postgresql://localhost:5432/db
     username: user
     password: postgres
   cloud:
+    config:
+      enabled: true
     stream:
       kafka:
         binder:
@@ -27,14 +34,3 @@ springdoc:
 
 controller:
   create-route: /ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
-
-client:
-  calculate-route:
-    url: http://localhost:8080
-    endpoint: /calculations/calculateRoute
-
-zookeeper:
-  url: localhost:22181
-  sleepMsBetweenRetries: 1000
-  maxRetries: 2
-  waitTime: PT10M
