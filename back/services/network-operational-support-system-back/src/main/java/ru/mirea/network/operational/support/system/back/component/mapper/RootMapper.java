@@ -1,4 +1,4 @@
-package ru.mirea.network.operational.support.system.back.mapper;
+package ru.mirea.network.operational.support.system.back.component.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -1,11 +1,11 @@
-package ru.mirea.network.operational.support.system.back.service.impl;
+package ru.mirea.network.operational.support.system.back.component.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import ru.mirea.network.operational.support.system.back.exception.TaskException;
-import ru.mirea.network.operational.support.system.back.service.CreateRouteService;
-import ru.mirea.network.operational.support.system.back.service.TaskService;
+import ru.mirea.network.operational.support.system.back.component.service.CreateRouteService;
+import ru.mirea.network.operational.support.system.back.component.service.TaskService;
 import ru.mirea.network.operational.support.system.back.dictionary.Constant;
 import ru.mirea.network.operational.support.system.common.api.ErrorDTO;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;

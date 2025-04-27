@@ -1,4 +1,4 @@
-package ru.mirea.network.operational.support.system.back.configuration;
+package ru.mirea.network.operational.support.system.back.component.configuration;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;

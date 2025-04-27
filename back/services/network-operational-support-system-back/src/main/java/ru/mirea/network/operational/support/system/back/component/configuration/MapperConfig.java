@@ -1,4 +1,4 @@
-package ru.mirea.network.operational.support.system.back.configuration;
+package ru.mirea.network.operational.support.system.back.component.configuration;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;

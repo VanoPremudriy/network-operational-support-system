@@ -1,4 +1,4 @@
-package ru.mirea.network.operational.support.system.back.client;
+package ru.mirea.network.operational.support.system.back.component.client;
 
 import jakarta.validation.Valid;
 import org.springframework.cloud.context.config.annotation.RefreshScope;

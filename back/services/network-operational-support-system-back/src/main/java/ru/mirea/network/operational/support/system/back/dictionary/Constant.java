@@ -9,4 +9,5 @@ public class Constant {
     public static String TEXT = "text";
 
     public static String TASK_LOCK_CODE = "/TASK";
+    public static String SCHEDULE_LOCK_CODE = "/SCHEDULE";
 }

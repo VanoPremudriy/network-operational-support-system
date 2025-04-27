@@ -1,16 +1,17 @@
-package ru.mirea.network.operational.support.system.back.service.impl;
+package ru.mirea.network.operational.support.system.back.component.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import ru.mirea.network.operational.support.system.back.dictionary.ParamType;
 import ru.mirea.network.operational.support.system.back.exception.TaskException;
-import ru.mirea.network.operational.support.system.back.mapper.RootMapper;
-import ru.mirea.network.operational.support.system.back.repository.TaskRepository;
-import ru.mirea.network.operational.support.system.back.service.CalculateRouteService;
-import ru.mirea.network.operational.support.system.back.service.TaskService;
+import ru.mirea.network.operational.support.system.back.component.mapper.RootMapper;
+import ru.mirea.network.operational.support.system.back.component.repository.TaskRepository;
+import ru.mirea.network.operational.support.system.back.component.service.CalculateRouteService;
+import ru.mirea.network.operational.support.system.back.component.service.TaskService;
 import ru.mirea.network.operational.support.system.back.dictionary.Constant;
 import ru.mirea.network.operational.support.system.back.zookeeper.DistributedLock;
 import ru.mirea.network.operational.support.system.db.entity.RouteEntity;
@@ -24,6 +25,7 @@ import java.util.UUID;
 
 @Slf4j
 @Service
+@RefreshScope
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
     private final CuratorFramework curatorFramework;
@@ -32,11 +34,11 @@ public class TaskServiceImpl implements TaskService {
     private final CalculateRouteService calculateRouteService;
 
     @Value("${zookeeper.waitTime:PT10M}")
-    private Duration waitTime;
+    private final Duration waitTime;
 
     @Override
     public TaskEntity createTaskWithLock(UUID clientId) {
-        try (DistributedLock lock = new DistributedLock(curatorFramework, Constant.TASK_LOCK_CODE, waitTime)) {
+        try (DistributedLock ignored = new DistributedLock(curatorFramework, Constant.TASK_LOCK_CODE, waitTime)) {
             TaskEntity taskEntity = taskRepository.findByActiveFlagTrue();
             if (taskEntity != null) {
                 throw new TaskException("Найдена активная задача. Попробуйте позже");

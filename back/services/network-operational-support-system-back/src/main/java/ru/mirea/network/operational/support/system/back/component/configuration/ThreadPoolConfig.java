@@ -1,4 +1,4 @@
-package ru.mirea.network.operational.support.system.back.configuration;
+package ru.mirea.network.operational.support.system.back.component.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration;

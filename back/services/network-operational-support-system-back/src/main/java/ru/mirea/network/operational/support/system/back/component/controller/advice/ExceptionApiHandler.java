@@ -1,4 +1,4 @@
-package ru.mirea.network.operational.support.system.back.controller.advice;
+package ru.mirea.network.operational.support.system.back.component.controller.advice;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;

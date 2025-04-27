@@ -1,9 +1,9 @@
-package ru.mirea.network.operational.support.system.back.service.impl;
+package ru.mirea.network.operational.support.system.back.component.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.mirea.network.operational.support.system.back.client.CalculateRouteClient;
-import ru.mirea.network.operational.support.system.back.service.CalculateRouteService;
+import ru.mirea.network.operational.support.system.back.component.client.CalculateRouteClient;
+import ru.mirea.network.operational.support.system.back.component.service.CalculateRouteService;
 import ru.mirea.network.operational.support.system.db.entity.RouteEntity;
 import ru.mirea.network.operational.support.system.route.api.route.calculate.CalculateRouteRq;
 import ru.mirea.network.operational.support.system.route.api.route.calculate.CalculateRouteRs;
