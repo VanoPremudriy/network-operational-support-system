@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -26,12 +27,21 @@ public class BoardModelEntity {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "level_number", unique = true, nullable = false)
+    @Column(name = "level_number", nullable = false)
     private String levelNumber;
 
-    @Column(name = "number_of_slots", unique = true, nullable = false)
+    @Column(name = "number_of_slots", nullable = false)
     private String numberOfSlots;
+
+    @Column(name = "can_send_to_a_lower_level")
+    private Boolean canSendToALowerLevel;
+
+    @Column(name = "is_linear", nullable = false)
+    private boolean isLinear;
+
+    @Column(name = "price")
+    private BigDecimal price;
 }

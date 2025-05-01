@@ -6,21 +6,20 @@ import org.apache.curator.framework.CuratorFramework;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
-import ru.mirea.network.operational.support.system.back.dictionary.ParamType;
-import ru.mirea.network.operational.support.system.back.exception.TaskException;
 import ru.mirea.network.operational.support.system.back.component.mapper.RootMapper;
 import ru.mirea.network.operational.support.system.back.component.repository.TaskRepository;
 import ru.mirea.network.operational.support.system.back.component.service.CalculateRouteService;
 import ru.mirea.network.operational.support.system.back.component.service.TaskService;
 import ru.mirea.network.operational.support.system.back.dictionary.Constant;
+import ru.mirea.network.operational.support.system.back.exception.TaskException;
 import ru.mirea.network.operational.support.system.back.zookeeper.DistributedLock;
+import ru.mirea.network.operational.support.system.db.dictionary.TaskType;
 import ru.mirea.network.operational.support.system.db.entity.RouteEntity;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRq;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Map;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Slf4j
@@ -37,7 +36,7 @@ public class TaskServiceImpl implements TaskService {
     private final Duration waitTime;
 
     @Override
-    public TaskEntity createTaskWithLock(UUID clientId) {
+    public TaskEntity createTaskWithLock(UUID clientId, TaskType taskType, Object data) {
         try (DistributedLock ignored = new DistributedLock(curatorFramework, Constant.TASK_LOCK_CODE, waitTime)) {
             TaskEntity taskEntity = taskRepository.findByActiveFlagTrue();
             if (taskEntity != null) {
@@ -45,9 +44,12 @@ public class TaskServiceImpl implements TaskService {
             }
 
             return taskRepository.save(new TaskEntity()
-                    .setCreatedTime(LocalDateTime.now())
+                    .setCreatedTime(OffsetDateTime.now())
                     .setActiveFlag(true)
-                    .setClientId(clientId));
+                    .setExecutionCount(1)
+                    .setClientId(clientId)
+                    .setTaskType(taskType.name())
+                    .setTaskData(data));
         } catch (Exception e) {
             log.error("Ошибка при попытке открыть задачу", e);
             throw new TaskException("При попытке открыть задачу произошла ошибка. Попробуйте позже");
@@ -56,31 +58,25 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void processTask(TaskEntity taskEntity) {
-        processTask(taskEntity, Map.of());
-    }
+        boolean completed = switch (taskEntity.getTaskType()) {
+            case CALCULATE_ROUTE -> calculateRoute(taskEntity);
+        };
 
-    @Override
-    public void processTask(TaskEntity taskEntity, Map<ParamType, Object> params) {
-        switch (taskEntity.getTaskType()) {
-            case CALCULATE_ROUTE -> calculateRoute(taskEntity, params);
-            //TODO ошибка
-            default -> taskRepository.save(taskEntity);
+        if (completed) {
+            taskRepository.save(taskEntity
+                    .setResolvedDate(OffsetDateTime.now())
+                    .setActiveFlag(false));
         }
     }
 
-    private void calculateRoute(TaskEntity taskEntity, Map<ParamType, Object> params) {
-        CreateRouteRq rq;
-
-        if (params.containsKey(ParamType.CREATE_ROUTE_RQ)){
-            rq = (CreateRouteRq) params.get(ParamType.CREATE_ROUTE_RQ);
-        } else {
-            //TODO find
-            rq = CreateRouteRq.builder().build();
-        }
+    private boolean calculateRoute(TaskEntity taskEntity) {
+        CreateRouteRq rq = (CreateRouteRq) taskEntity.getTaskData();
 
         RouteEntity route = calculateRouteService.calculate(rootMapper.map(rq, taskEntity));
 
         //TODO save
+
+        return true;
     }
 
 }

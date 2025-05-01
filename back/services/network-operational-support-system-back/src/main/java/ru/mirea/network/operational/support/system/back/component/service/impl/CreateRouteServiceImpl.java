@@ -8,6 +8,7 @@ import ru.mirea.network.operational.support.system.back.component.service.Create
 import ru.mirea.network.operational.support.system.back.component.service.TaskService;
 import ru.mirea.network.operational.support.system.back.dictionary.Constant;
 import ru.mirea.network.operational.support.system.common.api.ErrorDTO;
+import ru.mirea.network.operational.support.system.db.dictionary.TaskType;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRq;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRs;
@@ -23,7 +24,7 @@ public class CreateRouteServiceImpl implements CreateRouteService {
     @Override
     public CreateRouteRs createRoute(CreateRouteRq rq) {
         try {
-            TaskEntity taskEntity = taskService.createTaskWithLock(rq.getClientId());
+            TaskEntity taskEntity = taskService.createTaskWithLock(rq.getClientId(), TaskType.CALCULATE_ROUTE, rq);
 
             singleThreadExecutor.execute(() -> taskService.processTask(taskEntity));
 

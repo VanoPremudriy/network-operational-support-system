@@ -9,8 +9,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.type.SqlTypes;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -26,16 +29,20 @@ public class RouteEntity {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @Column(name = "active_flag", unique = true, nullable = false)
-    private Boolean activeFlag;
+    @Column(name = "active_flag", nullable = false)
+    private boolean activeFlag;
 
-    @Column(name = "client_id", unique = true, nullable = false)
-    private String clientId;
+    @Column(name = "client_id", nullable = false)
+    private UUID clientId;
 
-    @Column(name = "route_data", unique = true, nullable = false)
-    private String routeData;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "route_data", nullable = false)
+    private Object routeData;
 
     @Column(name = "task_id", unique = true, nullable = false)
-    private String taskId;
+    private UUID taskId;
+
+    @Column(name = "price")
+    private BigDecimal price;
 
 }

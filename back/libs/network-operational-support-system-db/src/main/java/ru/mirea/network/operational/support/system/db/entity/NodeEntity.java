@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -26,15 +27,15 @@ public class NodeEntity {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @Column(name = "description", unique = true, nullable = false)
+    @Column(name = "description")
     private String description;
 
-    @Column(name = "latitude", unique = true, nullable = false)
-    private String latitude;
+    @Column(name = "latitude", nullable = false)
+    private BigDecimal latitude;
 
-    @Column(name = "longitude", unique = true, nullable = false)
-    private String longitude;
+    @Column(name = "longitude", nullable = false)
+    private BigDecimal longitude;
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 }

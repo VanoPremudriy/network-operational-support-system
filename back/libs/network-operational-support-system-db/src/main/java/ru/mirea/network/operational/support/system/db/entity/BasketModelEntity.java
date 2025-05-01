@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -26,12 +27,18 @@ public class BasketModelEntity {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @Column(name = "level_number", unique = true, nullable = false)
+    @Column(name = "level_number", nullable = false)
     private String levelNumber;
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "number_of_slots", unique = true, nullable = false)
+    @Column(name = "number_of_slots", nullable = false)
     private String numberOfSlots;
+
+    @Column(name = "allowed_lambda_limit")
+    private String allowedLambdaLimit;
+
+    @Column(name = "price")
+    private BigDecimal price;
 }

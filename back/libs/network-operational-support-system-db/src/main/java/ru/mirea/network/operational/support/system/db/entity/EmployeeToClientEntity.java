@@ -26,10 +26,10 @@ public class EmployeeToClientEntity {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @Column(name = "client_id", unique = true, nullable = false)
-    private String clientId;
+    @Column(name = "client_id", nullable = false)
+    private UUID clientId;
 
-    @Column(name = "employee_id", unique = true, nullable = false)
-    private String employeeId;
+    @Column(name = "employee_id", nullable = false)
+    private UUID employeeId;
 
 }

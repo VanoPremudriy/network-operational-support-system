@@ -26,12 +26,15 @@ public class BasketEntity {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @Column(name = "basket_model_id", unique = true, nullable = false)
-    private String basketModelId;
+    @Column(name = "basket_model_id", nullable = false)
+    private UUID basketModelId;
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "linked_basket_id")
+    private UUID linkedBasketId;
+
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "node_id", unique = true, nullable = false)
+    @Column(name = "node_id", nullable = false)
     private String nodeId;
 }

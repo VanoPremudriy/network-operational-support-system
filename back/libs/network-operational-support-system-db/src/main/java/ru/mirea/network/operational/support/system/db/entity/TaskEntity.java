@@ -10,10 +10,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.type.SqlTypes;
 import ru.mirea.network.operational.support.system.db.dictionary.TaskType;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
@@ -30,17 +32,30 @@ public class TaskEntity {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @Column(name = "active_flag", unique = true, nullable = false)
-    private Boolean activeFlag;
+    @Column(name = "active_flag", nullable = false)
+    private boolean activeFlag;
 
-    @Column(name = "client_id", unique = true, nullable = false)
+    @Column(name = "client_id", nullable = false)
     private UUID clientId;
 
-    @Column(name = "created_time", unique = true, nullable = false)
-    private LocalDateTime createdTime;
+    @Column(name = "created_time", nullable = false)
+    private OffsetDateTime createdTime;
+
+    @Column(name = "resolved_date")
+    private OffsetDateTime resolvedDate;
+
+    @Column(name = "execution_count", nullable = false)
+    private Integer executionCount;
+
+    @Column(name = "task_type", nullable = false)
+    private String taskType;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "task_data", nullable = false)
+    private Object taskData;
 
     public TaskType getTaskType() {
-        return TaskType.CALCULATE_ROUTE;
+        return TaskType.of(taskType);
     }
 
 }

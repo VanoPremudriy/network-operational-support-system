@@ -33,7 +33,8 @@ springdoc:
     path: /swagger-ui
 
 scheduler:
-  interval: PT05M
+  interval: PT15M
+  maxExecutions: 4
 
 controller:
   create-route: /ntwrk-prtnl-spprt-sstm-mddlwr/createRoute

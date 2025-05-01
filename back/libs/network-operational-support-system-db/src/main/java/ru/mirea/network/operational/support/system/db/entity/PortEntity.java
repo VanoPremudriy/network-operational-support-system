@@ -26,16 +26,19 @@ public class PortEntity {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @Column(name = "board_id", unique = true, nullable = false)
-    private String boardId;
+    @Column(name = "board_id", nullable = false)
+    private UUID boardId;
 
-    @Column(name = "client_id", unique = true, nullable = false)
-    private String clientId;
+    @Column(name = "client_id", nullable = false)
+    private UUID clientId;
 
-    @Column(name = "link_id", unique = true, nullable = false)
-    private String linkId;
+    @Column(name = "link_to_the_associated_linear_port")
+    private UUID linkToTheAssociatedLinearPort;
 
-    @Column(name = "port_type_id", unique = true, nullable = false)
-    private String portTypeId;
+    @Column(name = "link_to_the_associated_linear_port_from_lower_level")
+    private UUID linkToTheAssociatedLinearPortFromLowerLevel;
+
+    @Column(name = "port_type_id", nullable = false)
+    private UUID portTypeId;
 
 }

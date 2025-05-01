@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -26,13 +27,16 @@ public class PortTypeEntity {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @Column(name = "capacity", unique = true, nullable = false)
-    private String capacity;
+    @Column(name = "capacity", nullable = false)
+    private BigDecimal capacity;
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "num_unit", unique = true, nullable = false)
+    @Column(name = "num_unit", nullable = false)
     private String num_unit;
+
+    @Column(name = "price")
+    private BigDecimal price;
 
 }

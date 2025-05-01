@@ -27,9 +27,9 @@ public class BasketAllowedBoardEntity {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @Column(name = "basket_model_id", unique = true, nullable = false)
-    private String basketModelId;
+    @Column(name = "basket_model_id", nullable = false)
+    private UUID basketModelId;
 
-    @Column(name = "board_model_id", unique = true, nullable = false)
-    private String boardModelId;
+    @Column(name = "board_model_id", nullable = false)
+    private UUID boardModelId;
 }

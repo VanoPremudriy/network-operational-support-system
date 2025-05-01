@@ -26,9 +26,12 @@ public class BoardEntity {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @Column(name = "basket_id", unique = true, nullable = false)
-    private String basketId;
+    @Column(name = "basket_id", nullable = false)
+    private UUID basketId;
 
-    @Column(name = "board_model_id", unique = true, nullable = false)
-    private String boardModelId;
+    @Column(name = "board_model_id", nullable = false)
+    private UUID boardModelId;
+
+    @Column(name = "name", nullable = false)
+    private String name;
 }

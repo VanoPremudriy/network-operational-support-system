@@ -26,9 +26,9 @@ public class BoardAllowedPortEntity {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @Column(name = "board_model_id", unique = true, nullable = false)
-    private String boardModelId;
+    @Column(name = "board_model_id", nullable = false)
+    private UUID boardModelId;
 
-    @Column(name = "port_type_id", unique = true, nullable = false)
-    private String portTypeId;
+    @Column(name = "port_type_id", nullable = false)
+    private UUID portTypeId;
 }

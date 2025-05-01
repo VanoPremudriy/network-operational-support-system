@@ -14,6 +14,7 @@ import ru.mirea.network.operational.support.system.back.zookeeper.DistributedLoc
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
 
 import java.time.Duration;
+import java.time.OffsetDateTime;
 
 @Slf4j
 @Component
@@ -28,13 +29,26 @@ public class Scheduler {
     @Value("${zookeeper.waitTime:PT10M}")
     private final Duration waitTime;
 
-    @Scheduled(fixedDelayString = "${scheduler.interval}")
+    @Value("${scheduler.maxExecutions:4}")
+    private final Integer maxExecutions;
+
+    @Scheduled(fixedDelayString = "${scheduler.interval:PT15M}")
     public void process() {
         try (DistributedLock ignored = new DistributedLock(curatorFramework, Constant.SCHEDULE_LOCK_CODE, waitTime)) {
-            //TODO: find task
-            TaskEntity taskEntity = new TaskEntity();
+            TaskEntity taskEntity = taskRepository.findByActiveFlagTrue();
 
-            //TODO: update task
+            if (taskEntity == null) {
+                return;
+            }
+
+            if (taskEntity.getExecutionCount() >= maxExecutions) {
+                taskRepository.save(taskEntity
+                        .setResolvedDate(OffsetDateTime.now())
+                        .setActiveFlag(false));
+                return;
+            }
+
+            taskEntity = taskRepository.save(taskEntity.setExecutionCount(taskEntity.getExecutionCount() + 1));
 
             taskService.processTask(taskEntity);
         } catch (Exception e) {
