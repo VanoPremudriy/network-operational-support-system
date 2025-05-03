@@ -34,7 +34,7 @@ public class PortTypeEntity {
     private String name;
 
     @Column(name = "num_unit", nullable = false)
-    private String num_unit;
+    private String numUnit;
 
     @Column(name = "price")
     private BigDecimal price;

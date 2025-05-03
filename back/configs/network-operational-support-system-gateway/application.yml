@@ -9,7 +9,7 @@ spring:
           predicates:
             - Path=/network-operational-support-system-api/auth
           filters:
-            - RewritePath=/network-operational-support-system-api/auth, /auth/v1/network-operational-support-system-api/auth
+            - RewritePath=/network-operational-support-system-api/auth, /auth/v1/sign-in
 
         - id: sign-up
           uri: http://localhost:8083
