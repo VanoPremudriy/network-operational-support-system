@@ -1,5 +1,6 @@
 package ru.mirea.network.operational.support.system.db.entity;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -37,7 +38,7 @@ public class RouteEntity {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "route_data", nullable = false)
-    private Object routeData;
+    private JsonNode routeData;
 
     @Column(name = "task_id", unique = true, nullable = false)
     private UUID taskId;

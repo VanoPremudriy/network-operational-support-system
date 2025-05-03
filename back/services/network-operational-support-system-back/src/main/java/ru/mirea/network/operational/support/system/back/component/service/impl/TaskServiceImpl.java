@@ -1,5 +1,6 @@
 package ru.mirea.network.operational.support.system.back.component.service.impl;
 
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
@@ -31,6 +32,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final RootMapper rootMapper;
     private final CalculateRouteService calculateRouteService;
+    private final JsonMapper jsonMapper;
 
     @Value("${zookeeper.waitTime:PT10M}")
     private final Duration waitTime;
@@ -49,7 +51,7 @@ public class TaskServiceImpl implements TaskService {
                     .setExecutionCount(1)
                     .setClientId(clientId)
                     .setTaskType(taskType.name())
-                    .setTaskData(data));
+                    .setTaskData(jsonMapper.valueToTree(data)));
         } catch (Exception e) {
             log.error("Ошибка при попытке открыть задачу", e);
             throw new TaskException("При попытке открыть задачу произошла ошибка. Попробуйте позже");
@@ -70,11 +72,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private boolean calculateRoute(TaskEntity taskEntity) {
-        CreateRouteRq rq = (CreateRouteRq) taskEntity.getTaskData();
+        try {
+            CreateRouteRq rq = jsonMapper.treeToValue(taskEntity.getTaskData(), CreateRouteRq.class);
+            RouteEntity route = calculateRouteService.calculate(rootMapper.map(rq, taskEntity));
+        } catch (Exception e) {
+            log.error("Ошибка при попытке расчитать маршрут", e);
 
-        RouteEntity route = calculateRouteService.calculate(rootMapper.map(rq, taskEntity));
-
-        //TODO save
+            return false;
+        }
 
         return true;
     }

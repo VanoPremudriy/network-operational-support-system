@@ -1,5 +1,6 @@
 package ru.mirea.network.operational.support.system.db.entity;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -52,7 +53,7 @@ public class TaskEntity {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "task_data", nullable = false)
-    private Object taskData;
+    private JsonNode taskData;
 
     public TaskType getTaskType() {
         return TaskType.of(taskType);
