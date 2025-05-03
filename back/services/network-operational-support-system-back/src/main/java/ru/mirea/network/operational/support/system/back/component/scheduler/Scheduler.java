@@ -14,7 +14,7 @@ import ru.mirea.network.operational.support.system.back.zookeeper.DistributedLoc
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
 
 import java.time.Duration;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Component
@@ -43,7 +43,7 @@ public class Scheduler {
 
             if (taskEntity.getExecutionCount() >= maxExecutions) {
                 taskRepository.save(taskEntity
-                        .setResolvedDate(OffsetDateTime.now())
+                        .setResolvedDate(LocalDateTime.now())
                         .setActiveFlag(false));
                 return;
             }

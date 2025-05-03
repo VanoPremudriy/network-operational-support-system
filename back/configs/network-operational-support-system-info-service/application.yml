@@ -33,4 +33,8 @@ springdoc:
     path: /swagger-ui
 
 controller:
-  create-route: /ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
+  tasks-by-client: /tasks/{clientId}
+  tasks-by-id: /task/{id}
+  nodes: /nodes
+  node-by-id: /node/{id}
+

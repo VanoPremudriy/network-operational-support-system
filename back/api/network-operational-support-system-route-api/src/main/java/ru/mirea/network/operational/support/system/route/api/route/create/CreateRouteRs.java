@@ -1,16 +1,18 @@
 package ru.mirea.network.operational.support.system.route.api.route.create;
 
-import lombok.Builder;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
-import ru.mirea.network.operational.support.system.common.api.BodyDTO;
-import ru.mirea.network.operational.support.system.common.api.ErrorDTO;
+import ru.mirea.network.operational.support.system.common.api.BaseRs;
 
 @Data
-@Builder
+@SuperBuilder
 @Jacksonized
-public class CreateRouteRs {
-    private boolean success;
-    private ErrorDTO error;
-    private BodyDTO body;
+@EqualsAndHashCode(callSuper = true)
+public class CreateRouteRs extends BaseRs {
+
+    @Schema(description = "Описание", example = "something")
+    private String description;
 }

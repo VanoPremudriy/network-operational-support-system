@@ -98,7 +98,7 @@ public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFac
     private Mono<Void> onError(ServerWebExchange exchange, HttpStatusCode statusCode, String title, String code, String errorMessage) {
         return onError(exchange, statusCode, BaseRs.builder()
                 .success(false)
-                .errorDTO(ErrorDTO.builder()
+                .error(ErrorDTO.builder()
                         .title(title)
                         .code(code)
                         .infos(Map.of("text", errorMessage))

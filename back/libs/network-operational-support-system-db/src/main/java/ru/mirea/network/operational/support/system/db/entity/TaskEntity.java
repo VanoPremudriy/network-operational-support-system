@@ -3,7 +3,10 @@ package ru.mirea.network.operational.support.system.db.entity;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,12 +14,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
 import ru.mirea.network.operational.support.system.db.dictionary.TaskType;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -40,10 +45,10 @@ public class TaskEntity {
     private UUID clientId;
 
     @Column(name = "created_time", nullable = false)
-    private OffsetDateTime createdTime;
+    private LocalDateTime createdTime;
 
     @Column(name = "resolved_date")
-    private OffsetDateTime resolvedDate;
+    private LocalDateTime resolvedDate;
 
     @Column(name = "execution_count", nullable = false)
     private Integer executionCount;
@@ -55,8 +60,12 @@ public class TaskEntity {
     @Column(name = "task_data", nullable = false)
     private JsonNode taskData;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_id")
+    @BatchSize(size = 5)
+    private Set<RouteEntity> routes;
+
     public TaskType getTaskType() {
         return TaskType.of(taskType);
     }
-
 }

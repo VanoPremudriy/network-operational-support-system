@@ -7,6 +7,7 @@
         <groupId>ru.mirea.network.operational.support.system</groupId>
         <artifactId>network-operational-support-system</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <name>network-operational-support-system-info-service</name>
@@ -25,16 +26,16 @@
         <mapstruct.version>1.6.3</mapstruct.version>
 
         <!-- MIREA -->
-        <route-api.version>1.0.0-SNAPSHOT</route-api.version>
+        <info-api.version>1.0.0-SNAPSHOT</info-api.version>
         <db.version>1.0.0-SNAPSHOT</db.version>
     </properties>
 
     <dependencies>
         <!-- MIREA -->
         <dependency>
-            <groupId>ru.mirea.network.operational.support.system.route.api</groupId>
-            <artifactId>network-operational-support-system-route-api</artifactId>
-            <version>${route-api.version}</version>
+            <groupId>ru.mirea.network.operational.support.system.info.api</groupId>
+            <artifactId>network-operational-support-system-info-api</artifactId>
+            <version>${info-api.version}</version>
         </dependency>
 
         <dependency>
@@ -42,6 +43,7 @@
             <artifactId>network-operational-support-system-db</artifactId>
             <version>${db.version}</version>
         </dependency>
+
         <!-- DEV -->
         <dependency>
             <groupId>org.projectlombok</groupId>

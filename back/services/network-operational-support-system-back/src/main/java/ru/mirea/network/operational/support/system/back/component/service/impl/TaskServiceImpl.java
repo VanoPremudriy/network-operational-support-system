@@ -20,7 +20,7 @@ import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRq;
 
 import java.time.Duration;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Slf4j
@@ -46,7 +46,7 @@ public class TaskServiceImpl implements TaskService {
             }
 
             return taskRepository.save(new TaskEntity()
-                    .setCreatedTime(OffsetDateTime.now())
+                    .setCreatedTime(LocalDateTime.now())
                     .setActiveFlag(true)
                     .setExecutionCount(1)
                     .setClientId(clientId)
@@ -66,7 +66,7 @@ public class TaskServiceImpl implements TaskService {
 
         if (completed) {
             taskRepository.save(taskEntity
-                    .setResolvedDate(OffsetDateTime.now())
+                    .setResolvedDate(LocalDateTime.now())
                     .setActiveFlag(false));
         }
     }

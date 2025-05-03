@@ -45,7 +45,7 @@ public class ExceptionApiHandler {
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler({Exception.class})
     public BaseRs defaultException(Exception e) {
-        log.error("Непредвиденная ошибка: {}", e.getMessage());
+        log.error("Непредвиденная ошибка: {}", e.getMessage(), e);
         return createRsBuilder("Что-то пошло не так", "UNEXPECTED:ERROR", "Попробуйте позже");
     }
 
@@ -58,7 +58,7 @@ public class ExceptionApiHandler {
 
         return BaseRs.builder()
                 .success(false)
-                .errorDTO(ErrorDTO.builder()
+                .error(ErrorDTO.builder()
                         .title(title)
                         .code(code)
                         .infos(infos)

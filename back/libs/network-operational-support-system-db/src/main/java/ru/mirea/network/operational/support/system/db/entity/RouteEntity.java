@@ -40,10 +40,9 @@ public class RouteEntity {
     @Column(name = "route_data", nullable = false)
     private JsonNode routeData;
 
-    @Column(name = "task_id", unique = true, nullable = false)
+    @Column(name = "task_id", nullable = false)
     private UUID taskId;
 
     @Column(name = "price")
     private BigDecimal price;
-
 }
