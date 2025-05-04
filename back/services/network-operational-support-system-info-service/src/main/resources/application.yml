@@ -1,0 +1,39 @@
+server:
+  port: 8089
+
+spring:
+  config:
+    import: optional:configserver:http://localhost:8888
+  application:
+    name: network-operational-support-system-info-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db
+    username: user
+    password: postgres
+  cloud:
+    config:
+      enabled: true
+    stream:
+      kafka:
+        binder:
+          brokers:
+            - localhost:19092
+            - localhost:29092
+    bus:
+      enabled: true
+      trace:
+        enabled: true
+      refresh:
+        enabled: true
+      env:
+        enabled: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
+
+controller:
+  tasks-by-client: /tasks/{clientId}
+  tasks-by-id: /task/{id}
+  nodes: /nodes
+  node-by-id: /node/{id}

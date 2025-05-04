@@ -38,27 +38,6 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 2
 
-  init-kafka:
-    image: confluentinc/cp-kafka:6.1.1
-    depends_on:
-      - kafka-1
-      - kafka-2
-    entrypoint: [ '/bin/sh', '-c' ]
-    command: |
-      "
-        # blocks until kafka is reachable
-       kafka-topics --bootstrap-server kafka-1:9092 --list
-       kafka-topics --bootstrap-server kafka-2:9092 --list
-       
-       echo -e 'Creating kafka topics'
-       kafka-topics --bootstrap-server kafka-1:9092 --create --if-not-exists --topic routes   --replication-factor 1 --partitions 3
-       kafka-topics --bootstrap-server kafka-2:9092 --create --if-not-exists --topic routes   --replication-factor 1 --partitions 3
-       
-       echo -e 'Successfully created the following topics:'
-       kafka-topics --bootstrap-server kafka-1:9092 --list
-       kafka-topics --bootstrap-server kafka-2:9092 --list
-      "
-
   kafka-ui:
     image: provectuslabs/kafka-ui
     container_name: kafka-ui

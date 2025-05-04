@@ -7,12 +7,13 @@
         <groupId>ru.mirea.network.operational.support.system</groupId>
         <artifactId>network-operational-support-system</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <name>network-operational-support-system-back</name>
     <groupId>ru.mirea.network.operational.support.system.back</groupId>
     <artifactId>network-operational-support-system-back</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -27,6 +28,7 @@
         <!-- MIREA -->
         <route-api.version>1.0.0-SNAPSHOT</route-api.version>
         <thread.version>1.0.0-SNAPSHOT</thread.version>
+        <db.version>1.0.0-SNAPSHOT</db.version>
     </properties>
 
     <dependencies>
@@ -41,6 +43,12 @@
             <groupId>ru.mirea.network.operational.support.system.thread</groupId>
             <artifactId>network-operational-support-system-thread</artifactId>
             <version>${thread.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.mirea.network.operational.support.system.db</groupId>
+            <artifactId>network-operational-support-system-db</artifactId>
+            <version>${db.version}</version>
         </dependency>
 
         <!-- DEV -->
@@ -98,10 +106,6 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
         <!-- Test -->

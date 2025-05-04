@@ -30,7 +30,7 @@ controller:
     validation: /validation
   auth:
     sign-up: /sign-up
-    sign-in: /network-operational-support-system-api/auth
+    sign-in: /sign-in
 
 springdoc:
   swagger-ui:

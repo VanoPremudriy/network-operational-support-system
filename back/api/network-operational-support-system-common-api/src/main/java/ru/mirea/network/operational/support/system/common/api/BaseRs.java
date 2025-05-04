@@ -17,5 +17,5 @@ public class BaseRs {
     private boolean success;
 
     @Schema(description = "Описание ошибок")
-    private ErrorDTO errorDTO;
+    private ErrorDTO error;
 }

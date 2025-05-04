@@ -8,7 +8,7 @@ public class ResponseValidationException extends RuntimeException {
     private final BaseRs response;
 
     public ResponseValidationException(BaseRs response) {
-        super(response.getErrorDTO().getTitle());
+        super(response.getError().getTitle());
         this.response = response;
     }
 }

@@ -89,7 +89,7 @@ public class ExceptionApiHandler {
 
         return BaseRs.builder()
                 .success(false)
-                .errorDTO(ErrorDTO.builder()
+                .error(ErrorDTO.builder()
                         .title(title)
                         .code(code)
                         .infos(infos)

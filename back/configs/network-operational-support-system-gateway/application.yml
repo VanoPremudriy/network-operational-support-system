@@ -9,13 +9,15 @@ spring:
           predicates:
             - Path=/network-operational-support-system-api/auth
           filters:
-            - RewritePath=/network-operational-support-system-api/auth, /auth/v1/network-operational-support-system-api/auth
+            - RewritePath=/network-operational-support-system-api/auth, /auth/v1/sign-in
+
         - id: sign-up
           uri: http://localhost:8083
           predicates:
             - Path=/sign-up
           filters:
             - RewritePath=/sign-up, /auth/v1/sign-up
+
         - id: create-route
           uri: http://localhost:8080
           predicates:
@@ -23,6 +25,38 @@ spring:
           filters:
             - Authentication=true
             - RewritePath=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute, /v1/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
+
+        - id: nodes
+          uri: http://localhost:8089
+          predicates:
+            - Path=/nodes
+          filters:
+            - Authentication=true
+            - RewritePath=/nodes, /v1/nodes
+
+        - id: node-by-id
+          uri: http://localhost:8089
+          predicates:
+            - Path=/node/**
+          filters:
+            - Authentication=true
+            - RewritePath=/node/(?<segment>.*), /v1/node/$\{segment}
+
+        - id: tasks-by-client-id
+          uri: http://localhost:8089
+          predicates:
+            - Path=/tasks/**
+          filters:
+            - Authentication=true
+            - RewritePath=/tasks/(?<segment>.*), /v1/tasks/$\{segment}
+
+        - id: task-by-id
+          uri: http://localhost:8089
+          predicates:
+            - Path=/task/**
+          filters:
+            - Authentication=true
+            - RewritePath=/task/(?<segment>.*), /v1/task/$\{segment}
     stream:
       kafka:
         binder:
