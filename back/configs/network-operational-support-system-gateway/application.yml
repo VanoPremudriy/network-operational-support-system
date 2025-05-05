@@ -24,7 +24,7 @@ spring:
             - Path=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
           filters:
             - Authentication=true
-            - RewritePath=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute, /v1/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
+            - RewritePath=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute, /v1/createRoute
 
         - id: nodes
           uri: http://localhost:8089

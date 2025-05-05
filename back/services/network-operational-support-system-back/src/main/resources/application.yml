@@ -34,10 +34,11 @@ springdoc:
 
 scheduler:
   interval: PT15M
+  waitForConfirmedTime: PT05H
   maxExecutions: 4
 
 controller:
-  create-route: /ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
+  create-route: /createRoute
 
 client:
   calculate-route:

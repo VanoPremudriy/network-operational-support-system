@@ -26,7 +26,12 @@ springdoc:
     path: /swagger-ui
 
 controller:
-  create-route: /ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
+  create-route: /createRoute
+
+scheduler:
+  interval: PT15M
+  waitForConfirmedTime: PT05H
+  maxExecutions: 4
 
 client:
   calculate-route:
