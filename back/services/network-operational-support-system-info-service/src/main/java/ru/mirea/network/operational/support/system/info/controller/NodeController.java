@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.mirea.network.operational.support.system.info.api.info.node.DetailedNodeRs;
-import ru.mirea.network.operational.support.system.info.api.info.node.NodeListRs;
+import ru.mirea.network.operational.support.system.info.api.node.DetailedNodeRs;
+import ru.mirea.network.operational.support.system.info.api.node.NodeListRs;
 import ru.mirea.network.operational.support.system.info.service.NodeService;
 
 import java.util.UUID;

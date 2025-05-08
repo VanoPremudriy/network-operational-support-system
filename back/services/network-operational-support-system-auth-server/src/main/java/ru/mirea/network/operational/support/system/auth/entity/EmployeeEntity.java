@@ -31,19 +31,19 @@ public class EmployeeEntity implements UserDetails {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @Column(name = "login", unique = true, nullable = false)
+    @Column(name = "login", nullable = false)
     private String login;
 
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "first_name", unique = true, nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "last_name", unique = true, nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "middle_name", unique = true)
+    @Column(name = "middle_name")
     private String middleName;
 
     @Column(name = "email", unique = true)

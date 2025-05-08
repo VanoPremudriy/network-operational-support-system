@@ -9,4 +9,6 @@ public interface TaskService {
     TaskEntity createTaskWithLock(UUID clientId, TaskType taskType, Object data);
 
     void processTask(TaskEntity taskEntity);
+
+    void applyTask(UUID taskId);
 }

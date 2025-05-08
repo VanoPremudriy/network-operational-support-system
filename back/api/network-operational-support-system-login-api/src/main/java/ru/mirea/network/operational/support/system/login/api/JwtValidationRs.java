@@ -29,7 +29,6 @@ public class JwtValidationRs extends BaseRs {
 
     @Schema(description = "Адрес электронной почты", example = "jondoe@gmail.com")
     @Size(min = 5, max = 50, message = "Адрес электронной почты должен содержать от 5 до 255 символов")
-    @NotBlank(message = "Адрес электронной почты не может быть пустыми")
     @Email(message = "Email адрес должен быть в формате user@example.com")
     private String email;
 

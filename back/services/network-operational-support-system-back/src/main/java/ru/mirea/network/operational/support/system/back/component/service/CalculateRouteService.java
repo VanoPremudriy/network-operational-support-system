@@ -1,8 +1,9 @@
 package ru.mirea.network.operational.support.system.back.component.service;
 
 import ru.mirea.network.operational.support.system.db.entity.RouteEntity;
-import ru.mirea.network.operational.support.system.route.api.route.calculate.CalculateRouteRq;
+import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
+import ru.mirea.network.operational.support.system.python.api.calculate.CalculateRouteRq;
 
 public interface CalculateRouteService {
-    RouteEntity calculate(CalculateRouteRq rq);
+    RouteEntity calculate(TaskEntity taskEntity, CalculateRouteRq rq);
 }

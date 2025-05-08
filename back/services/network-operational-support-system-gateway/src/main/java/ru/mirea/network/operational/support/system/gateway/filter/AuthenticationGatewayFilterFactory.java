@@ -19,7 +19,8 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import ru.mirea.network.operational.support.system.common.api.BaseRs;
 import ru.mirea.network.operational.support.system.common.api.ErrorDTO;
-import ru.mirea.network.operational.support.system.gateway.dictionary.Constant;
+import ru.mirea.network.operational.support.system.common.dictionary.ErrorCode;
+import ru.mirea.network.operational.support.system.common.dictionary.Headers;
 import ru.mirea.network.operational.support.system.gateway.exception.ResponseValidationException;
 import ru.mirea.network.operational.support.system.login.api.JwtValidationRs;
 
@@ -57,16 +58,16 @@ public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFac
                 return chain.filter(exchange);
             }
 
-            String bearerToken = exchange.getRequest().getHeaders().getFirst(Constant.HEADER_AUTHORIZATION);
+            String bearerToken = exchange.getRequest().getHeaders().getFirst(Headers.AUTHORIZATION.getName());
 
             if (bearerToken == null) {
-                return onError(exchange, HttpStatus.OK, "Ошибка аутентификации", "AUTH:ERROR",
+                return onError(exchange, HttpStatus.OK, "Ошибка аутентификации", ErrorCode.EMPLOYEE_AUTH_ERROR_CODE,
                         "Нет токена авторизации");
             }
 
             return webClientBuilder.build().get()
                     .uri(url + endpoint)
-                    .header(Constant.HEADER_AUTHORIZATION, bearerToken)
+                    .header(Headers.AUTHORIZATION.getName(), bearerToken)
                     .retrieve()
                     .bodyToMono(JwtValidationRs.class)
                     .map(response -> {
@@ -74,11 +75,16 @@ public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFac
                             throw new ResponseValidationException(response);
                         }
 
-                        exchange.getRequest().mutate().header("Id", response.getId());
-                        exchange.getRequest().mutate().header("Email", response.getEmail());
-                        exchange.getRequest().mutate().header("FirstName", response.getFirstName());
-                        exchange.getRequest().mutate().header("LastName", response.getLastName());
-                        exchange.getRequest().mutate().header("MiddleName", response.getMiddleName());
+                        exchange.getRequest().mutate().header(Headers.ID.getName(), response.getId());
+                        if (response.getEmail() != null) {
+                            exchange.getRequest().mutate().header(Headers.EMAIL.getName(), response.getEmail());
+                        }
+                        if (response.getMiddleName() != null) {
+                            exchange.getRequest().mutate().header(Headers.MIDDLE_NAME.getName(), response.getMiddleName());
+                        }
+                        exchange.getRequest().mutate().header(Headers.FIRST_NAME.getName(), response.getFirstName());
+                        exchange.getRequest().mutate().header(Headers.LAST_NAME.getName(), response.getLastName());
+                        exchange.getRequest().mutate().header(Headers.LOGIN.getName(), response.getLogin());
 
                         return exchange;
                     })
@@ -95,12 +101,12 @@ public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFac
         };
     }
 
-    private Mono<Void> onError(ServerWebExchange exchange, HttpStatusCode statusCode, String title, String code, String errorMessage) {
+    private Mono<Void> onError(ServerWebExchange exchange, HttpStatusCode statusCode, String title, ErrorCode code, String errorMessage) {
         return onError(exchange, statusCode, BaseRs.builder()
                 .success(false)
                 .error(ErrorDTO.builder()
                         .title(title)
-                        .code(code)
+                        .code(code.getCode())
                         .infos(Map.of("text", errorMessage))
                         .build())
                 .build());

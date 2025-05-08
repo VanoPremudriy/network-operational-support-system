@@ -6,12 +6,12 @@ import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValueCheckStrategy;
 import ru.mirea.network.operational.support.system.db.entity.NodeEntity;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
-import ru.mirea.network.operational.support.system.info.api.info.node.DetailedNode;
-import ru.mirea.network.operational.support.system.info.api.info.node.Node;
-import ru.mirea.network.operational.support.system.info.api.info.node.NodeList;
-import ru.mirea.network.operational.support.system.info.api.info.task.DetailedTask;
-import ru.mirea.network.operational.support.system.info.api.info.task.Task;
-import ru.mirea.network.operational.support.system.info.api.info.task.TaskList;
+import ru.mirea.network.operational.support.system.info.api.node.DetailedNode;
+import ru.mirea.network.operational.support.system.info.api.node.Node;
+import ru.mirea.network.operational.support.system.info.api.node.NodeList;
+import ru.mirea.network.operational.support.system.info.api.task.DetailedTask;
+import ru.mirea.network.operational.support.system.info.api.task.Task;
+import ru.mirea.network.operational.support.system.info.api.task.TaskList;
 
 import java.util.List;
 

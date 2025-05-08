@@ -57,6 +57,14 @@ spring:
           filters:
             - Authentication=true
             - RewritePath=/task/(?<segment>.*), /v1/task/$\{segment}
+
+        - id: route
+          uri: http://localhost:8089
+          predicates:
+            - Path=/network-operational-support-system-api/route
+          filters:
+            - Authentication=true
+            - RewritePath=/network-operational-support-system-api/route, /v1/route
     stream:
       kafka:
         binder:

@@ -1,7 +1,7 @@
 package ru.mirea.network.operational.support.system.info.service;
 
-import ru.mirea.network.operational.support.system.info.api.info.task.DetailedTaskRs;
-import ru.mirea.network.operational.support.system.info.api.info.task.TaskListRs;
+import ru.mirea.network.operational.support.system.info.api.task.DetailedTaskRs;
+import ru.mirea.network.operational.support.system.info.api.task.TaskListRs;
 
 import java.util.UUID;
 

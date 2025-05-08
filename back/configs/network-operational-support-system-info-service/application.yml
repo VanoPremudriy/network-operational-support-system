@@ -37,4 +37,9 @@ controller:
   tasks-by-id: /task/{id}
   nodes: /nodes
   node-by-id: /node/{id}
+  routes: /route
 
+client:
+  get-adjacency-matrix:
+    url: http://localhost:8000
+    endpoint: /api/routes/get_adjacency_matrix

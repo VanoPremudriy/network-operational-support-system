@@ -20,6 +20,7 @@
         <module>api/network-operational-support-system-login-api</module>
         <module>api/network-operational-support-system-route-api</module>
         <module>api/network-operational-support-system-info-api</module>
+        <module>api/network-operational-support-system-python-api</module>
 
         <module>services/network-operational-support-system-back</module>
         <module>services/network-operational-support-system-gateway</module>

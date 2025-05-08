@@ -27,6 +27,7 @@
 
         <!-- MIREA -->
         <info-api.version>1.0.0-SNAPSHOT</info-api.version>
+        <python-api.version>1.0.0-SNAPSHOT</python-api.version>
         <db.version>1.0.0-SNAPSHOT</db.version>
     </properties>
 
@@ -36,6 +37,11 @@
             <groupId>ru.mirea.network.operational.support.system.info.api</groupId>
             <artifactId>network-operational-support-system-info-api</artifactId>
             <version>${info-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.mirea.network.operational.support.system.python.api</groupId>
+            <artifactId>network-operational-support-system-python-api</artifactId>
+            <version>${python-api.version}</version>
         </dependency>
 
         <dependency>
@@ -87,8 +93,8 @@
             <artifactId>spring-cloud-starter-bus-kafka</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
         <!-- Test -->
