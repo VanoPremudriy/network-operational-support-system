@@ -7,6 +7,12 @@
     background-color: white;
     display: flex;
     flex-direction: column;
+    gap: 5%;
+}
+
+.form {
+    align-items: center;
+    align-self: center;
 }
 
 .logo {
@@ -25,90 +31,34 @@
     margin: auto;
 }
 
+.error {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 4px;
+    min-height: 1.2em; /* зарезервировано место даже без текста */
+    visibility: hidden;
+}
 
-.loginDiv {
+.error.visible {
+    visibility: visible;
+}
+
+.inputs {
     width: 100%;
-    /*height: 30px;*/
-    height: 30%;
-    /*justify-content: center;*/
+    height: 35%;
     align-items: center;
+    align-self: center;
     display: flex;
-    margin: auto;
     flex-direction: column;
+    gap: 10%;
 }
 
-.loginDiv h5 {
+.buttons {
     width: 90%;
-}
-
-.loginInput {
-    border: solid #D0D5DD 1px;
-    border-radius: 5px;
-    width: 90%;
-    /*height: 100%;*/
-    height: 40px;
-    font-size: 20px;
-
-}
-
-
-.passwordDiv {
-    width: 100%;
-    /*height: 30px;*/
-    height: 30%;
-    /*justify-content: center;*/
-    display: flex;
-    margin: auto;
-    flex-direction: column;
+    height: 35%;
     align-items: center;
-}
-
-.passwordDiv h5 {
-    width: 90%;
-}
-
-.passwordInput {
-    border: solid #D0D5DD 1px;
-    border-radius: 5px;
-    width: 90%;
-    /*height: 100%;*/
-    height: 40px;
-    font-size: 20px;
-}
-
-.loginButtonDiv {
-    width: 100%;
-    /*height: 30px;*/
-    height: 10%;
-    justify-content: center;
+    align-self: center;
     display: flex;
-    margin: auto;
-}
-
-
-.loginButton {
-    border: none;
-    width: 90%;
-    /*height: 100%;*/
-    height: 40px;
-    background: #3563E9;
-    border-radius: 5px;
-    text-align: center;
-    transition: .4s;
-    color: white;
-    font-size: 20px;
-}
-
-.loginButton:hover {
-    transition: .4s;
-    background: #3f6be8;
-}
-
-.loginButton:active {
-    background: #5679ec;
-    transition: .0s;
-}
-
-.loginButton:focus {
-    outline: none;
+    flex-direction: column;
+    gap: 5%
 }
