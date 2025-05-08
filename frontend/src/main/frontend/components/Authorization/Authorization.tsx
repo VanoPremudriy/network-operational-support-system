@@ -47,13 +47,13 @@ const Authorization = ({ setAuthorized }: { setAuthorized?: (value: boolean) => 
 
       <div className={styles.inputs}>
         <CustomInput label="Логин" name="login" value={formData.login} onChange={handleChange} />
-        <div className={`${styles.error} ${errors.login ? styles.visible : ''}`}>
-          {errors.login || ''}
+        <div className={`${styles.error} ${errors.login || errors.text ? styles.visible : ''}`}>
+          {errors.login || errors.text || ''}
         </div>
 
         <CustomInput label="Пароль" name="password" value={formData.password} onChange={handleChange} type="password" />
-        <div className={`${styles.error} ${errors.password ? styles.visible : ''}`}>
-          {errors.password || ''}
+        <div className={`${styles.error} ${errors.password || errors.text ? styles.visible : ''}`}>
+          {errors.password || errors.text || ''}
         </div>
       </div>
 
