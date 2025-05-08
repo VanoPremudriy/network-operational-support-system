@@ -4,8 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValueCheckStrategy;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
-import ru.mirea.network.operational.support.system.route.api.route.calculate.CalculateRouteRq;
-import ru.mirea.network.operational.support.system.route.api.route.calculate.CalculateRouteRs;
+import ru.mirea.network.operational.support.system.python.api.calculate.CalculateRouteRq;
+import ru.mirea.network.operational.support.system.python.api.calculate.CalculateRouteRs;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRq;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRs;
 

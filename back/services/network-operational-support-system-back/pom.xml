@@ -27,6 +27,7 @@
 
         <!-- MIREA -->
         <route-api.version>1.0.0-SNAPSHOT</route-api.version>
+        <python-api.version>1.0.0-SNAPSHOT</python-api.version>
         <thread.version>1.0.0-SNAPSHOT</thread.version>
         <db.version>1.0.0-SNAPSHOT</db.version>
     </properties>
@@ -38,7 +39,11 @@
             <artifactId>network-operational-support-system-route-api</artifactId>
             <version>${route-api.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>ru.mirea.network.operational.support.system.python.api</groupId>
+            <artifactId>network-operational-support-system-python-api</artifactId>
+            <version>${python-api.version}</version>
+        </dependency>
         <dependency>
             <groupId>ru.mirea.network.operational.support.system.thread</groupId>
             <artifactId>network-operational-support-system-thread</artifactId>

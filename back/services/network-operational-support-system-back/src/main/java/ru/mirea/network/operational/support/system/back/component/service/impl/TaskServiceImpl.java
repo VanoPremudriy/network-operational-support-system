@@ -7,6 +7,8 @@ import org.apache.curator.framework.CuratorFramework;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import ru.mirea.network.operational.support.system.back.component.mapper.RootMapper;
 import ru.mirea.network.operational.support.system.back.component.repository.TaskRepository;
 import ru.mirea.network.operational.support.system.back.component.service.CalculateRouteService;
@@ -15,12 +17,12 @@ import ru.mirea.network.operational.support.system.back.dictionary.Constant;
 import ru.mirea.network.operational.support.system.back.exception.TaskException;
 import ru.mirea.network.operational.support.system.back.zookeeper.DistributedLock;
 import ru.mirea.network.operational.support.system.db.dictionary.TaskType;
-import ru.mirea.network.operational.support.system.db.entity.RouteEntity;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRq;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -65,23 +67,36 @@ public class TaskServiceImpl implements TaskService {
         };
 
         if (completed) {
-            taskRepository.save(taskEntity
-                    .setResolvedDate(LocalDateTime.now())
-                    .setActiveFlag(false));
+            taskRepository.save(taskEntity.setResolvedDate(LocalDateTime.now()));
         }
+    }
+
+    @Transactional
+    @Override
+    public void applyTask(UUID taskId) {
+        //TODO throw
+        TaskEntity taskEntity = taskRepository.findByIdWithRoute(taskId);
+
+        if (taskEntity == null) {
+            throw new RuntimeException("Не найдена задача");
+        }
+
+        if (CollectionUtils.isEmpty(taskEntity.getRoutes())) {
+            throw new RuntimeException("Не найден маршрут");
+        }
+
     }
 
     private boolean calculateRoute(TaskEntity taskEntity) {
         try {
             CreateRouteRq rq = jsonMapper.treeToValue(taskEntity.getTaskData(), CreateRouteRq.class);
-            RouteEntity route = calculateRouteService.calculate(rootMapper.map(rq, taskEntity));
+            taskEntity.setRoutes(Set.of(calculateRouteService.calculate(taskEntity, rootMapper.map(rq, taskEntity))));
+            return true;
         } catch (Exception e) {
             log.error("Ошибка при попытке расчитать маршрут", e);
 
             return false;
         }
-
-        return true;
     }
 
 }

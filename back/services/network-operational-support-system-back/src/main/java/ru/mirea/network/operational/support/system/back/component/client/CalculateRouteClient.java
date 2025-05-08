@@ -7,8 +7,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import ru.mirea.network.operational.support.system.route.api.route.calculate.CalculateRouteRq;
-import ru.mirea.network.operational.support.system.route.api.route.calculate.CalculateRouteRs;
+import ru.mirea.network.operational.support.system.python.api.calculate.CalculateRouteRq;
+import ru.mirea.network.operational.support.system.python.api.calculate.CalculateRouteRs;
 
 @Validated
 @RefreshScope

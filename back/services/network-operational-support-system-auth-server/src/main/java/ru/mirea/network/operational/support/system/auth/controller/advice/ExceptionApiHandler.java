@@ -12,6 +12,7 @@ import ru.mirea.network.operational.support.system.auth.exception.UserAlreadyExi
 import ru.mirea.network.operational.support.system.auth.exception.UserNotFoundException;
 import ru.mirea.network.operational.support.system.common.api.BaseRs;
 import ru.mirea.network.operational.support.system.common.api.ErrorDTO;
+import ru.mirea.network.operational.support.system.common.dictionary.ErrorCode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class ExceptionApiHandler {
     public BaseRs handleAuthenticationException(AuthenticationException e) {
         log.error("Ошибка аутентификации: {}", e.getMessage());
 
-        return createRsBuilder("Ошибка аутентификации", "EMPLOYEE_AUTH:ERROR",
+        return createRsBuilder("Ошибка аутентификации", ErrorCode.EMPLOYEE_AUTH_ERROR_CODE,
                 "Проверьте корректность введенных данных и попробуйте еще раз");
     }
 
@@ -34,7 +35,7 @@ public class ExceptionApiHandler {
     public BaseRs notFound(UserNotFoundException e) {
         log.error("Пользователь [{}] не найден", e.getUsername());
 
-        return createRsBuilder("Пользователь с указанными данными не найден", "EMPLOYEE_SEARCH:ERROR",
+        return createRsBuilder("Пользователь с указанными данными не найден", ErrorCode.EMPLOYEE_SEARCH_ERROR_CODE,
                 "Проверьте корректность введенных данных и попробуйте еще раз");
     }
 
@@ -43,7 +44,7 @@ public class ExceptionApiHandler {
     public BaseRs conflict(UserAlreadyExistException e) {
         log.error("Пользователь [{}] уже существует", e.getUsername());
 
-        return createRsBuilder("Пользователь с указанными данными уже существует", "EMPLOYEE_AUTH:ERROR",
+        return createRsBuilder("Пользователь с указанными данными уже существует", ErrorCode.EMPLOYEE_AUTH_ERROR_CODE,
                 "Проверьте корректность введенных данных и попробуйте еще раз");
     }
 
@@ -57,7 +58,7 @@ public class ExceptionApiHandler {
                 .map(violation -> Map.entry(violation.getPropertyPath().toString(), violation.getMessage()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        return createRsBuilder("Некорректные данные", "VALIDATION:ERROR", infos);
+        return createRsBuilder("Некорректные данные", ErrorCode.VALIDATION_ERROR_CODE, infos);
     }
 
     @ResponseStatus(value = HttpStatus.OK)
@@ -69,29 +70,29 @@ public class ExceptionApiHandler {
         exception.getBindingResult().getFieldErrors().forEach(error ->
                 infos.put(error.getField(), error.getDefaultMessage()));
 
-        return createRsBuilder("Некорректные данные", "VALIDATION:ERROR", infos);
+        return createRsBuilder("Некорректные данные", ErrorCode.VALIDATION_ERROR_CODE, infos);
     }
 
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler({Exception.class})
     public BaseRs defaultException(Exception e) {
         log.error("Непредвиденная ошибка: {}", e.getMessage());
-        return createRsBuilder("Что-то пошло не так", "UNEXPECTED:ERROR", "Попробуйте позже");
+        return createRsBuilder("Что-то пошло не так", ErrorCode.UNEXPECTED_ERROR_CODE, "Попробуйте позже");
     }
 
 
-    private BaseRs createRsBuilder(String title, String code, String errorMessage) {
+    private BaseRs createRsBuilder(String title, ErrorCode code, String errorMessage) {
 
         return createRsBuilder(title, code, Map.of("text", errorMessage));
     }
 
-    private BaseRs createRsBuilder(String title, String code, Map<String, String> infos) {
+    private BaseRs createRsBuilder(String title, ErrorCode code, Map<String, String> infos) {
 
         return BaseRs.builder()
                 .success(false)
                 .error(ErrorDTO.builder()
                         .title(title)
-                        .code(code)
+                        .code(code.getCode())
                         .infos(infos)
                         .build())
                 .build();

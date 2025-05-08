@@ -50,10 +50,15 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();
         if (userDetails instanceof EmployeeEntity customEmployeeDetails) {
             claims.put("id", customEmployeeDetails.getId());
-            claims.put("email", customEmployeeDetails.getEmail());
+            if (customEmployeeDetails.getEmail() != null){
+                claims.put("email", customEmployeeDetails.getEmail());
+            }
+            claims.put("login", customEmployeeDetails.getLogin());
             claims.put("first_name", customEmployeeDetails.getFirstName());
             claims.put("last_name", customEmployeeDetails.getLastName());
-            claims.put("middle_name", customEmployeeDetails.getMiddleName());
+            if (customEmployeeDetails.getMiddleName() != null) {
+                claims.put("middle_name", customEmployeeDetails.getMiddleName());
+            }
         }
         return generateToken(claims, userDetails);
     }
@@ -85,6 +90,7 @@ public class JwtService {
                 .firstName(claims.get("first_name", String.class))
                 .lastName(claims.get("last_name", String.class))
                 .middleName(claims.get("middle_name", String.class))
+                .login(claims.get("login", String.class))
                 .build();
     }
 

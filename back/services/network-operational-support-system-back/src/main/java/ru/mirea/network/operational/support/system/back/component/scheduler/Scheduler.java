@@ -29,6 +29,9 @@ public class Scheduler {
     @Value("${zookeeper.waitTime:PT10M}")
     private final Duration waitTime;
 
+    @Value("${scheduler.waitForConfirmedTime:PT05H}")
+    private final Duration waitForConfirmedTime;
+
     @Value("${scheduler.maxExecutions:4}")
     private final Integer maxExecutions;
 
@@ -45,6 +48,13 @@ public class Scheduler {
                 taskRepository.save(taskEntity
                         .setResolvedDate(LocalDateTime.now())
                         .setActiveFlag(false));
+                return;
+            }
+
+            if (taskEntity.getResolvedDate() != null) {
+                if (waitForConfirmedTime.compareTo(Duration.between(taskEntity.getResolvedDate(), LocalDateTime.now())) < 0) {
+                    taskRepository.save(taskEntity.setActiveFlag(false));
+                }
                 return;
             }
 
