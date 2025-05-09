@@ -1,6 +1,7 @@
 import { Map } from 'Frontend/components/Map/Map';
 import {useMapData } from 'Frontend/hooks/useMapData';
 import { useEffect } from 'react';
+import { useRouteData } from 'Frontend/services/RouteService';
 
 const RouteMap = () => {
   const points : { id: number; name: string; coordinates: [number, number] }[] = [
@@ -28,15 +29,18 @@ const RouteMap = () => {
   ];
 
   const data = useMapData();
+  const routeData = useRouteData();
 
   if (!data) {
     return <pre>Loading...</pre>;
   }
 
   return (
-    <Map data={data}
-         points={points}
-         edges={edges}/>
+    <Map
+      data={data}
+      points={routeData?.points ?? []}
+      edges={routeData?.edges ?? []}
+    />
   )
 }
 

@@ -7,8 +7,8 @@ import { BaseMapLayer } from 'Frontend/components/Map/Layers/BaseMapLayer';
 import { LakesLayer } from 'Frontend/components/Map/Layers/LakesLayer';
 import { RoadsLayer } from 'Frontend/components/Map/Layers/RoadsLayer';
 
-type Point = { id: number; name: string; coordinates: [number, number] };
-type Edge = { source: number; target: number };
+type Point = { id: string; name: string; coordinates: [number, number]; equipmentAmount: number};
+type Edge = { source: string; target: string };
 
 type MapProps = {
   data: any;

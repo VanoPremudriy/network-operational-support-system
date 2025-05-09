@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 
 type Point = {
-  id: number;
+  id: string;
   name: string;
   x: number;
   y: number;
+  equipmentAmount: number;
 };
 
-type Edge = { source: number; target: number };
+type Edge = { source: string; target: string };
 
 type MarksProps = {
   points: Point[];
