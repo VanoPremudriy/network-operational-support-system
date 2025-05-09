@@ -1,0 +1,42 @@
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: none;
+    background: #3f6be8;  /* Синий цвет кнопки */
+    height: 40px;
+    color: white;  /* Белый текст по умолчанию */
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 0 15px;
+    font-size: 16px;
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    color: white;  /* Белая иконка по умолчанию */
+}
+
+.label {
+    color: white;  /* Белый текст по умолчанию */
+}
+
+/* Стили при наведении */
+.button:hover {
+    background: #3f6be8;
+    opacity: 0.9;
+}
+
+.button:hover .label {
+    color: white;
+}
+
+.button:hover .icon {
+    color: white;
+}
+
+.button:active {
+    background: rgba(63, 107, 232, 0.47);
+}

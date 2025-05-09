@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from 'Frontend/components/IconButton/IconButton.module.css';
+import styles from 'Frontend/components/Buttons/IconButton/IconButton.module.css';
 
 interface IconButtonProps {
   onClick: () => void;
