@@ -1,0 +1,50 @@
+.row {
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 12px 0;
+
+}
+
+.cell {
+    padding: 12px 0;
+    vertical-align: middle;
+    text-align: left;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+th {
+    text-align: left;
+    justify-content: left;
+}
+
+.updateButton {
+    background-color: #f2f6ff;
+    color: #3066e3;
+    border: 1px solid #d0dfff;
+    border-radius: 12px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.updateButton:hover {
+    background-color: #e4ecff;
+}
+
+.deleteButton {
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.deleteButton:hover {
+    background-color: #d9363e;
+}
