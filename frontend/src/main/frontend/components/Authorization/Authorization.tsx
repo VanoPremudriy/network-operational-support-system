@@ -5,8 +5,8 @@ import logo from "/public/authorization/logo.jpg";
 import {getAuthToken} from "Frontend/services/AuthorizationService"
 import { RoutePath } from 'Frontend/routes';
 import CustomInput from 'Frontend/components/CustomInput/CustomInput';
-import CustomButtonColor from 'Frontend/components/CustomButton/CustomButtonColor';
-import CustomButtonNonColor from 'Frontend/components/CustomButton/CustomButtonNonColor';
+import CustomButtonColor from 'Frontend/components/Buttons/CustomButtonColor/CustomButtonColor';
+import CustomButtonNonColor from 'Frontend/components/Buttons/CustomButtonNonColor/CustomButtonNonColor';
 
 const Authorization = ({ setAuthorized }: { setAuthorized?: (value: boolean) => void }) => {
   const navigate = useNavigate();

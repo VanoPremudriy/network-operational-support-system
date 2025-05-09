@@ -1,7 +1,7 @@
 import styles from "Frontend/components/Registration/Registration.module.css"
 import CustomInput from 'Frontend/components/CustomInput/CustomInput';
-import CustomButtonColor from 'Frontend/components/CustomButton/CustomButtonColor';
-import CustomButtonNonColor from 'Frontend/components/CustomButton/CustomButtonNonColor';
+import CustomButtonColor from 'Frontend/components/Buttons/CustomButtonColor/CustomButtonColor';
+import CustomButtonNonColor from 'Frontend/components/Buttons/CustomButtonNonColor/CustomButtonNonColor';
 import { useNavigate } from 'react-router-dom';
 import { RoutePath } from 'Frontend/routes';
 import React, { useState } from 'react';
