@@ -4,8 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValueCheckStrategy;
+import ru.mirea.network.operational.support.system.db.entity.ClientEntity;
 import ru.mirea.network.operational.support.system.db.entity.NodeEntity;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
+import ru.mirea.network.operational.support.system.info.api.client.ClientDTODetailed;
+import ru.mirea.network.operational.support.system.info.api.client.ClientDTOWithId;
+import ru.mirea.network.operational.support.system.info.api.client.ClientDTOWithLogin;
 import ru.mirea.network.operational.support.system.info.api.node.DetailedNode;
 import ru.mirea.network.operational.support.system.info.api.node.Node;
 import ru.mirea.network.operational.support.system.info.api.node.NodeList;
@@ -19,6 +23,12 @@ import java.util.List;
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface EntityMapper {
     Task map(TaskEntity taskEntity);
+
+    ClientEntity map(ClientDTOWithLogin clientDTO);
+
+    ClientEntity map(ClientDTOWithId clientDTO);
+
+    ClientDTODetailed map(ClientEntity clientEntity);
 
     DetailedTask mapDetailed(TaskEntity taskEntity);
 

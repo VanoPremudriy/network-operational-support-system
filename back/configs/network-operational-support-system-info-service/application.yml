@@ -38,6 +38,12 @@ controller:
   nodes: /nodes
   node-by-id: /node/{id}
   routes: /route
+  client-delete: /client/delete
+  client-create: /client/create
+  client-update: /client/update
+  client-get-all:
+    endpoint: /client
+    pageSize: 8
 
 client:
   get-adjacency-matrix:

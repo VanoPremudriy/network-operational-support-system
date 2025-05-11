@@ -19,7 +19,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(schema = "public", name = "client")
+@Table(schema = "public", name = "clients")
 public class ClientEntity {
     @Id
     @Column(name = "id")
@@ -32,7 +32,7 @@ public class ClientEntity {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "login", unique = true, nullable = false)
+    @Column(name = "login", unique = true, updatable = false, nullable = false)
     private String login;
 
     @Column(name = "middle_name")
