@@ -8,7 +8,9 @@ public class ResponseValidationException extends RuntimeException {
     private final BaseRs response;
 
     public ResponseValidationException(BaseRs response) {
-        super(response.getError().getTitle());
+        super(response.getError() == null
+                ? "Проверьте правильность введенных данных"
+                : response.getError().getTitle());
         this.response = response;
     }
 }

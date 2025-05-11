@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.mirea.network.operational.support.system.python.api.calculate.CalculateRouteRq;
 import ru.mirea.network.operational.support.system.python.api.calculate.CalculateRouteRs;
 
+import java.util.List;
+
 @Validated
 @RefreshScope
 @FeignClient(value = "calculate-route", url = "${client.calculate-route.url}")
 public interface CalculateRouteClient {
     @RequestMapping(method = RequestMethod.POST, value = "${client.calculate-route.endpoint}")
-    CalculateRouteRs calculateRoute(@RequestBody @Valid CalculateRouteRq rq);
+    List<CalculateRouteRs> calculateRoute(@RequestBody @Valid CalculateRouteRq rq);
 }

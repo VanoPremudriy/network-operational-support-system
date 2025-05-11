@@ -33,7 +33,7 @@ public class RouteController {
                 .body(routeService.createRoute(rq));
     }
 
-    @PostMapping(value = "${controller.apply-task}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "${controller.apply-task}")
     public void applyTask(@PathVariable("id") UUID id) {
         taskService.applyTask(id);
     }

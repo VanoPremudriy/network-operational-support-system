@@ -8,6 +8,6 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Jacksonized
 public class CalculateRouteRq {
-    private String startingPoint;
-    private String destinationPoint;
+    private String city1;
+    private String city2;
 }

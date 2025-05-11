@@ -35,7 +35,7 @@ public class SignUpRq {
 
     @Schema(description = "Имя работника", example = "Андрей")
     @NotBlank(message = "Имя работника не может быть пустым")
-    @Size(min = 1, max = 50, message = "Длина пароля должна быть не более 255 символов")
+    @Size(min = 1, max = 50, message = "Длина имени работника должна быть не более 255 символов")
     private String firstName;
 
     @Schema(description = "Фамилия работника", example = "Шурупов")

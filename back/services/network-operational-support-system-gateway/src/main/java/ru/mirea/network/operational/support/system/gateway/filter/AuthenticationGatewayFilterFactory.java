@@ -93,7 +93,14 @@ public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFac
                         if (error instanceof WebClientResponseException webCLientException) {
                             return onError(exchange, webCLientException.getStatusCode());
                         } else if (error instanceof ResponseValidationException responseValidationException) {
-                            return onError(exchange, HttpStatus.OK, responseValidationException.getResponse());
+                            BaseRs baseRs = responseValidationException.getResponse();
+                            if (baseRs.getError() == null) {
+                                baseRs.setError(ErrorDTO.builder()
+                                        .code(ErrorCode.UNEXPECTED_ERROR_CODE.getCode())
+                                        .title(responseValidationException.getMessage())
+                                        .build());
+                            }
+                            return onError(exchange, HttpStatus.OK, baseRs);
                         }
 
                         return onError(exchange, HttpStatus.BAD_GATEWAY);
