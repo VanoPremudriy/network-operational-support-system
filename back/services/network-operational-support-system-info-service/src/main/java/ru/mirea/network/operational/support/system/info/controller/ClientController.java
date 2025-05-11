@@ -27,20 +27,20 @@ import java.util.UUID;
 @Validated
 @RefreshScope
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/client")
 @RequiredArgsConstructor
 public class ClientController {
     private final ClientService clientService;
 
     @Operation(summary = "Удаление клиента")
-    @DeleteMapping(value = "${controller.client-delete}")
+    @DeleteMapping(value = "${controller.client.delete}")
     public ResponseEntity<BaseRs> deleteClient(@RequestParam("id") UUID id) {
         return ResponseEntity.ok()
                 .body(clientService.deleteClient(id));
     }
 
     @Operation(summary = "Создание клиента")
-    @PostMapping(value = "${controller.client-create}")
+    @PostMapping(value = "${controller.client.create}")
     public ResponseEntity<BaseRs> createClient(@RequestHeader(Constant.HEADER_ID) UUID employeeId,
                                                @RequestBody @Valid ClientDTOWithLogin client) {
         return ResponseEntity.ok()
@@ -48,14 +48,14 @@ public class ClientController {
     }
 
     @Operation(summary = "Обновление клиента")
-    @PutMapping(value = "${controller.client-update}")
+    @PutMapping(value = "${controller.client.update}")
     public ResponseEntity<BaseRs> updateClient(@RequestBody @Valid ClientDTOWithId client) {
         return ResponseEntity.ok()
                 .body(clientService.updateClient(client));
     }
 
     @Operation(summary = "Получение клиентов")
-    @PostMapping(value = "${controller.client-get-all.endpoint}")
+    @PostMapping(value = "${controller.client.get-all.endpoint}")
     public ResponseEntity<GetAllClientsRs> getAllClients(@RequestHeader(Constant.HEADER_ID) UUID employeeId,
                                                          @RequestBody @Valid GetAllClientsRq rq) {
         return ResponseEntity.ok()

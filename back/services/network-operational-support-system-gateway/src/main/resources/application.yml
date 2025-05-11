@@ -43,29 +43,13 @@ spring:
             - Authentication=true
             - RewritePath=/task/apply/(?<segment>.*), /v1/task/apply/$\{segment}
 
-        - id: nodes
-          uri: http://localhost:8089
-          predicates:
-            - Path=/nodes
-          filters:
-            - Authentication=true
-            - RewritePath=/nodes, /v1/nodes
-
-        - id: node-by-id
-          uri: http://localhost:8089
-          predicates:
-            - Path=/node/**
-          filters:
-            - Authentication=true
-            - RewritePath=/node/(?<segment>.*), /v1/node/$\{segment}
-
         - id: tasks-by-client-id
           uri: http://localhost:8089
           predicates:
-            - Path=/tasks/**
+            - Path=/client/task/**
           filters:
             - Authentication=true
-            - RewritePath=/tasks/(?<segment>.*), /v1/tasks/$\{segment}
+            - RewritePath=/client/task/(?<segment>.*), /v1/client/task/$\{segment}
 
         - id: task-by-id
           uri: http://localhost:8089
@@ -97,7 +81,7 @@ spring:
             - Path=/network-operational-support-system-api/client/create
           filters:
             - Authentication=true
-            - RewritePath=/network-operational-support-system-api/client/create, /v1/tasks/client/create
+            - RewritePath=/network-operational-support-system-api/client/create, /v1/client/create
 
         - id: client-update
           uri: http://localhost:8089
@@ -114,6 +98,30 @@ spring:
           filters:
             - Authentication=true
             - RewritePath=/network-operational-support-system-api/client, /v1/client
+
+        - id: dictionary-find-node
+          uri: http://localhost:8089
+          predicates:
+            - Path=/network-operational-support-system-api/dictionaries/node
+          filters:
+            - Authentication=true
+            - RewritePath=/network-operational-support-system-api/dictionaries/node, /v1/dictionary/node
+
+        - id: dictionary-find-capacity
+          uri: http://localhost:8089
+          predicates:
+            - Path=/network-operational-support-system-api/dictionaries/capacity
+          filters:
+            - Authentication=true
+            - RewritePath=/network-operational-support-system-api/dictionaries/capacity, /v1/dictionary/capacity
+
+        - id: dictionary-find-client
+          uri: http://localhost:8089
+          predicates:
+            - Path=/network-operational-support-system-api/dictionaries/client
+          filters:
+            - Authentication=true
+            - RewritePath=/network-operational-support-system-api/dictionaries/client, /v1/dictionary/client
 
     stream:
       kafka:

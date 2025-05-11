@@ -2,14 +2,20 @@ package ru.mirea.network.operational.support.system.info.mapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.Named;
 import org.mapstruct.NullValueCheckStrategy;
 import ru.mirea.network.operational.support.system.db.entity.ClientEntity;
 import ru.mirea.network.operational.support.system.db.entity.NodeEntity;
+import ru.mirea.network.operational.support.system.db.entity.PortTypeEntity;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
 import ru.mirea.network.operational.support.system.info.api.client.ClientDTODetailed;
 import ru.mirea.network.operational.support.system.info.api.client.ClientDTOWithId;
 import ru.mirea.network.operational.support.system.info.api.client.ClientDTOWithLogin;
+import ru.mirea.network.operational.support.system.info.api.dictionary.CapacityDTO;
+import ru.mirea.network.operational.support.system.info.api.dictionary.ClientDTO;
+import ru.mirea.network.operational.support.system.info.api.dictionary.NodeDTO;
 import ru.mirea.network.operational.support.system.info.api.node.DetailedNode;
 import ru.mirea.network.operational.support.system.info.api.node.Node;
 import ru.mirea.network.operational.support.system.info.api.node.NodeList;
@@ -29,6 +35,24 @@ public interface EntityMapper {
     ClientEntity map(ClientDTOWithId clientDTO);
 
     ClientDTODetailed map(ClientEntity clientEntity);
+
+    NodeDTO mapDictionary(NodeEntity node);
+
+    List<NodeDTO> mapNodeDictionary(List<NodeEntity> nodes);
+
+    CapacityDTO mapDictionary(PortTypeEntity node);
+
+    List<CapacityDTO> mapCapacityDictionary(List<PortTypeEntity> nodes);
+
+    @Mapping(target = "fullName", source = ".", qualifiedByName = "getFullName")
+    ClientDTO mapDictionary(ClientEntity node);
+
+    List<ClientDTO> mapClientDictionary(List<ClientEntity> nodes);
+
+    @Named("getFullName")
+    default String getFullName(ClientEntity clientEntity) {
+        return clientEntity.getLastName() + " " + clientEntity.getFirstName() + " " + clientEntity.getMiddleName();
+    }
 
     DetailedTask mapDetailed(TaskEntity taskEntity);
 
