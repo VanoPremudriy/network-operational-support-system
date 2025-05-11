@@ -11,12 +11,12 @@ import ru.mirea.network.operational.support.system.info.service.RouteService;
 
 @Validated
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/route")
 @RequiredArgsConstructor
 public class RouteController {
     private final RouteService routeService;
 
-    @GetMapping(value = "${controller.routes}")
+    @GetMapping(value = "${controller.route.get-all}")
     public ResponseEntity<GetRouteRs> getRoute() {
         return ResponseEntity.ok()
                 .body(routeService.getRoute());

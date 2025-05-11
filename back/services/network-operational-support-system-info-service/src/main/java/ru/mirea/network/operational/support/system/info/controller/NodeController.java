@@ -13,20 +13,21 @@ import ru.mirea.network.operational.support.system.info.service.NodeService;
 
 import java.util.UUID;
 
+@Deprecated
 @Validated
-@RestController
-@RequestMapping("/v1")
+//@RestController
+@RequestMapping("/v1/node")
 @RequiredArgsConstructor
 public class NodeController {
     private final NodeService nodeService;
 
-    @GetMapping(value = "${controller.nodes}")
+    @GetMapping(value = "${controller.node.get-all}")
     public ResponseEntity<NodeListRs> getNodes() {
         return ResponseEntity.ok()
                 .body(nodeService.getAll());
     }
 
-    @GetMapping(value = "${controller.node-by-id}")
+    @GetMapping(value = "${controller.node.get-by-id}")
     public ResponseEntity<DetailedNodeRs> getById(@PathVariable("id") UUID id) {
         return ResponseEntity.ok()
                 .body(nodeService.getById(id));

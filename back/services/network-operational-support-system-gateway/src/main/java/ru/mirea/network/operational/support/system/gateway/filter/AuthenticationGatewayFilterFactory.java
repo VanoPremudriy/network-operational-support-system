@@ -11,6 +11,7 @@ import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFac
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -75,18 +76,22 @@ public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFac
                             throw new ResponseValidationException(response);
                         }
 
-                        exchange.getRequest().mutate().header(Headers.ID.getName(), response.getId());
+                        ServerHttpRequest.Builder builder = exchange.getRequest().mutate();
+
+                        builder.header(Headers.ID.getName(), response.getId());
                         if (response.getEmail() != null) {
-                            exchange.getRequest().mutate().header(Headers.EMAIL.getName(), response.getEmail());
+                            builder.header(Headers.EMAIL.getName(), response.getEmail());
                         }
                         if (response.getMiddleName() != null) {
-                            exchange.getRequest().mutate().header(Headers.MIDDLE_NAME.getName(), response.getMiddleName());
+                            builder.header(Headers.MIDDLE_NAME.getName(), response.getMiddleName());
                         }
-                        exchange.getRequest().mutate().header(Headers.FIRST_NAME.getName(), response.getFirstName());
-                        exchange.getRequest().mutate().header(Headers.LAST_NAME.getName(), response.getLastName());
-                        exchange.getRequest().mutate().header(Headers.LOGIN.getName(), response.getLogin());
+                        builder.header(Headers.FIRST_NAME.getName(), response.getFirstName());
+                        builder.header(Headers.LAST_NAME.getName(), response.getLastName());
+                        builder.header(Headers.LOGIN.getName(), response.getLogin());
 
-                        return exchange;
+                        return exchange.mutate()
+                                .request(builder.build())
+                                .build();
                     })
                     .flatMap(chain::filter)
                     .onErrorResume(error -> {

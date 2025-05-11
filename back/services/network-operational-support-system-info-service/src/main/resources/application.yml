@@ -27,23 +27,33 @@ spring:
         enabled: true
       env:
         enabled: true
+  jpa:
+    show-sql: true
 
 springdoc:
   swagger-ui:
     path: /swagger-ui
 
 controller:
-  tasks-by-client: /tasks/{clientId}
-  tasks-by-id: /task/{id}
-  nodes: /nodes
-  node-by-id: /node/{id}
-  routes: /route
-  client-delete: /client/delete
-  client-create: /client/create
-  client-update: /client/update
-  client-get-all:
-    endpoint: /client
-    pageSize: 8
+  task:
+    get-by-client: /client/{clientId}
+    get-by-id: /{id}
+#  node:
+#    get-all: /
+#    get-by-id: /{id}
+  route:
+    get-all: /
+  client:
+    delete: /delete
+    create: /create
+    update: /update
+    get-all:
+      endpoint: /
+      pageSize: 8
+  dictionary:
+    find-node: /node
+    find-capacity: /capacity
+    find-client: /client
 
 client:
   get-adjacency-matrix:
