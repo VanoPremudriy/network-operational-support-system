@@ -16,9 +16,9 @@ public class SignInRq {
     @NotBlank(message = "Имя пользователя не может быть пустыми")
     private String login;
 
-    @Schema(description = "Пароль", example = "my_1secret1_password")
+    @Schema(description = "Пароль", example = "my1secret1password")
     @Size(min = 1, max = 255, message = "Длина пароля должна быть от 8 до 255 символов")
-    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Имя пользователя содержит недопустимые символы")
+    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Пароль содержит недопустимые символы")
     @NotBlank(message = "Пароль не может быть пустыми")
     private String password;
 }

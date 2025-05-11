@@ -41,4 +41,7 @@ public class PortEntity {
     @Column(name = "port_type_id", nullable = false)
     private UUID portTypeId;
 
+    @Column(name = "task_id", nullable = false)
+    private UUID taskId;
+
 }

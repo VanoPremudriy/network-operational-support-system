@@ -31,7 +31,7 @@ public class EmployeeEntity implements UserDetails {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @Column(name = "login", nullable = false)
+    @Column(name = "login", unique = true, nullable = false)
     private String login;
 
     @Column(name = "password", nullable = false)
@@ -46,7 +46,7 @@ public class EmployeeEntity implements UserDetails {
     @Column(name = "middle_name")
     private String middleName;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email")
     private String email;
 
     @Override

@@ -24,7 +24,15 @@ spring:
             - Path=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
           filters:
             - Authentication=true
-            - RewritePath=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute, /v1/createRoute
+            - RewritePath=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute, /v1/route/create
+
+        - id: task-apply
+          uri: http://localhost:8080
+          predicates:
+            - Path=/task/apply/**
+          filters:
+            - Authentication=true
+            - RewritePath=/task/apply/(?<segment>.*), /v1/task/apply/$\{segment}
 
         - id: nodes
           uri: http://localhost:8089
@@ -65,6 +73,39 @@ spring:
           filters:
             - Authentication=true
             - RewritePath=/network-operational-support-system-api/route, /v1/route
+
+        - id: client-delete
+          uri: http://localhost:8089
+          predicates:
+            - Path=/network-operational-support-system-api/client/delete
+          filters:
+            - Authentication=true
+            - RewritePath=/network-operational-support-system-api/client/delete, /v1/client/delete
+
+        - id: client-create
+          uri: http://localhost:8089
+          predicates:
+            - Path=/network-operational-support-system-api/client/create
+          filters:
+            - Authentication=true
+            - RewritePath=/network-operational-support-system-api/client/create, /v1/tasks/client/create
+
+        - id: client-update
+          uri: http://localhost:8089
+          predicates:
+            - Path=/network-operational-support-system-api/client/update
+          filters:
+            - Authentication=true
+            - RewritePath=/network-operational-support-system-api/client/update, /v1/client/update
+
+        - id: client-get-all
+          uri: http://localhost:8089
+          predicates:
+            - Path=/network-operational-support-system-api/client
+          filters:
+            - Authentication=true
+            - RewritePath=/network-operational-support-system-api/client, /v1/client
+
     stream:
       kafka:
         binder:

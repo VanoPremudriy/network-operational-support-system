@@ -6,14 +6,14 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Headers {
-    ID("Id"),
+    ID(Constant.HEADER_ID),
     EMAIL("Email"),
     MIDDLE_NAME("Middle-Name"),
     FIRST_NAME("First-Name"),
     LAST_NAME("Last-Name"),
     LOGIN("Login"),
 
-    AUTHORIZATION("Authorization"),
+    AUTHORIZATION(Constant.HEADER_AUTHORIZATION),
 
     ;
 

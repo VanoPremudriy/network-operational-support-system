@@ -14,4 +14,6 @@ public interface TaskRepository extends JpaRepository<TaskEntity, UUID> {
             "left join fetch t.routes " +
             "where t.id = :taskId")
     TaskEntity findByTaskIdWithRoutes(UUID taskId);
+
+    void deleteByClientId(UUID clientId);
 }

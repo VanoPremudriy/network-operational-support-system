@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.mirea.network.operational.support.system.auth.dictionary.Constant;
 import ru.mirea.network.operational.support.system.auth.service.JwtService;
+import ru.mirea.network.operational.support.system.common.dictionary.Constant;
 import ru.mirea.network.operational.support.system.login.api.JwtValidationRs;
 
 @Slf4j

@@ -1,6 +1,7 @@
 package ru.mirea.network.operational.support.system.db.entity;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -60,7 +61,7 @@ public class TaskEntity {
     @Column(name = "task_data", nullable = false)
     private JsonNode taskData;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "task_id")
     @BatchSize(size = 5)
     private Set<RouteEntity> routes;

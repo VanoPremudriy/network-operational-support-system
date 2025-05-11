@@ -38,12 +38,13 @@ scheduler:
   maxExecutions: 4
 
 controller:
-  create-route: /createRoute
+  apply-task: /task/apply/{id}
+  create-route: /route/create
 
 client:
   calculate-route:
-    url: http://localhost:8080
-    endpoint: /calculations/calculateRoute
+    url: http://localhost:8000
+    endpoint: /api/routes/create_routes
 
 zookeeper:
   url: localhost:22181
