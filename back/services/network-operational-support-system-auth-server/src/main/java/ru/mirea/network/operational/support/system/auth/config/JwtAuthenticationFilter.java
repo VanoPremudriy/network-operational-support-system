@@ -17,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import ru.mirea.network.operational.support.system.auth.dictionary.Constant;
 import ru.mirea.network.operational.support.system.auth.service.JwtService;
 import ru.mirea.network.operational.support.system.auth.service.UserService;
+import ru.mirea.network.operational.support.system.common.dictionary.Headers;
 
 import java.io.IOException;
 
@@ -34,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         // Получаем токен из заголовка
-        String authHeader = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        String authHeader = request.getHeader(Headers.AUTHORIZATION.getName());
         if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, Constant.BEARER_PREFIX)) {
             filterChain.doFilter(request, response);
             return;

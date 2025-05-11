@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.mirea.network.operational.support.system.back.exception.NotFoundException;
 import ru.mirea.network.operational.support.system.common.api.BaseRs;
 import ru.mirea.network.operational.support.system.common.api.ErrorDTO;
 import ru.mirea.network.operational.support.system.common.dictionary.ErrorCode;
@@ -41,6 +42,15 @@ public class ExceptionApiHandler {
                 infos.put(error.getField(), error.getDefaultMessage()));
 
         return createRsBuilder("Некорректные данные", ErrorCode.VALIDATION_ERROR_CODE, infos);
+    }
+
+    @ResponseStatus(value = HttpStatus.OK)
+    @ExceptionHandler({NotFoundException.class})
+    public BaseRs notFoundException(NotFoundException exception) {
+        log.error("Не найден объект: {}", exception.getMessage());
+        Map<String, String> infos = new HashMap<>();
+
+        return createRsBuilder("Что-то пошло не так", ErrorCode.NOT_FOUND_ERROR_CODE, exception.getMessage());
     }
 
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)

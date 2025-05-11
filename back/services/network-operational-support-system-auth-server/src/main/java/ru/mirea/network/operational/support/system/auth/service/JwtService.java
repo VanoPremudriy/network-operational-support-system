@@ -91,6 +91,7 @@ public class JwtService {
                 .lastName(claims.get("last_name", String.class))
                 .middleName(claims.get("middle_name", String.class))
                 .login(claims.get("login", String.class))
+                .success(true)
                 .build();
     }
 

@@ -1,5 +1,6 @@
 package ru.mirea.network.operational.support.system.db.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -43,7 +44,7 @@ public class BasketEntity {
     @Column(name = "node_id", nullable = false)
     private UUID nodeId;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "basket_id")
     @BatchSize(size = 5)
     private Set<BoardEntity> boards;

@@ -44,7 +44,7 @@ public class Scheduler {
                 return;
             }
 
-            if (taskEntity.getExecutionCount() >= maxExecutions) {
+            if (taskEntity.getExecutionCount() + 1 > maxExecutions) {
                 taskRepository.save(taskEntity
                         .setResolvedDate(LocalDateTime.now())
                         .setActiveFlag(false));
