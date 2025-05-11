@@ -80,8 +80,40 @@ spring:
           predicates:
             - Path=/network-operational-support-system-api/route
           filters:
-            - Authentication=false
+            - Authentication=true
             - RewritePath=/network-operational-support-system-api/route, /v1/route
+
+        - id: client-delete
+          uri: http://localhost:8089
+          predicates:
+            - Path=/network-operational-support-system-api/client/delete
+          filters:
+            - Authentication=true
+            - RewritePath=/network-operational-support-system-api/client/delete, /v1/client/delete
+
+        - id: client-create
+          uri: http://localhost:8089
+          predicates:
+            - Path=/network-operational-support-system-api/client/create
+          filters:
+            - Authentication=true
+            - RewritePath=/network-operational-support-system-api/client/create, /v1/tasks/client/create
+
+        - id: client-update
+          uri: http://localhost:8089
+          predicates:
+            - Path=/network-operational-support-system-api/client/update
+          filters:
+            - Authentication=true
+            - RewritePath=/network-operational-support-system-api/client/update, /v1/client/update
+
+        - id: client-get-all
+          uri: http://localhost:8089
+          predicates:
+            - Path=/network-operational-support-system-api/client
+          filters:
+            - Authentication=true
+            - RewritePath=/network-operational-support-system-api/client, /v1/client
 
     stream:
       kafka:
