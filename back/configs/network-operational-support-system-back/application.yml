@@ -2,7 +2,7 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
   datasource:
-    url: jdbc:postgresql://localhost:5432/db
+    url: jdbc:postgresql://postgres:5432/db
     username: user
     password: postgres
   cloud:
@@ -10,8 +10,8 @@ spring:
       kafka:
         binder:
           brokers:
-            - localhost:19092
-            - localhost:29092
+            - kafka-1:9092
+            - kafka-2:9092
     bus:
       enabled: true
       trace:
@@ -40,7 +40,7 @@ client:
     endpoint: /api/routes/create_routes
 
 zookeeper:
-  url: localhost:22181
+  url: zookeeper:22181
   sleepMsBetweenRetries: 1000
   maxRetries: 2
   waitTime: PT10M

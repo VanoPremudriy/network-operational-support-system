@@ -1,0 +1,240 @@
+version: "3.9"
+services:
+  zookeeper:
+    container_name: zookeeper
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "22181:2181"
+    networks:
+      - network-operational-support-system-gateway
+
+  kafka-1:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka-1
+    depends_on:
+      - zookeeper
+    ports:
+      - 19092:19092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_HOST://localhost:19092,PLAINTEXT://kafka-1:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 2
+    networks:
+      - network-operational-support-system-gateway
+
+  kafka-2:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka-2
+    depends_on:
+      - zookeeper
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_HOST://localhost:29092,PLAINTEXT://kafka-2:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 2
+    networks:
+      - network-operational-support-system-gateway
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: ui-kafka
+    ports:
+      - 9090:8080
+    restart: always
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka-1:9092,kafka-2:9092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+    links:
+      - kafka-1
+      - kafka-2
+      - zookeeper
+
+  postgres:
+    container_name: postgres
+    image: postgres:14.8-alpine3.18
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=50"
+      - "-c"
+      - "shared_buffers=1GB"
+      - "-c"
+      - "effective_cache_size=4GB"
+      - "-c"
+      - "work_mem=16MB"
+      - "-c"
+      - "maintenance_work_mem=512MB"
+      - "-c"
+      - "random_page_cost=1.1"
+      - "-c"
+      - "temp_file_limit=10GB"
+      - "-c"
+      - "log_min_duration_statement=200ms"
+      - "-c"
+      - "idle_in_transaction_session_timeout=10s"
+      - "-c"
+      - "lock_timeout=1s"
+      - "-c"
+      - "statement_timeout=60s"
+      - "-c"
+      - "shared_preload_libraries=pg_stat_statements"
+      - "-c"
+      - "pg_stat_statements.max=10000"
+      - "-c"
+      - "pg_stat_statements.track=all"
+    environment:
+      POSTGRES_DB: "db"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "postgres"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ../2. Init Database:/docker-entrypoint-initdb.d
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user -d db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+    networks:
+      - network-operational-support-system-gateway
+      - postgres
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:7.2
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "user@habr.com"
+      PGADMIN_DEFAULT_PASSWORD: "postgres"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+    networks:
+      - postgres
+
+  postgres_exporter:
+    container_name: postgres_exporter
+    image: prometheuscommunity/postgres-exporter:v0.10.1
+    environment:
+      DATA_SOURCE_URI: "postgres:5432/db?sslmode=disable"
+      DATA_SOURCE_USER: "user"
+      DATA_SOURCE_PASS: "postgres"
+      PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
+    volumes:
+      - ./queries.yaml:/etc/postgres_exporter/queries.yaml:ro
+    ports:
+      - "9187:9187"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 500M
+    networks:
+      - postgres
+
+  config-service:
+    container_name: config-service
+    build: ../../back/services/network-operational-support-system-config
+    ports:
+      - "8888:8888"
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - zookeeper
+    networks:
+      - network-operational-support-system-gateway
+
+  info-service:
+    container_name: info-service
+    build: ../../back/services/network-operational-support-system-info-service
+    ports:
+      - "8089:8089"
+    depends_on:
+      - config-service
+      - postgres
+      - kafka-1
+      - kafka-2
+      - zookeeper
+    networks:
+      - network-operational-support-system-gateway
+
+  back-service:
+    container_name: back-service
+    build: ../../back/services/network-operational-support-system-back
+    ports:
+      - "8080:8080"
+    depends_on:
+      - config-service
+      - postgres
+      - kafka-1
+      - kafka-2
+      - zookeeper
+    networks:
+      - network-operational-support-system-gateway
+
+  auth-service:
+    container_name: auth-service
+    build: ../../back/services/network-operational-support-system-auth-server
+    ports:
+      - "8083:8083"
+    depends_on:
+      - config-service
+      - postgres
+      - kafka-1
+      - kafka-2
+      - zookeeper
+    networks:
+      - network-operational-support-system-gateway
+
+  gateway-service:
+    container_name: gateway-service
+    build: ../../back/services/network-operational-support-system-gateway
+    ports:
+      - "8085:8085"
+    depends_on:
+      - config-service
+      - kafka-1
+      - kafka-2
+      - zookeeper
+    networks:
+      - network-operational-support-system-gateway
+
+volumes:
+  db-data:
+  pgadmin-data:
+
+networks:
+  postgres:
+    driver: bridge
+  network-operational-support-system-gateway:
+    driver: bridge

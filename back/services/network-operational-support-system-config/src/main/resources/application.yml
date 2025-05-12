@@ -18,5 +18,5 @@ spring:
       kafka:
         binder:
           brokers:
-            - localhost:19092
-            - localhost:29092
+            - kafka-1:9092
+            - kafka-2:9092

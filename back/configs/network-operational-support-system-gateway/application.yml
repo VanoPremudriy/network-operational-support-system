@@ -5,21 +5,21 @@ spring:
     gateway:
       routes:
         - id: sign-in
-          uri: http://localhost:8083
+          uri: http://auth-service:8083
           predicates:
             - Path=/network-operational-support-system-api/auth
           filters:
             - RewritePath=/network-operational-support-system-api/auth, /auth/v1/sign-in
 
         - id: sign-up
-          uri: http://localhost:8083
+          uri: http://auth-service:8083
           predicates:
             - Path=/sign-up
           filters:
             - RewritePath=/sign-up, /auth/v1/sign-up
 
         - id: create-route
-          uri: http://localhost:8080
+          uri: http://back-service:8080
           predicates:
             - Path=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute
           filters:
@@ -27,7 +27,7 @@ spring:
             - RewritePath=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute, /v1/route/create
 
         - id: task-apply
-          uri: http://localhost:8080
+          uri: http://back-service:8080
           predicates:
             - Path=/task/apply/**
           filters:
@@ -35,7 +35,7 @@ spring:
             - RewritePath=/task/apply/(?<segment>.*), /v1/task/apply/$\{segment}
 
         - id: tasks-by-client-id
-          uri: http://localhost:8089
+          uri: http://info-service:8089
           predicates:
             - Path=/client/task/**
           filters:
@@ -43,7 +43,7 @@ spring:
             - RewritePath=/client/task/(?<segment>.*), /v1/client/task/$\{segment}
 
         - id: task-by-id
-          uri: http://localhost:8089
+          uri: http://info-service:8089
           predicates:
             - Path=/task/**
           filters:
@@ -51,7 +51,7 @@ spring:
             - RewritePath=/task/(?<segment>.*), /v1/task/$\{segment}
 
         - id: route
-          uri: http://localhost:8089
+          uri: http://info-service:8089
           predicates:
             - Path=/network-operational-support-system-api/route
           filters:
@@ -59,7 +59,7 @@ spring:
             - RewritePath=/network-operational-support-system-api/route, /v1/route
 
         - id: client-delete
-          uri: http://localhost:8089
+          uri: http://info-service:8089
           predicates:
             - Path=/network-operational-support-system-api/client/delete
           filters:
@@ -67,7 +67,7 @@ spring:
             - RewritePath=/network-operational-support-system-api/client/delete, /v1/client/delete
 
         - id: client-create
-          uri: http://localhost:8089
+          uri: http://info-service:8089
           predicates:
             - Path=/network-operational-support-system-api/client/create
           filters:
@@ -75,7 +75,7 @@ spring:
             - RewritePath=/network-operational-support-system-api/client/create, /v1/client/create
 
         - id: client-update
-          uri: http://localhost:8089
+          uri: http://info-service:8089
           predicates:
             - Path=/network-operational-support-system-api/client/update
           filters:
@@ -83,7 +83,7 @@ spring:
             - RewritePath=/network-operational-support-system-api/client/update, /v1/client/update
 
         - id: client-get-all
-          uri: http://localhost:8089
+          uri: http://info-service:8089
           predicates:
             - Path=/network-operational-support-system-api/client
           filters:
@@ -91,7 +91,7 @@ spring:
             - RewritePath=/network-operational-support-system-api/client, /v1/client
 
         - id: dictionary-find-node
-          uri: http://localhost:8089
+          uri: http://info-service:8089
           predicates:
             - Path=/network-operational-support-system-api/dictionaries/node
           filters:
@@ -99,7 +99,7 @@ spring:
             - RewritePath=/network-operational-support-system-api/dictionaries/node, /v1/dictionary/node
 
         - id: dictionary-find-capacity
-          uri: http://localhost:8089
+          uri: http://info-service:8089
           predicates:
             - Path=/network-operational-support-system-api/dictionaries/capacity
           filters:
@@ -107,7 +107,7 @@ spring:
             - RewritePath=/network-operational-support-system-api/dictionaries/capacity, /v1/dictionary/capacity
 
         - id: dictionary-find-client
-          uri: http://localhost:8089
+          uri: http://info-service:8089
           predicates:
             - Path=/network-operational-support-system-api/dictionaries/client
           filters:
@@ -118,8 +118,8 @@ spring:
       kafka:
         binder:
           brokers:
-            - localhost:19092
-            - localhost:29092
+            - kafka-1:9092
+            - kafka-2:9092
     bus:
       enabled: true
       trace:
@@ -130,5 +130,5 @@ spring:
         enabled: true
 
 auth-server:
-  url: http://localhost:8083
+  url: http://auth-server:8083
   endpoint: /jwt/v1/validation
