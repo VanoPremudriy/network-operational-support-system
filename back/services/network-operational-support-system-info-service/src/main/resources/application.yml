@@ -3,7 +3,7 @@ server:
 
 spring:
   config:
-    import: optional:configserver:http://localhost:8888
+    import: optional:configserver:http://config-service:8888
   application:
     name: network-operational-support-system-info-service
   datasource:

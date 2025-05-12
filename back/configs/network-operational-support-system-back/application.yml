@@ -40,7 +40,7 @@ client:
     endpoint: /api/routes/create_routes
 
 zookeeper:
-  url: zookeeper:22181
+  url: zookeeper:2181
   sleepMsBetweenRetries: 1000
   maxRetries: 2
   waitTime: PT10M
