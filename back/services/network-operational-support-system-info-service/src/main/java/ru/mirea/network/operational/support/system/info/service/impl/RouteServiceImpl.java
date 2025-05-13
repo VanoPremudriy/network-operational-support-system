@@ -23,21 +23,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class RouteServiceImpl implements RouteService {
     private final RouteClient routeClient;
     private final NodeRepository nodeRepository;
-    private GetRouteRs cachedResponse;
+    private List<GetMatrixRs> cachedMatrix;
 
     @Override
     public GetRouteRs getRoute() {
-        if (cachedResponse != null) {
-            return cachedResponse;
+        if (cachedMatrix == null) {
+            cachedMatrix = routeClient.getMatrix();
         }
-
-        List<GetMatrixRs> matrix = routeClient.getMatrix();
 
         Set<UUID> ids = new HashSet<>();
         Set<RouteNode> nodes = new HashSet<>();
         Set<RouteEdge> edges = new HashSet<>();
 
-        for (GetMatrixRs m : matrix) {
+        for (GetMatrixRs m : cachedMatrix) {
             ids.add(m.getStartCity());
             if (!CollectionUtils.isEmpty(m.getAdjacentCities())) {
                 m.getAdjacentCities().forEach(c -> {
@@ -72,11 +70,9 @@ public class RouteServiceImpl implements RouteService {
                     .build());
         }
 
-        cachedResponse = GetRouteRs.builder()
+        return GetRouteRs.builder()
                 .nodes(nodes)
                 .edges(edges)
                 .build();
-
-        return cachedResponse;
     }
 }
