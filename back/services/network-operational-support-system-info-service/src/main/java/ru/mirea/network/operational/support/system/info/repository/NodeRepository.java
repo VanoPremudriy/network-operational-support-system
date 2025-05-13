@@ -21,4 +21,6 @@ public interface NodeRepository extends JpaRepository<NodeEntity, UUID> {
             "left join fetch ba.boards bo " +
             "where n.id in (:nodeIds)")
     List<NodeEntity> findByNodeIdDetailed(Collection<UUID> nodeIds);
+
+    List<NodeEntity> findByNameContains(String name);
 }

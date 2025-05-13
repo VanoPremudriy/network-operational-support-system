@@ -15,18 +15,18 @@ import java.util.UUID;
 
 @Validated
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/task")
 @RequiredArgsConstructor
 public class TaskController {
     private final TaskService taskService;
 
-    @GetMapping(value = "${controller.tasks-by-client}")
+    @GetMapping(value = "${controller.task.get-by-client}")
     public ResponseEntity<TaskListRs> getByClientId(@PathVariable("clientId") UUID clientId) {
         return ResponseEntity.ok()
                 .body(taskService.getByClientId(clientId));
     }
 
-    @GetMapping(value = "${controller.tasks-by-id}")
+    @GetMapping(value = "${controller.task.get-by-id}")
     public ResponseEntity<DetailedTaskRs> getById(@PathVariable("id") UUID id) {
         return ResponseEntity.ok()
                 .body(taskService.getById(id));

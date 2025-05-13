@@ -1,24 +1,17 @@
-server:
-  port: 8089
-
 spring:
-  config:
-    import: optional:configserver:http://localhost:8888
-  application:
-    name: network-operational-support-system-info-service
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
   datasource:
-    url: jdbc:postgresql://localhost:5432/db
+    url: jdbc:postgresql://postgres:5432/db
     username: user
     password: postgres
   cloud:
-    config:
-      enabled: true
     stream:
       kafka:
         binder:
           brokers:
-            - localhost:19092
-            - localhost:29092
+            - kafka-1:9092
+            - kafka-2:9092
     bus:
       enabled: true
       trace:
@@ -33,17 +26,22 @@ springdoc:
     path: /swagger-ui
 
 controller:
-  tasks-by-client: /tasks/{clientId}
-  tasks-by-id: /task/{id}
-  nodes: /nodes
-  node-by-id: /node/{id}
-  routes: /route
-  client-delete: /client/delete
-  client-create: /client/create
-  client-update: /client/update
-  client-get-all:
-    endpoint: /client
-    pageSize: 8
+  task:
+    get-by-client: /client/{clientId}
+    get-by-id: /{id}
+  route:
+    get-all: /
+  client:
+    delete: /delete
+    create: /create
+    update: /update
+    get-all:
+      endpoint: /
+      pageSize: 8
+  dictionary:
+    find-node: /node
+    find-capacity: /capacity
+    find-client: /client
 
 client:
   get-adjacency-matrix:

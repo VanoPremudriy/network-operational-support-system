@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @RefreshScope
 @RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
-    @Value("${controller.client-get-all.pageSize:8}")
+    @Value("${controller.client.get-all.pageSize:8}")
     private final Integer pageSize;
 
     private final ClientRepository clientRepository;
@@ -97,6 +97,7 @@ public class ClientServiceImpl implements ClientService {
         return GetAllClientsRs.builder()
                 .clients(clientsDTO)
                 .numberOfPages(clients.getTotalPages())
+                .success(true)
                 .build();
     }
 }

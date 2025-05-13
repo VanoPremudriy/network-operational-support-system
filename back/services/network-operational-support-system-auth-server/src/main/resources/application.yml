@@ -9,7 +9,7 @@ spring:
     username: user
     password: postgres
   config:
-    import: optional:configserver:http://localhost:8888
+    import: optional:configserver:http://config-service:8888
   cloud:
     config:
       enabled: true
