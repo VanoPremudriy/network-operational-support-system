@@ -30,13 +30,13 @@ controller:
     get-by-client: /client/{clientId}
     get-by-id: /{id}
   route:
-    get-all: /
+    get-all:
   client:
     delete: /delete
     create: /create
     update: /update
     get-all:
-      endpoint: /
+      endpoint:
       pageSize: 8
   dictionary:
     find-node: /node
