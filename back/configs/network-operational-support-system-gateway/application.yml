@@ -130,5 +130,5 @@ spring:
         enabled: true
 
 auth-server:
-  url: http://auth-server:8083
+  url: http://auth-service:8083
   endpoint: /jwt/v1/validation
