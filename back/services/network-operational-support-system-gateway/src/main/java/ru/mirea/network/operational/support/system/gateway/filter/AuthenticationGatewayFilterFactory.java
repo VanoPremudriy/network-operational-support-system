@@ -9,8 +9,10 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.io.buffer.DataBufferFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
@@ -130,6 +132,7 @@ public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFac
             DataBufferFactory dataBufferFactory = exchange.getResponse().bufferFactory();
             byte[] byteData = objectMapper.writeValueAsBytes(data);
             response.setStatusCode(statusCode);
+            response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
             return response.writeWith(Mono.just(byteData).map(dataBufferFactory::wrap));
         } catch (JsonProcessingException e) {
