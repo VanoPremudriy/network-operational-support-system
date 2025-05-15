@@ -4,24 +4,27 @@ import { useState } from 'react';
 import styles from 'Frontend/views/ClientView/ClientView.module.css'
 import { FaPlus } from "react-icons/fa"
 import CustomButtonColorWithIcon from 'Frontend/components/Buttons/CustomButtonColorWithIcon/CustomButtonColorWithIcon';
-import { Client } from 'Frontend/components/Client/ClientRow/ClientRow';
-import ClientUpdateForm from 'Frontend/components/Client/ClientUpdateForm/ClientUpdateForm';
+import { Client } from 'Frontend/types/Client';
+import ClientUpdateForm from 'Frontend/components/Client/ClientUpdateForm/ClientUpdateForm'
 
 const ClientView = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
 
   const handleAddClient = () => {
-    console.log('Добавить клиента');
-  };
-
-  const handleSave = (updatedClient: Client) => {
-    console.log('Сохранён клиент:', updatedClient);
-    // Здесь можно обновить список клиентов
+    setFormMode('create');
+    setSelectedClient(null);
+    setIsFormOpen(true);
   };
 
   const handleUpdate = (client: Client) => {
+    setFormMode('edit');
     setSelectedClient(client);
+    setIsFormOpen(true);
   };
 
   return (
@@ -34,15 +37,24 @@ const ClientView = () => {
 
       <div className={styles.list}>
         <ClientSearch query={searchQuery} onChange={setSearchQuery} />
-        <ClientList onUpdate={handleUpdate} />
+        <ClientList onUpdate={handleUpdate} refreshTrigger={refreshTrigger} setRefreshTrigger={setRefreshTrigger} />
+
       </div>
 
     </div>
-      {selectedClient && (
+      {isFormOpen && (
         <ClientUpdateForm
-          client={selectedClient}
-          onClose={() => setSelectedClient(null)}
-          onSave={handleSave}
+          client={selectedClient ?? undefined}
+          mode={formMode}
+          onClose={() => {
+            setIsFormOpen(false);
+            setSelectedClient(null);
+          }}
+          onSave={() => {
+            setIsFormOpen(false);
+            setSelectedClient(null);
+            setRefreshTrigger(Date.now());
+          }}
         />
       )}
     </div>
