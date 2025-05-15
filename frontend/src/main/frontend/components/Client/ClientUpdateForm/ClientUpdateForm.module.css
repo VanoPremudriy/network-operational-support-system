@@ -22,14 +22,27 @@
 
 .modal input {
     width: 100%;
-    margin-bottom: 12px;
+    margin-bottom: 1px;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 6px;
 }
 
 .buttons {
+    margin-top: 10px;
     display: flex;
-    gap: 8px;
+    gap: 10px;
     width: 80%;
+}
+
+.error {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 1px;
+    min-height: 1.2em; /* зарезервировано место даже без текста */
+    visibility: hidden;
+}
+
+.error.visible {
+    visibility: visible;
 }

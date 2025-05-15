@@ -1,4 +1,4 @@
 @NonNullApi
-package org.vaadin.example.presentation.endpoint;
+package ru.mirea.cnoss.presentation.endpoint;
 
 import org.springframework.lang.NonNullApi;
