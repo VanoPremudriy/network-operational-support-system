@@ -1,8 +1,8 @@
 import styles from 'Frontend/components/Sidebar/Sidebar.module.css';
 import React, { useState } from 'react';
-import SelectButton from 'Frontend/components/SelectButton/SelectButton';
-import CustomButtonColor from 'Frontend/components/CustomButton/CustomButtonColor';
-import CustomButtonNonColor from 'Frontend/components/CustomButton/CustomButtonNonColor';
+import SelectButton from 'Frontend/components/Buttons/SelectButton/SelectButton';
+import CustomButtonColor from 'Frontend/components/Buttons/CustomButtonColor/CustomButtonColor';
+import CustomButtonNonColor from 'Frontend/components/Buttons/CustomButtonNonColor/CustomButtonNonColor';
 
 
 const Sidebar = () => {

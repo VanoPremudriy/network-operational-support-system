@@ -1,0 +1,31 @@
+.searchWrapper {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+
+.icon {
+    position: absolute;
+    left: 12px;
+    color: black;
+    pointer-events: none;
+    font-size: 16px;
+}
+
+.input {
+    flex: 1;
+    padding: 10px 16px 10px 36px; /* левый паддинг под иконку */
+    border: 1px solid #cfd4dc;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.input:focus {
+    border-color: #5b8def;
+    box-shadow: 0 0 0 2px rgba(91, 141, 239, 0.2);
+}

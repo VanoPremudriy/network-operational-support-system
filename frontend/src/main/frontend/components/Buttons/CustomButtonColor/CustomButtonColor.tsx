@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styles from "Frontend/components/CustomButton/CustomButtonColor.module.css"
+import styles from "Frontend/components/Buttons/CustomButtonColor/CustomButtonColor.module.css"
 
 interface CustomButtonProps {
   label: string;
@@ -9,7 +9,7 @@ interface CustomButtonProps {
 const CustomButtonColor: React.FC<CustomButtonProps> = ({label, onClick}) => {
 
   return (
-    <button type="submit" className={styles.button}>
+    <button type="submit" className={styles.button} onClick={onClick}>
       {label && <span className={styles.label}>{label}</span>}
     </button>
   )
