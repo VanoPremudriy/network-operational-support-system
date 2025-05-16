@@ -28,7 +28,7 @@ public class BasketModelEntity {
     private UUID id;
 
     @Column(name = "level_number", nullable = false)
-    private String levelNumber;
+    private Integer levelNumber;
 
     @Column(name = "name", nullable = false)
     private String name;

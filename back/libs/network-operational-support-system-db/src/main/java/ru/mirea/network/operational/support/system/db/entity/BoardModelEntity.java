@@ -31,7 +31,7 @@ public class BoardModelEntity {
     private String name;
 
     @Column(name = "level_number", nullable = false)
-    private String levelNumber;
+    private Integer levelNumber;
 
     @Column(name = "number_of_slots", nullable = false)
     private String numberOfSlots;

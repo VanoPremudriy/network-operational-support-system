@@ -65,13 +65,10 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void processTask(TaskEntity taskEntity) {
-        boolean completed = switch (taskEntity.getTaskType()) {
+        switch (taskEntity.getTaskType()) {
             case CALCULATE_ROUTE -> calculateRoute(taskEntity);
-        };
-
-        if (completed) {
-            taskRepository.save(taskEntity.setResolvedDate(LocalDateTime.now()));
         }
+        ;
     }
 
     @Transactional
@@ -98,19 +95,22 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.save(taskEntity.setActiveFlag(false));
     }
 
-    private boolean calculateRoute(TaskEntity taskEntity) {
+    private void calculateRoute(TaskEntity taskEntity) {
         try {
             CreateRouteRq rq = jsonMapper.treeToValue(taskEntity.getTaskData(), CreateRouteRq.class);
             CalculateRouteRq calculateRouteRq = CalculateRouteRq.builder()
                     .city1(rq.getStartingPoint())
                     .city2(rq.getDestinationPoint())
                     .build();
-            taskEntity.setRoutes(Set.of(calculateRouteService.calculate(taskEntity, calculateRouteRq)));
-            return true;
+            taskEntity.setRoutes(Set.of(calculateRouteService.calculate(taskEntity, calculateRouteRq, rq.getCapacity())));
+
+            taskRepository.save(taskEntity.setResolvedDate(LocalDateTime.now()));
+        } catch (TaskException e) {
+            log.error("Ошибка при попытке рассчитать маршрут: {}. Задача не будет выполнена.", e.getMessage(), e);
+
+            taskRepository.save(taskEntity.setActiveFlag(false).setResolvedDate(LocalDateTime.now()));
         } catch (Exception e) {
             log.error("Ошибка при попытке рассчитать маршрут", e);
-
-            return false;
         }
     }
 
