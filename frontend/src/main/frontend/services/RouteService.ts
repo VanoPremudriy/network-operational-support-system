@@ -13,13 +13,15 @@ interface Edge {
   target: string;
 }
 
+const token = localStorage.getItem("token");
+
 export const useRouteData = () => {
   const [data, setData] = useState<{ points: Point[]; edges: Edge[] } | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const route = await RouteEndpoint.getRoute();
+        const route = await RouteEndpoint.getRoute(token || '');
 
         const points = Array.from(route?.nodes ?? [])
           .filter((node): node is Point => node !== undefined)

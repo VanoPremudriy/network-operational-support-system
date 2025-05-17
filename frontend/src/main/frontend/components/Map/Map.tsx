@@ -16,7 +16,7 @@ type MapProps = {
   edges: Edge[];
 };
 
-export const Map = ({ data, points, edges }: MapProps) => {
+export const Map = ({ data, points, edges, onPointClick }: MapProps & { onPointClick: (id: string) => void }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const gRef = useRef<SVGGElement | null>(null);
 
@@ -38,14 +38,14 @@ export const Map = ({ data, points, edges }: MapProps) => {
   );
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+    <div style={{ position: 'relative', width: '100%', height: '100%'}}>
       <svg ref={svgRef} width="100%" height="100%" style={{ border: '1px solid black' }} onClick={handleSvgClick}>
         <rect width="100%" height="100%" fill="transparent" pointerEvents="all" />
         <g ref={gRef}>
           <BaseMapLayer features={data?.features || []} pathGenerator={pathGenerator} zoomScale={zoomScale} />
           <RoadsLayer pathGenerator={pathGenerator} zoomScale={zoomScale} bounds={visibleBounds} projection={projection} />
           <LakesLayer pathGenerator={pathGenerator} zoomScale={zoomScale} />
-          <Marks points={mappedPoints} edges={edges} zoomScale={zoomScale} clearSelectionTrigger={clearSelectionTrigger} />
+          <Marks points={mappedPoints} edges={edges} zoomScale={zoomScale} clearSelectionTrigger={clearSelectionTrigger} onPointClick={onPointClick}/>
         </g>
       </svg>
     </div>
