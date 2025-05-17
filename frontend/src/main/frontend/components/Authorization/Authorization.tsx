@@ -37,12 +37,9 @@ const Authorization = ({ setAuthorized }: { setAuthorized?: (value: boolean) => 
   return (
     <form onSubmit={handleLogin} className={styles.form}>
     <div className={styles.div}>
-      <div className={styles.logo}>
-        <img src={logo} alt={"Логотип"} height={300} width={300}/>
-      </div>
 
       <div className={styles.headerDiv}>
-        <h3 className={styles.header}>Войти</h3>
+        <h2 className={styles.header}>Войти</h2>
       </div>
 
       <div className={styles.inputs}>
