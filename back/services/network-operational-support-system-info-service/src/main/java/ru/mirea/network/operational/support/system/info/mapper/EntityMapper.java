@@ -56,6 +56,7 @@ public interface EntityMapper {
         return clientEntity.getLastName() + " " + clientEntity.getFirstName() + " " + clientEntity.getMiddleName();
     }
 
+    @Mapping(target = "routes", ignore = true)
     DetailedTask mapDetailed(TaskEntity taskEntity);
 
     List<Task> mapTaskList(List<TaskEntity> tasks);

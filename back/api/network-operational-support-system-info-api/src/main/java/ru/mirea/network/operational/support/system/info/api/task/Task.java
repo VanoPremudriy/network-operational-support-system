@@ -20,9 +20,6 @@ public class Task {
     @Schema(description = "Флаг активности задачи", example = "true")
     private boolean activeFlag;
 
-    @Schema(description = "Id клиента", example = "f0e5842f-8d2f-44fc-ac7e-3132b49db457")
-    private UUID clientId;
-
     @Schema(description = "Дата создания", example = "2025-05-03 11:27:51.176173")
     private LocalDateTime createdTime;
 

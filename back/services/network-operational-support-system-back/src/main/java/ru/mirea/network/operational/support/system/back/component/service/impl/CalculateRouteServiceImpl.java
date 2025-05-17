@@ -104,6 +104,7 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                             .nodes(entityMapper.mapEntity(nodes))
                             .shifts(routeRs.getShifts())
                             .distance(routeRs.getDistance())
+                            .build()
                     ))
                     .build());
         }

@@ -26,13 +26,13 @@ spring:
             - Authentication=true
             - RewritePath=/ntwrk-prtnl-spprt-sstm-mddlwr/createRoute, /v1/route/create
 
-        - id: task-apply
+        - id: route-apply
           uri: http://back-service:8080
           predicates:
-            - Path=/task/apply/**
+            - Path=/route/apply/**
           filters:
             - Authentication=true
-            - RewritePath=/task/apply/(?<segment>.*), /v1/task/apply/$\{segment}
+            - RewritePath=/route/apply/(?<segment>.*), /v1/route/apply/$\{segment}
 
         - id: tasks-by-client-id
           uri: http://info-service:8089
