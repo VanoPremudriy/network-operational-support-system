@@ -4,12 +4,10 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.BrowserCallable;
 import lombok.RequiredArgsConstructor;
 import ru.mirea.cnoss.model.route.RouteService;
-import ru.mirea.cnoss.model.route.dto.Node;
+import ru.mirea.cnoss.model.route.converter.RouteResponseConverter;
 import ru.mirea.cnoss.model.route.dto.Route;
+import ru.mirea.cnoss.model.route.dto.RouteResponse;
 
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @BrowserCallable
 @AnonymousAllowed
@@ -18,13 +16,15 @@ public class RouteEndpoint {
 
     private final RouteService routeService;
 
-    public Route getRoute() {
-        Route route = routeService.getRoute();
-        Set<Node> nodes = route.getNodes().stream().peek(node -> {
-            if (Objects.isNull(node.getEquipmentAmount())) node.setEquipmentAmount(0);
-        }).collect(Collectors.toSet());
+    private final static String BEARER = "Bearer ";
 
-        route.setNodes(nodes);
-        return route;
+    private final RouteResponseConverter routeResponseConverter;
+
+    public Route getRoute(String userToken) {
+        String token = BEARER + userToken;
+
+        RouteResponse routeResponse = routeService.getRoute(token);
+
+        return routeResponseConverter.convert(routeResponse);
     }
 }
