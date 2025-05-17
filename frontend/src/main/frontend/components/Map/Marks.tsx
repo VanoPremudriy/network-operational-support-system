@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { PointTooltip } from 'Frontend/components/Map/PointTooltip';
 
 type Point = {
   id: string;
@@ -17,7 +18,7 @@ type MarksProps = {
   clearSelectionTrigger: number;
 };
 
-export const Marks = ({ points, edges, zoomScale, clearSelectionTrigger }: MarksProps) => {
+export const Marks = ({ points, edges, zoomScale, clearSelectionTrigger, onPointClick }:  MarksProps & { onPointClick: (id: string) => void }) => {
   const [selectedPoint, setSelectedPoint] = useState<Point | null>(null);
 
   React.useEffect(() => {
@@ -65,32 +66,9 @@ export const Marks = ({ points, edges, zoomScale, clearSelectionTrigger }: Marks
         </circle>
       ))}
 
-      {/* Всплывающее окно с инфой */}
-      {selectedPoint && (
-          <g>
-            <g
-              transform={`translate(${selectedPoint.x + 10 / zoomScale}, ${selectedPoint.y - 10 / zoomScale}) scale(${1 / zoomScale })`}
-            >
-              <rect
-                x={0}
-                y={0}
-                width={120}
-                height={40}
-                fill="white"
-                stroke="black"
-                strokeWidth={0.5}
-                rx={4}
-                ry={4}
-              />
-              <text x={10} y={15} fontSize={10} fill="black">
-                {`ID: ${selectedPoint.id}`}
-              </text>
-              <text x={10} y={30} fontSize={10} fill="black">
-                {`Name: ${selectedPoint.name}`}
-              </text>
-            </g>
-          </g>
-      )}
+
+      {/* Всплывающее окно */}
+      {selectedPoint && <PointTooltip point={selectedPoint} zoomScale={zoomScale} onDetailsClick={() => onPointClick(selectedPoint.id)}/>}
     </>
   );
 };
