@@ -1,12 +1,10 @@
 package ru.mirea.network.operational.support.system.back.component.service.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mirea.network.operational.support.system.back.common.Node;
 import ru.mirea.network.operational.support.system.back.component.mapper.EntityMapper;
 import ru.mirea.network.operational.support.system.back.component.repository.NodeRepository;
 import ru.mirea.network.operational.support.system.back.component.repository.RouteRepository;
@@ -22,6 +20,7 @@ import ru.mirea.network.operational.support.system.db.dictionary.TaskType;
 import ru.mirea.network.operational.support.system.db.entity.NodeEntity;
 import ru.mirea.network.operational.support.system.db.entity.RouteEntity;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
+import ru.mirea.network.operational.support.system.route.api.route.common.RouteInfo;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRq;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRs;
 
@@ -85,14 +84,15 @@ public class RouteServiceImpl implements RouteService {
             throw new TaskException("Задача [" + taskEntity.getId() + "] не активна");
         }
 
-        List<Node> nodes;
+        RouteInfo routeInfo;
+
         try {
-            nodes = mapper.treeToValue(route.getRouteData(), new TypeReference<List<Node>>() {});
+            routeInfo = mapper.treeToValue(route.getRouteData(), RouteInfo.class);
         } catch (Exception e) {
             throw new TaskException("Не удалось десериализовать маршрут.");
         }
 
-        List<NodeEntity> nodeEntities = entityMapper.map(nodes);
+        List<NodeEntity> nodeEntities = entityMapper.map(routeInfo.getNodes());
 
         nodeRepository.saveAll(nodeEntities);
         routeRepository.save(route.setActiveFlag(true));

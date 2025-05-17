@@ -6,14 +6,14 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValueCheckStrategy;
 import org.springframework.util.CollectionUtils;
-import ru.mirea.network.operational.support.system.back.common.Basket;
-import ru.mirea.network.operational.support.system.back.common.Board;
-import ru.mirea.network.operational.support.system.back.common.Node;
-import ru.mirea.network.operational.support.system.back.common.Port;
 import ru.mirea.network.operational.support.system.db.entity.BasketEntity;
 import ru.mirea.network.operational.support.system.db.entity.BoardEntity;
 import ru.mirea.network.operational.support.system.db.entity.NodeEntity;
 import ru.mirea.network.operational.support.system.db.entity.PortEntity;
+import ru.mirea.network.operational.support.system.route.api.route.common.Basket;
+import ru.mirea.network.operational.support.system.route.api.route.common.Board;
+import ru.mirea.network.operational.support.system.route.api.route.common.Node;
+import ru.mirea.network.operational.support.system.route.api.route.common.Port;
 
 import java.util.ArrayList;
 import java.util.HashMap;

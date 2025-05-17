@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import ru.mirea.network.operational.support.system.back.component.client.CalculateRouteClient;
 import ru.mirea.network.operational.support.system.back.component.mapper.EntityMapper;
@@ -28,6 +26,7 @@ import ru.mirea.network.operational.support.system.db.entity.RouteEntity;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
 import ru.mirea.network.operational.support.system.python.api.calculate.CalculateRouteRq;
 import ru.mirea.network.operational.support.system.python.api.calculate.CalculateRouteRs;
+import ru.mirea.network.operational.support.system.route.api.route.common.RouteInfo;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -101,7 +100,11 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                     .taskId(taskEntity.getId())
                     .clientId(taskEntity.getClientId())
                     .activeFlag(false)
-                    .routeData(jsonMapper.valueToTree(entityMapper.mapEntity(nodes)))
+                    .routeData(jsonMapper.valueToTree(RouteInfo.builder()
+                            .nodes(entityMapper.mapEntity(nodes))
+                            .shifts(routeRs.getShifts())
+                            .distance(routeRs.getDistance())
+                    ))
                     .build());
         }
 

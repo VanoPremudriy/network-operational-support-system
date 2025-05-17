@@ -1,9 +1,8 @@
-package ru.mirea.network.operational.support.system.back.common;
+package ru.mirea.network.operational.support.system.route.api.route.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
 
 import java.math.BigDecimal;

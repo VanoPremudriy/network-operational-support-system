@@ -1,4 +1,4 @@
-package ru.mirea.network.operational.support.system.back.common;
+package ru.mirea.network.operational.support.system.route.api.route.common;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
