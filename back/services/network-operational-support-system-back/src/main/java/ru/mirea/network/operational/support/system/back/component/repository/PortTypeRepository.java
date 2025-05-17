@@ -7,5 +7,5 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public interface PortTypeRepository extends JpaRepository<PortTypeEntity, UUID> {
-    PortTypeEntity findByCapacity(BigDecimal capacity);
+    PortTypeEntity findTopByCapacityOrderByPrice(BigDecimal capacity);
 }

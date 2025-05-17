@@ -7,4 +7,6 @@ import java.util.UUID;
 
 public interface RouteService {
     CreateRouteRs createRoute(CreateRouteRq rq);
+
+    void applyRoute(UUID id);
 }

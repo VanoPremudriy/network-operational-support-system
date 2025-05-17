@@ -34,11 +34,18 @@ public class BasketModelEntity {
     private String name;
 
     @Column(name = "number_of_slots", nullable = false)
-    private String numberOfSlots;
+    private Integer numberOfSlots;
 
     @Column(name = "allowed_lambda_limit")
-    private String allowedLambdaLimit;
+    private Integer allowedLambdaLimit;
 
     @Column(name = "price")
     private BigDecimal price;
+
+    public BigDecimal getPrice() {
+        if (price == null) {
+            return BigDecimal.ZERO;
+        }
+        return price;
+    }
 }

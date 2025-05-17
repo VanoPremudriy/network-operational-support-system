@@ -5,7 +5,8 @@ import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
 import ru.mirea.network.operational.support.system.python.api.calculate.CalculateRouteRq;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 public interface CalculateRouteService {
-    RouteEntity calculate(TaskEntity taskEntity, CalculateRouteRq rq, BigDecimal capacity);
+    Set<RouteEntity> calculate(TaskEntity taskEntity, CalculateRouteRq rq, BigDecimal capacity);
 }

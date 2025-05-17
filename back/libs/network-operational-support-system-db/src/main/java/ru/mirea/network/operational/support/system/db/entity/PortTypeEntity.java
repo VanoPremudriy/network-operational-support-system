@@ -39,4 +39,11 @@ public class PortTypeEntity {
     @Column(name = "price")
     private BigDecimal price;
 
+    public BigDecimal getPrice() {
+        if (price == null) {
+            return BigDecimal.ZERO;
+        }
+        return price;
+    }
+
 }

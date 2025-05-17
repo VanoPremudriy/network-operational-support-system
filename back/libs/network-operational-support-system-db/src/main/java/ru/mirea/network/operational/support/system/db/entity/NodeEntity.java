@@ -1,18 +1,20 @@
 package ru.mirea.network.operational.support.system.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.jackson.Jacksonized;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -24,8 +26,10 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
+@Jacksonized
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Table(schema = "public", name = "nodes")
 public class NodeEntity {
     @Id
@@ -45,8 +49,8 @@ public class NodeEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "node_id")
+    @EqualsAndHashCode.Exclude
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "node")
     @BatchSize(size = 5)
     private Set<BasketEntity> baskets;
 }
