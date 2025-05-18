@@ -1,6 +1,5 @@
 package ru.mirea.network.operational.support.system.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,6 +18,7 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -53,4 +53,11 @@ public class NodeEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "node")
     @BatchSize(size = 5)
     private Set<BasketEntity> baskets;
+
+    public Set<BasketEntity> getBaskets() {
+        if (baskets == null) {
+            return new HashSet<>();
+        }
+        return baskets;
+    }
 }

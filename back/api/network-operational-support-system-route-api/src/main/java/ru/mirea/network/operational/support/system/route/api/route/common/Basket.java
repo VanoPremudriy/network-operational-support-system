@@ -16,7 +16,7 @@ import java.util.UUID;
 public class Basket {
     private UUID id;
 
-    private UUID basketModelId;
+    private BasketModel basketModel;
 
     private String name;
 

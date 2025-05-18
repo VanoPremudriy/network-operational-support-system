@@ -6,27 +6,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
 @Builder
 @Jacksonized
 @AllArgsConstructor
-public class Port {
+public class BoardModel {
     private UUID id;
-
-    private UUID clientId;
-
-    private PortType portType;
-
-    private UUID taskId;
-
-    private UUID linkToTheAssociatedLinearPort;
-
-    private UUID linkToTheAssociatedLinearPortFromLowerLevel;
-
-    private UUID board;
-
-    @JsonProperty(value = "new")
-    private boolean isNew;
+    private String name;
+    private Integer levelNumber;
+    private Integer numberOfSlots;
+    private Boolean canSendToALowerLevel;
+    @JsonProperty(value = "linear")
+    private boolean isLinear;
+    private BigDecimal price;
 }

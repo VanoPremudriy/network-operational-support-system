@@ -1,6 +1,5 @@
 package ru.mirea.network.operational.support.system.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,11 +37,13 @@ public class PortEntity implements Persistable<UUID> {
     @Column(name = "client_id", nullable = false)
     private UUID clientId;
 
-    @Column(name = "port_type_id", nullable = false)
-    private UUID portTypeId;
-
     @Column(name = "task_id", nullable = false)
     private UUID taskId;
+
+    @EqualsAndHashCode.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "port_type_id", nullable = false)
+    private PortTypeEntity portType;
 
     @EqualsAndHashCode.Exclude
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

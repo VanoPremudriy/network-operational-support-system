@@ -31,6 +31,7 @@ controller:
     get-by-id: /{id}
   route:
     get-all:
+    get-by-id: /{id}
   client:
     delete: /delete
     create: /create

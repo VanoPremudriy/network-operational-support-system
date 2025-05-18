@@ -1,6 +1,5 @@
 package ru.mirea.network.operational.support.system.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,6 +19,7 @@ import lombok.extern.jackson.Jacksonized;
 import org.hibernate.annotations.BatchSize;
 import org.springframework.data.domain.Persistable;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -37,11 +37,13 @@ public class BoardEntity implements Persistable<UUID> {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "board_model_id", nullable = false)
-    private UUID boardModelId;
-
     @Column(name = "name", nullable = false)
     private String name;
+
+    @EqualsAndHashCode.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_model_id", nullable = false)
+    private BoardModelEntity boardModel;
 
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -53,11 +55,17 @@ public class BoardEntity implements Persistable<UUID> {
     @BatchSize(size = 5)
     private Set<PortEntity> ports;
 
-    @JsonProperty(value = "isNew")
     private transient boolean isNew;
 
     @Override
     public boolean isNew() {
         return isNew;
+    }
+
+    public Set<PortEntity> getPorts() {
+        if (ports == null) {
+            return new HashSet<>();
+        }
+        return ports;
     }
 }
