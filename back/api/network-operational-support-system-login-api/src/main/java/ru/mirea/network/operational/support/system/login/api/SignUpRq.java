@@ -18,18 +18,18 @@ public class SignUpRq {
     @Schema(description = "Имя пользователя", example = "Jon")
     @Size(min = 1, max = 20, message = "Имя пользователя должно содержать от 1 до 20 символов")
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Имя пользователя содержит недопустимые символы")
-    @NotBlank(message = "Имя пользователя не может быть пустыми")
+    @NotBlank(message = "Имя пользователя не может быть пустым")
     private String login;
 
     @Schema(description = "Пароль", example = "my1secret1password")
     @Size(min = 1, max = 255, message = "Длина пароля должна быть от 8 до 255 символов")
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Пароль содержит недопустимые символы")
-    @NotBlank(message = "Пароль не может быть пустыми")
+    @NotBlank(message = "Пароль не может быть пустым")
     private String password;
 
     @Schema(description = "Адрес электронной почты", example = "jondoe@gmail.com")
     @Size(min = 5, max = 50, message = "Адрес электронной почты должен содержать от 5 до 255 символов")
-    //@NotBlank(message = "Адрес электронной почты не может быть пустыми")
+    //@NotBlank(message = "Адрес электронной почты не может быть пустым")
     @Email(message = "Email адрес должен быть в формате user@example.com")
     private String email;
 

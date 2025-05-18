@@ -19,12 +19,12 @@ public class JwtValidationRs extends BaseRs {
 
     @Schema(description = "id пользователя", example = "\"c0a86465-9500-1791-8195-00c7ab0e0000\"")
     @Size(max = 50, message = "id пользователя должно содержать до 50 символов")
-    @NotBlank(message = "id пользователя не может быть пустыми")
+    @NotBlank(message = "id пользователя не может быть пустым")
     private String id;
 
     @Schema(description = "Имя пользователя", example = "Jon")
     @Size(min = 5, max = 50, message = "Имя пользователя должно содержать от 5 до 50 символов")
-    @NotBlank(message = "Имя пользователя не может быть пустыми")
+    @NotBlank(message = "Имя пользователя не может быть пустым")
     private String login;
 
     @Schema(description = "Адрес электронной почты", example = "jondoe@gmail.com")
