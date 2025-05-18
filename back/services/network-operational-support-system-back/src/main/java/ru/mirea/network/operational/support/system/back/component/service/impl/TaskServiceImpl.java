@@ -8,24 +8,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-import ru.mirea.network.operational.support.system.back.component.mapper.RootMapper;
 import ru.mirea.network.operational.support.system.back.component.repository.TaskRepository;
 import ru.mirea.network.operational.support.system.back.component.service.CalculateRouteService;
 import ru.mirea.network.operational.support.system.back.component.service.TaskService;
 import ru.mirea.network.operational.support.system.back.dictionary.Constant;
-import ru.mirea.network.operational.support.system.back.exception.NotFoundException;
 import ru.mirea.network.operational.support.system.back.exception.TaskException;
 import ru.mirea.network.operational.support.system.back.zookeeper.DistributedLock;
 import ru.mirea.network.operational.support.system.db.dictionary.TaskType;
-import ru.mirea.network.operational.support.system.db.entity.RouteEntity;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
 import ru.mirea.network.operational.support.system.python.api.calculate.CalculateRouteRq;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRq;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -35,7 +30,6 @@ import java.util.UUID;
 public class TaskServiceImpl implements TaskService {
     private final CuratorFramework curatorFramework;
     private final TaskRepository taskRepository;
-    private final RootMapper rootMapper;
     private final CalculateRouteService calculateRouteService;
     private final JsonMapper jsonMapper;
 
@@ -71,30 +65,6 @@ public class TaskServiceImpl implements TaskService {
         ;
     }
 
-    @Transactional
-    @Override
-    public void applyTask(UUID taskId) {
-        TaskEntity taskEntity = taskRepository.findByIdWithRoute(taskId);
-
-        if (taskEntity == null) {
-            throw new NotFoundException("Не найдена задача с ID: " + taskId);
-        }
-
-        if (CollectionUtils.isEmpty(taskEntity.getRoutes())) {
-            throw new NotFoundException("Не найден маршрут для задачи с ID: " + taskId);
-        }
-
-        // Пока предполагается, что будет только один маршрут.
-        RouteEntity routeEntity = taskEntity.getRoutes().stream().findAny().get();
-
-        routeEntity.setActiveFlag(true);
-
-        //TODO Сохранить маршрут в БД.
-        routeEntity.getRouteData();
-
-        taskRepository.save(taskEntity.setActiveFlag(false));
-    }
-
     private void calculateRoute(TaskEntity taskEntity) {
         try {
             CreateRouteRq rq = jsonMapper.treeToValue(taskEntity.getTaskData(), CreateRouteRq.class);
@@ -102,16 +72,21 @@ public class TaskServiceImpl implements TaskService {
                     .city1(rq.getStartingPoint())
                     .city2(rq.getDestinationPoint())
                     .build();
-            taskEntity.setRoutes(Set.of(calculateRouteService.calculate(taskEntity, calculateRouteRq, rq.getCapacity())));
+            taskEntity.setRoutes(calculateRouteService.calculate(taskEntity, calculateRouteRq, rq.getCapacity()));
 
-            taskRepository.save(taskEntity.setResolvedDate(LocalDateTime.now()));
+            saveTask(taskEntity.setResolvedDate(LocalDateTime.now()));
         } catch (TaskException e) {
             log.error("Ошибка при попытке рассчитать маршрут: {}. Задача не будет выполнена.", e.getMessage(), e);
 
-            taskRepository.save(taskEntity.setActiveFlag(false).setResolvedDate(LocalDateTime.now()));
+            saveTask(taskEntity.setActiveFlag(false).setResolvedDate(LocalDateTime.now()));
         } catch (Exception e) {
             log.error("Ошибка при попытке рассчитать маршрут", e);
         }
+    }
+
+    @Transactional
+    private void saveTask(TaskEntity taskEntity) {
+        taskRepository.save(taskEntity);
     }
 
 }

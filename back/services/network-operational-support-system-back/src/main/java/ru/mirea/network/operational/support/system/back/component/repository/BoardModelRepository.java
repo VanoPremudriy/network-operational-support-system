@@ -9,14 +9,16 @@ import java.util.UUID;
 
 public interface BoardModelRepository extends JpaRepository<BoardModelEntity, UUID> {
     @Query(value = """
-            SELECT * FROM board_models bm
+            SELECT bm.* FROM board_models bm
             inner join board_allowed_port_lists bap on bap.board_model_id = bm.id
             where bap.port_type_id = :id
+            order by bm.price
+            limit 1
             ;
             """,
             nativeQuery = true)
     BoardModelEntity findByPortTypeId(UUID id);
 
 
-    List<BoardModelEntity> findByLevelNumberLessThan(int levelNumber);
+    List<BoardModelEntity> findByLevelNumberLessThanEqual(int levelNumber);
 }

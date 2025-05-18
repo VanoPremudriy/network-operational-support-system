@@ -28,11 +28,17 @@
         <!-- MIREA -->
         <info-api.version>1.0.0-SNAPSHOT</info-api.version>
         <python-api.version>1.0.0-SNAPSHOT</python-api.version>
+        <route-api.version>1.0.0-SNAPSHOT</route-api.version>
         <db.version>1.0.0-SNAPSHOT</db.version>
     </properties>
 
     <dependencies>
         <!-- MIREA -->
+        <dependency>
+            <groupId>ru.mirea.network.operational.support.system.route.api</groupId>
+            <artifactId>network-operational-support-system-route-api</artifactId>
+            <version>${route-api.version}</version>
+        </dependency>
         <dependency>
             <groupId>ru.mirea.network.operational.support.system.info.api</groupId>
             <artifactId>network-operational-support-system-info-api</artifactId>

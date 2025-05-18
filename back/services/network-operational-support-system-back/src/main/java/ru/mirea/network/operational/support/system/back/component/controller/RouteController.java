@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mirea.network.operational.support.system.back.component.service.RouteService;
 import ru.mirea.network.operational.support.system.back.component.service.TaskService;
+import ru.mirea.network.operational.support.system.common.api.BaseRs;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRq;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRs;
 
@@ -33,8 +34,10 @@ public class RouteController {
                 .body(routeService.createRoute(rq));
     }
 
-    @PostMapping(value = "${controller.apply-task}")
-    public void applyTask(@PathVariable("id") UUID id) {
-        taskService.applyTask(id);
+    @PostMapping(value = "${controller.apply-route}")
+    public BaseRs applyRoute(@PathVariable("id") UUID id) {
+        routeService.applyRoute(id);
+
+        return BaseRs.builder().success(true).build();
     }
 }

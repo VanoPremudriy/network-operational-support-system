@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@Accessors(chain = true)
 @AllArgsConstructor
 @Table(schema = "public", name = "routes")
 public class RouteEntity {

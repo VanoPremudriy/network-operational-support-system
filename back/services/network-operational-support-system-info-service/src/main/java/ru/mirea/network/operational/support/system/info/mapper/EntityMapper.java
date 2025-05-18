@@ -8,6 +8,7 @@ import org.mapstruct.Named;
 import org.mapstruct.NullValueCheckStrategy;
 import ru.mirea.network.operational.support.system.db.entity.ClientEntity;
 import ru.mirea.network.operational.support.system.db.entity.NodeEntity;
+import ru.mirea.network.operational.support.system.db.entity.PortEntity;
 import ru.mirea.network.operational.support.system.db.entity.PortTypeEntity;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
 import ru.mirea.network.operational.support.system.info.api.client.ClientDTODetailed;
@@ -24,6 +25,7 @@ import ru.mirea.network.operational.support.system.info.api.task.Task;
 import ru.mirea.network.operational.support.system.info.api.task.TaskList;
 
 import java.util.List;
+import java.util.UUID;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
@@ -54,6 +56,7 @@ public interface EntityMapper {
         return clientEntity.getLastName() + " " + clientEntity.getFirstName() + " " + clientEntity.getMiddleName();
     }
 
+    @Mapping(target = "routes", ignore = true)
     DetailedTask mapDetailed(TaskEntity taskEntity);
 
     List<Task> mapTaskList(List<TaskEntity> tasks);
@@ -73,6 +76,10 @@ public interface EntityMapper {
                     .nodes(mapNodeList(nodes))
                     .build();
         }
+    }
+
+    default UUID map(PortEntity value){
+        return value.getId();
     }
 
     default TaskList mapTask(List<TaskEntity> tasks) {

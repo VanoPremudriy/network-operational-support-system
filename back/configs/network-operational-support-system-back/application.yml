@@ -31,7 +31,7 @@ scheduler:
   maxExecutions: 4
 
 controller:
-  apply-task: /task/apply/{id}
+  apply-route: /route/apply/{id}
   create-route: /route/create
 
 client:

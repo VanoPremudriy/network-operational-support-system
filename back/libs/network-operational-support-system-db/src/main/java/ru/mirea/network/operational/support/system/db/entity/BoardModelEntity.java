@@ -34,7 +34,7 @@ public class BoardModelEntity {
     private Integer levelNumber;
 
     @Column(name = "number_of_slots", nullable = false)
-    private String numberOfSlots;
+    private Integer numberOfSlots;
 
     @Column(name = "can_send_to_a_lower_level")
     private Boolean canSendToALowerLevel;
@@ -44,4 +44,11 @@ public class BoardModelEntity {
 
     @Column(name = "price")
     private BigDecimal price;
+
+    public BigDecimal getPrice() {
+        if (price == null) {
+            return BigDecimal.ZERO;
+        }
+        return price;
+    }
 }
