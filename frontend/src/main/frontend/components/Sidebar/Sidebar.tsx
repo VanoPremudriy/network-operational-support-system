@@ -27,11 +27,11 @@ const Sidebar = ({ selectedPointId, onClose }: SidebarProps) => {
   };
 
   const handleSelectStartNode = (node: {id: string; label: string}) => {
-    console.log('Точка начала выбрана:', node);
+    console.log('Город начала выбрана:', node);
   }
 
   const handleSelectEndNode = (node: {id: string; label: string}) => {
-    console.log('Точка назначения выбрана:', node);
+    console.log('Город назначения выбрана:', node);
   }
 
   const handleSelectCapacity = (capacity: {id: string; label: string}) => {
@@ -58,7 +58,7 @@ const Sidebar = ({ selectedPointId, onClose }: SidebarProps) => {
           ) : (
             <>
               <SelectButton
-                label="Точка начала"
+                label="Город начала"
                 fetchOptions={async (query) => {
                   const raw = await fetchNodes(query);
                   return raw.map((c) => ({ id: c.id, label: c.name }));
@@ -67,7 +67,7 @@ const Sidebar = ({ selectedPointId, onClose }: SidebarProps) => {
               />
 
               <SelectButton
-                label="Точка назначения"
+                label="Город назначения"
                 fetchOptions={async (query) => {
                   const raw = await fetchNodes(query);
                   return raw.map((c) => ({ id: c.id, label: c.name }));
