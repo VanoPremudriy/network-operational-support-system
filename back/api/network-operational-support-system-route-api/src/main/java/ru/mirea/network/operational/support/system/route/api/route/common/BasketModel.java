@@ -1,29 +1,27 @@
 package ru.mirea.network.operational.support.system.route.api.route.common;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
-import java.util.List;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
 @Builder
 @Jacksonized
 @AllArgsConstructor
-public class Board {
+public class BasketModel {
     private UUID id;
 
-    private BoardModel boardModel;
+    private Integer levelNumber;
 
     private String name;
 
-    private UUID basket;
+    private Integer numberOfSlots;
 
-    private List<Port> ports;
+    private Integer allowedLambdaLimit;
 
-    @JsonProperty(value = "new")
-    private boolean isNew;
+    private BigDecimal price;
 }

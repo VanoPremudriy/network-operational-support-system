@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Table(schema = "public", name = "basket_models")
 public class BasketModelEntity {
     @Id
@@ -47,5 +49,12 @@ public class BasketModelEntity {
             return BigDecimal.ZERO;
         }
         return price;
+    }
+
+    public Integer getAllowedLambdaLimit() {
+        if (allowedLambdaLimit == null) {
+            return numberOfSlots;
+        }
+        return allowedLambdaLimit;
     }
 }

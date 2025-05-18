@@ -82,13 +82,17 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                 UUID id = routeRs.getRoute().get(i);
                 NodeEntity node = nodeRepository.findByNodeIdDetailed(id);
                 if (i == 0) {
-                    processFirst(node, baseLevel, dto, taskEntity, boardModel, basketModel, boardByLevel, basketsByLevel, portType);
+                    UUID nextId = routeRs.getRoute().get(i + 1);
+                    NodeEntity nextNode = nodeRepository.findByNodeIdDetailed(nextId);
+                    processFirst(node, nextNode, baseLevel, dto, taskEntity, basketModel, boardModel, portType, basketsByLevel, boardByLevel);
                     price = price.add(dto.getPrice());
                 } else if (i == routeRs.getRoute().size() - 1) {
                     processLast(node, baseLevel, dto, taskEntity, boardModel, basketModel, boardByLevel, basketsByLevel, portType);
                     price = price.add(dto.getPrice());
                 } else {
-                    processMiddle(node, dto, taskEntity, boardByLevel, basketsByLevel, portType);
+                    UUID nextId = routeRs.getRoute().get(i + 1);
+                    NodeEntity nextNode = nodeRepository.findByNodeIdDetailed(nextId);
+                    processMiddle(node, nextNode, dto, taskEntity, boardByLevel, basketsByLevel, portType);
                     price = price.add(dto.getPrice());
                 }
 
@@ -113,56 +117,34 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
     }
 
     private void processFirst(NodeEntity node,
+                              NodeEntity nextNode,
                               Integer currentLevel,
                               CalculateDto dto,
                               TaskEntity taskEntity,
-                              BoardModelEntity firstBoardModel,
                               BasketModelEntity firstBasketModel,
-                              Map<Integer, List<BoardModelEntity>> boardByLevel,
+                              BoardModelEntity firstBoardModel,
+                              PortTypeEntity portType,
                               Map<Integer, List<BasketModelEntity>> basketsByLevel,
-                              PortTypeEntity portType) {
-        if (CollectionUtils.isEmpty(node.getBaskets())
-                || node.getBaskets().stream().noneMatch(b -> b.getBasketModelId() == firstBasketModel.getId())) {
-            BasketEntity basket = BasketEntity.builder()
-                    .id(UUID.randomUUID())
-                    .isNew(true)
-                    .basketModelId(firstBasketModel.getId())
-                    .name(firstBasketModel.getName())
-                    .node(node)
-                    .boards(new HashSet<>())
-                    .build();
-            node.setBaskets(new HashSet<>(Set.of(basket)));
-
-            BoardEntity board = BoardEntity.builder()
-                    .id(UUID.randomUUID())
-                    .isNew(true)
-                    .name(firstBoardModel.getName())
-                    .boardModelId(firstBoardModel.getId())
-                    .basket(basket)
-                    .ports(new HashSet<>())
-                    .build();
-            basket.getBoards().add(board);
-
-            PortEntity port = PortEntity.builder()
-                    .id(UUID.randomUUID())
-                    .isNew(true)
-                    .clientId(taskEntity.getClientId())
-                    .taskId(taskEntity.getId())
-                    .portTypeId(portType.getId())
-                    .board(board)
-                    .build();
-            board.getPorts().add(port);
-
-            dto
-                    .setBasket(basket)
-                    .setPort(port)
-                    .setPrice(dto.getPrice()
-                            .add(firstBoardModel.getPrice())
-                            .add(firstBasketModel.getPrice())
-                            .add(portType.getPrice()));
-        } else {
-            //TODO
+                              Map<Integer, List<BoardModelEntity>> boardByLevel) {
+        BasketEntity basket = findBasket(node, nextNode, firstBasketModel);
+        if (basket == null) {
+            basket = createBasket(dto, node, List.of(firstBasketModel));
         }
+
+        BoardEntity board = findBoard(basket, firstBoardModel);
+        if (board == null) {
+            board = createClientBoard(dto, basket, List.of(firstBoardModel));
+        }
+
+        PortEntity port = createPort(dto, board, taskEntity, portType);
+
+        dto
+                .setBasket(basket)
+                .setPort(port)
+                .setPrice(dto.getPrice()
+                        .add(firstBoardModel.getPrice())
+                        .add(firstBasketModel.getPrice())
+                        .add(portType.getPrice()));
 
         if (currentLevel != 1) {
             while (currentLevel != 1) {
@@ -171,9 +153,15 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
 
                 BasketEntity basketForLinear = dto.getBasket();
 
-                BoardEntity linearBoard = createLinerBoard(dto, basketForLinear, boards);
+                BoardEntity linearBoard = findBoard(basketForLinear, boards, true);
+                if (linearBoard == null) {
+                    linearBoard = createLinerBoard(dto, basketForLinear, boards);
+                }
 
-                PortEntity linerPort = createPort(dto, linearBoard, taskEntity, portType);
+                PortEntity linerPort = findPort(linearBoard, portType);
+                if (linerPort == null) {
+                    linerPort = createPort(dto, linearBoard, taskEntity, portType);
+                }
 
                 dto.getPort().setLinkToTheAssociatedLinearPort(linerPort);
 
@@ -182,12 +170,19 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                 boards = boardByLevel.get(currentLevel);
                 List<BasketModelEntity> baskets = basketsByLevel.get(currentLevel);
 
-                BasketEntity clientBasket = createBasket(dto, node, baskets);
-                node.getBaskets().add(clientBasket);
+                BasketEntity clientBasket = findBasketWithNext(node, nextNode, baskets);
+                if (clientBasket == null) {
+                    clientBasket = createBasket(dto, node, baskets);
+                }
 
-                BoardEntity clientBoard = createClientBoard(dto, clientBasket, boards);
+                BoardEntity clientBoard = findBoard(clientBasket, boards, false);
+                if (clientBoard == null) {
+                    clientBoard = createClientBoard(dto, clientBasket, boards);
+                }
 
                 PortEntity clientPort = createPort(dto, clientBoard, taskEntity, portType);
+
+                clientPort.setLinkToTheAssociatedLinearPortFromLowerLevel(linerPort);
 
                 dto.setBasket(clientBasket)
                         .setPort(clientPort);
@@ -204,74 +199,98 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                              Map<Integer, List<BoardModelEntity>> boardByLevel,
                              Map<Integer, List<BasketModelEntity>> basketsByLevel,
                              PortTypeEntity portType) {
+        if (baseLevel == 1) {
+            BasketEntity prevBasket = dto.getBasket();
+            BasketEntity basket = findBasketWithPrev(node, prevBasket, List.of(lastBasketModel));
+            if (basket == null) {
+                basket = createBasket(dto, node, List.of(lastBasketModel));
+            }
+
+            BoardEntity board = findBoard(basket, lastBoardModel);
+            if (board == null) {
+                board = createClientBoard(dto, basket, List.of(lastBoardModel));
+            }
+
+            createPort(dto, board, taskEntity, portType);
+
+            return;
+        }
+
         // Входящая корзина первого уровня
         List<BasketModelEntity> baskets = basketsByLevel.get(1);
         List<BoardModelEntity> boards = boardByLevel.get(1);
 
-        BasketEntity inBasket = createBasket(dto, node, baskets);
-
         BasketEntity prevBasket = dto.getBasket();
+
+        BasketEntity inBasket = findBasketWithPrev(node, prevBasket, baskets);
+        if (inBasket == null) {
+            inBasket = createBasket(dto, node, baskets);
+        }
+
         inBasket.setLinkedBasket(prevBasket);
         prevBasket.setLinkedBasket(inBasket);
 
-        BoardEntity inBoard = createClientBoard(dto, inBasket, boards);
+        BoardEntity inBoard = findBoard(inBasket, boards, false);
+        if (inBoard == null) {
+            inBoard = createClientBoard(dto, inBasket, boards);
+        }
+
         PortEntity inPort = createPort(dto, inBoard, taskEntity, portType);
+
         Integer currentLevel = 2;
 
         dto.setBasket(inBasket)
                 .setPort(inPort);
 
         while (currentLevel <= baseLevel) {
+            // Заполняем линейную корзину
             boards = boardByLevel.get(currentLevel);
 
             BasketEntity basketForLinear = dto.getBasket();
 
-            BoardEntity linearBoard = createLinerBoard(dto, basketForLinear, boards);
+            BoardEntity linearBoard = findBoard(inBasket, boards, true);
+            if (linearBoard == null) {
+                linearBoard = createLinerBoard(dto, basketForLinear, boards);
+            }
 
-            PortEntity linerPort = createPort(dto, linearBoard, taskEntity, portType);
+            PortEntity linerPort = findPort(linearBoard, portType);
+            if (linerPort == null) {
+                linerPort = createPort(dto, linearBoard, taskEntity, portType);
+            }
 
-            dto.getPort().setLinkToTheAssociatedLinearPort(linerPort);
+            dto.getPort().setLinkToTheAssociatedLinearPortFromLowerLevel(linerPort);
 
+            // Заполняем последнюю клиентскую корзину
             if (currentLevel.equals(baseLevel)) {
-                BasketEntity basket = BasketEntity.builder()
-                        .id(UUID.randomUUID())
-                        .isNew(true)
-                        .basketModelId(lastBasketModel.getId())
-                        .name(lastBasketModel.getName())
-                        .node(node)
-                        .boards(new HashSet<>())
-                        .build();
-                node.getBaskets().add(basket);
+                BasketEntity basket = findBasket(node, lastBasketModel);
+                if (basket == null) {
+                    basket = createBasket(dto, node, List.of(lastBasketModel));
+                }
 
-                BoardEntity board = BoardEntity.builder()
-                        .id(UUID.randomUUID())
-                        .isNew(true)
-                        .name(lastBoardModel.getName())
-                        .boardModelId(lastBoardModel.getId())
-                        .basket(basket)
-                        .ports(new HashSet<>())
-                        .build();
-                basket.getBoards().add(board);
+                BoardEntity board = findBoard(basket, lastBoardModel);
+                if (board == null) {
+                    board = createClientBoard(dto, basket, List.of(lastBoardModel));
+                }
 
-                PortEntity port = PortEntity.builder()
-                        .id(UUID.randomUUID())
-                        .isNew(true)
-                        .clientId(taskEntity.getClientId())
-                        .taskId(taskEntity.getId())
-                        .portTypeId(portType.getId())
-                        .board(board)
-                        .build();
-                board.getPorts().add(port);
+                createPort(dto, board, taskEntity, portType);
             } else {
+                // Заполняем промежуточные клиентские корзины
                 boards = boardByLevel.get(currentLevel);
                 baskets = basketsByLevel.get(currentLevel);
 
-                BasketEntity clientBasket = createBasket(dto, node, baskets);
-                node.getBaskets().add(clientBasket);
+                BasketEntity clientBasket = findBasket(node, baskets);
+                if (clientBasket == null) {
+                    clientBasket = createBasket(dto, node, baskets);
+                }
 
-                BoardEntity clientBoard = createClientBoard(dto, clientBasket, boards);
+                BoardEntity clientBoard = findBoard(clientBasket, lastBoardModel);
+                if (clientBoard == null) {
+                    clientBoard = createClientBoard(dto, clientBasket, boards);
+                }
 
                 PortEntity clientPort = createPort(dto, clientBoard, taskEntity, portType);
+
+                clientPort.setLinkToTheAssociatedLinearPort(linerPort);
 
                 dto.setBasket(clientBasket)
                         .setPort(clientPort);
@@ -282,6 +301,7 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
     }
 
     private void processMiddle(NodeEntity node,
+                               NodeEntity nextNode,
                                CalculateDto dto,
                                TaskEntity taskEntity,
                                Map<Integer, List<BoardModelEntity>> boardByLevel,
@@ -292,31 +312,59 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
         List<BasketModelEntity> baskets = basketsByLevel.get(1);
         List<BoardModelEntity> boards = boardByLevel.get(1);
 
-        BasketEntity inBasket = createBasket(dto, node, baskets);
-
         BasketEntity prevBasket = dto.getBasket();
+
+        BasketEntity inBasket = findBasketWithPrev(node, prevBasket, baskets);
+        if (inBasket == null) {
+            inBasket = createBasket(dto, node, baskets);
+        }
         inBasket.setLinkedBasket(prevBasket);
         prevBasket.setLinkedBasket(inBasket);
 
-        BoardEntity inBoard = createClientBoard(dto, inBasket, boards);
+        BoardEntity inBoard = findBoard(inBasket, boards, false);
+        if (inBoard == null) {
+            inBoard = createClientBoard(dto, inBasket, boards);
+        }
+
         PortEntity inPort = createPort(dto, inBoard, taskEntity, portType);
 
         // Входящая корзина второго уровня
         baskets = basketsByLevel.get(2);
         boards = boardByLevel.get(2);
 
-        BasketEntity inSecondBasket = createBasket(dto, node, baskets);
+        BasketEntity inSecondBasket = findBasket(node, baskets);
+        if (inSecondBasket == null) {
+            inSecondBasket = createBasket(dto, node, baskets);
+        }
 
-        BoardEntity inSecondBoard = createClientBoard(dto, inSecondBasket, boards);
-        PortEntity inSecondPort = createPort(dto, inSecondBoard, taskEntity, portType);
+        BoardEntity inSecondBoard = findBoard(inSecondBasket, boards, true);
+        if (inSecondBoard == null) {
+            inSecondBoard = createLinerBoard(dto, inSecondBasket, boards);
+        }
+
+        PortEntity inSecondPort = findPort(inSecondBoard, portType);
+        if (inSecondPort == null) {
+            inSecondPort = createPort(dto, inSecondBoard, taskEntity, portType);
+        }
 
         inPort.setLinkToTheAssociatedLinearPortFromLowerLevel(inSecondPort);
 
         // Исходящая корзина второго уровня
-        BasketEntity outSecondBasket = createBasket(dto, node, baskets);
 
-        BoardEntity outSecondBoard = createClientBoard(dto, outSecondBasket, boards);
-        PortEntity outSecondPort = createPort(dto, outSecondBoard, taskEntity, portType);
+        BasketEntity outSecondBasket = findBasket(node, baskets);
+        if (outSecondBasket == null) {
+            outSecondBasket = createBasket(dto, node, baskets);
+        }
+
+        BoardEntity outSecondBoard = findBoard(outSecondBasket, boards, true);
+        if (outSecondBoard == null) {
+            outSecondBoard = createLinerBoard(dto, outSecondBasket, boards);
+        }
+
+        PortEntity outSecondPort = findPort(outSecondBoard, portType);
+        if (outSecondPort == null) {
+            outSecondPort = createPort(dto, outSecondBoard, taskEntity, portType);
+        }
 
         outSecondPort.setLinkToTheAssociatedLinearPort(inSecondPort);
         inSecondPort.setLinkToTheAssociatedLinearPort(outSecondPort);
@@ -324,15 +372,126 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
         // Исходящая корзина первого уровня
         baskets = basketsByLevel.get(1);
         boards = boardByLevel.get(1);
-        BasketEntity outBasket = createBasket(dto, node, baskets);
 
-        BoardEntity outBoard = createClientBoard(dto, outBasket, boards);
+        BasketEntity outBasket = findBasketWithNext(node, nextNode, baskets);
+        if (outBasket == null) {
+            outBasket = createBasket(dto, node, baskets);
+        }
+
+        BoardEntity outBoard = findBoard(outBasket, boards, false);
+        if (outBoard == null) {
+            outBoard = createClientBoard(dto, outBasket, boards);
+        }
+
         PortEntity outPort = createPort(dto, outBoard, taskEntity, portType);
-
-        outPort.setLinkToTheAssociatedLinearPort(outSecondPort);
+        outPort.setLinkToTheAssociatedLinearPortFromLowerLevel(outSecondPort);
 
         dto.setBasket(outBasket)
                 .setPort(outPort);
+    }
+
+    private BasketEntity findBasket(NodeEntity node, BasketModelEntity model) {
+        if (CollectionUtils.isEmpty(node.getBaskets())) {
+            return null;
+        }
+        return node.getBaskets().stream()
+                .filter(
+                        b -> b.getBasketModel() == model
+                                && b.getBoards().size() < b.getBasketModel().getAllowedLambdaLimit()
+                )
+                .findAny()
+                .orElse(null);
+    }
+
+
+    private BasketEntity findBasket(NodeEntity node, List<BasketModelEntity> models) {
+        if (CollectionUtils.isEmpty(node.getBaskets())) {
+            return null;
+        }
+        return node.getBaskets().stream()
+                .filter(
+                        b -> models.contains(b.getBasketModel())
+                                && b.getBoards().size() < b.getBasketModel().getAllowedLambdaLimit()
+                )
+                .findAny()
+                .orElse(null);
+    }
+
+    private BasketEntity findBasket(NodeEntity node, NodeEntity nextNode, BasketModelEntity model) {
+        if (CollectionUtils.isEmpty(node.getBaskets())) {
+            return null;
+        }
+        return node.getBaskets().stream()
+                .filter(
+                        b -> b.getBasketModel() == model
+                                && b.getBoards().size() < b.getBasketModel().getAllowedLambdaLimit() &&
+                                (b.getLinkedBasket() == null
+                                        || b.getLinkedBasket().getNode().equals(nextNode)
+                                        && b.getLinkedBasket().getBoards().size() < b.getLinkedBasket().getBasketModel().getAllowedLambdaLimit())
+                )
+                .findAny()
+                .orElse(null);
+    }
+
+    private BasketEntity findBasketWithPrev(NodeEntity node, BasketEntity prevBasket, List<BasketModelEntity> models) {
+        if (CollectionUtils.isEmpty(node.getBaskets())) {
+            return null;
+        }
+        return node.getBaskets().stream()
+                .filter(b -> models.contains(b.getBasketModel())
+                        && b.getBoards().size() < b.getBasketModel().getAllowedLambdaLimit() &&
+                        (b.getLinkedBasket() == null || b.getLinkedBasket().equals(prevBasket))
+                )
+                .findAny()
+                .orElse(null);
+    }
+
+    private BasketEntity findBasketWithNext(NodeEntity node, NodeEntity nextNode, List<BasketModelEntity> models) {
+        if (CollectionUtils.isEmpty(node.getBaskets())) {
+            return null;
+        }
+        return node.getBaskets().stream()
+                .filter(b -> models.contains(b.getBasketModel())
+                        && b.getBoards().size() < b.getBasketModel().getAllowedLambdaLimit() &&
+                        (b.getLinkedBasket() == null
+                                || b.getLinkedBasket().getNode().equals(nextNode)
+                                && b.getLinkedBasket().getBoards().size() < b.getLinkedBasket().getBasketModel().getAllowedLambdaLimit())
+                )
+                .findAny()
+                .orElse(null);
+    }
+
+    private BoardEntity findBoard(BasketEntity basket, List<BoardModelEntity> models, boolean isLiner) {
+        if (CollectionUtils.isEmpty(basket.getBoards())) {
+            return null;
+        }
+        return basket.getBoards().stream()
+                .filter(b -> b.getBoardModel().isLinear() == isLiner
+                        && models.contains(b.getBoardModel())
+                        && b.getPorts().size() < b.getBoardModel().getNumberOfSlots())
+                .findAny()
+                .orElse(null);
+    }
+
+    private BoardEntity findBoard(BasketEntity basket, BoardModelEntity model) {
+        if (CollectionUtils.isEmpty(basket.getBoards())) {
+            return null;
+        }
+        return basket.getBoards().stream()
+                .filter(b -> b.getBoardModel() == model
+                        && b.getPorts().size() < b.getBoardModel().getNumberOfSlots())
+                .findAny()
+                .orElse(null);
+    }
+
+    private PortEntity findPort(BoardEntity board, PortTypeEntity model) {
+        if (CollectionUtils.isEmpty(board.getPorts())) {
+            return null;
+        }
+        return board.getPorts().stream()
+                .filter(b -> b.getPortType() == model)
+                .findAny()
+                .orElse(null);
     }
 
     private BasketEntity createBasket(CalculateDto dto, NodeEntity node, List<BasketModelEntity> baskets) {
@@ -343,7 +502,7 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
         BasketEntity basket = BasketEntity.builder()
                 .id(UUID.randomUUID())
                 .isNew(true)
-                .basketModelId(basketModel.getId())
+                .basketModel(basketModel)
                 .name(basketModel.getName())
                 .node(node)
                 .boards(new HashSet<>())
@@ -367,7 +526,7 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                 .id(UUID.randomUUID())
                 .isNew(true)
                 .name(boardModel.getName())
-                .boardModelId(boardModel.getId())
+                .boardModel(boardModel)
                 .basket(basket)
                 .ports(new HashSet<>())
                 .build();
@@ -391,7 +550,7 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                 .id(UUID.randomUUID())
                 .isNew(true)
                 .name(boardModel.getName())
-                .boardModelId(boardModel.getId())
+                .boardModel(boardModel)
                 .basket(basket)
                 .ports(new HashSet<>())
                 .build();
@@ -408,7 +567,7 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                 .isNew(true)
                 .clientId(taskEntity.getClientId())
                 .taskId(taskEntity.getId())
-                .portTypeId(portType.getId())
+                .portType(portType)
                 .board(board)
                 .build();
         board.getPorts().add(port);

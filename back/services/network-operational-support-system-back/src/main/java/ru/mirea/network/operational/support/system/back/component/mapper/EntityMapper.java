@@ -75,22 +75,22 @@ public interface EntityMapper {
                 continue;
             }
             for (Basket basket : node.getBaskets()) {
-                if (CollectionUtils.isEmpty(basket.getBoards())) {
-                    continue;
-                }
                 BasketEntity basketEntity = (BasketEntity) context.get(basket.getId());
 
                 basketEntity.setNode((NodeEntity) context.get(basket.getNode()));
                 basketEntity.setLinkedBasket((BasketEntity) context.get(basket.getLinkedBasket()));
 
+                if (CollectionUtils.isEmpty(basket.getBoards())) {
+                    continue;
+                }
                 for (Board board : basket.getBoards()) {
-                    if (CollectionUtils.isEmpty(board.getPorts())) {
-                        continue;
-                    }
                     BoardEntity boardEntity = (BoardEntity) context.get(board.getId());
 
                     boardEntity.setBasket((BasketEntity) context.get(board.getBasket()));
 
+                    if (CollectionUtils.isEmpty(board.getPorts())) {
+                        continue;
+                    }
                     for (Port port : board.getPorts()) {
                         PortEntity portEntity = (PortEntity) context.get(port.getId());
 

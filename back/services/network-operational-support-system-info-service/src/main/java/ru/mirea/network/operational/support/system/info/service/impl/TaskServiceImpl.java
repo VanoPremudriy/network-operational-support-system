@@ -56,12 +56,13 @@ public class TaskServiceImpl implements TaskService {
                 try {
                     RouteInfo routeInfo = mapper.treeToValue(route.getRouteData(), RouteInfo.class);
                     detailedTask.getRoutes().add(Route.builder()
+                            .id(route.getId())
                             .distance(routeInfo.getDistance())
                             .shifts(routeInfo.getShifts())
                             .price(route.getPrice())
                             .build());
                 } catch (Exception e) {
-                    throw new RuntimeException("Не удалось десериализовать маршрут.");
+                    throw new RuntimeException("Не удалось десериализовать маршрут", e);
                 }
             });
         }
