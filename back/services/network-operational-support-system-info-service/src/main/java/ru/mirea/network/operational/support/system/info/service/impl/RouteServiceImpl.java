@@ -96,6 +96,16 @@ public class RouteServiceImpl implements RouteService {
             RouteInfo routeInfo = jsonMapper.treeToValue(route.getRouteData(), RouteInfo.class);
             Node previous = null;
             for (Node node : routeInfo.getNodes()) {
+                AtomicInteger equipmentAmount = new AtomicInteger();
+                if (node.getBaskets() != null) {
+                    node.getBaskets().forEach(b -> {
+                        equipmentAmount.incrementAndGet();
+                        if (b.getBoards() != null) {
+                            equipmentAmount.addAndGet(b.getBoards().size());
+                        }
+                    });
+                }
+
                 if (previous != null) {
                     edges.add(RouteEdge.builder()
                             .source(previous.getId())
@@ -104,6 +114,7 @@ public class RouteServiceImpl implements RouteService {
                 }
                 nodes.add(RouteNode.builder()
                         .id(node.getId())
+                        .equipmentAmount(equipmentAmount.get())
                         .coordinates(List.of(node.getLongitude(), node.getLatitude()))
                         .name(node.getName())
                         .build());
