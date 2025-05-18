@@ -3,11 +3,11 @@ package ru.mirea.cnoss.presentation.endpoint;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.BrowserCallable;
 import lombok.RequiredArgsConstructor;
-import ru.mirea.cnoss.model.dictionary.DictionaryService;
-import ru.mirea.cnoss.model.dictionary.converter.CapacityDictionaryResponseToViewConverter;
-import ru.mirea.cnoss.model.dictionary.dto.capacity.CapacityDictionaryViewResponse;
-import ru.mirea.cnoss.model.dictionary.dto.client.ClientDictionaryResponse;
-import ru.mirea.cnoss.model.dictionary.dto.node.NodeDictionaryResponse;
+import ru.mirea.cnoss.service.dictionary.DictionaryService;
+import ru.mirea.cnoss.service.dictionary.converter.CapacityDictionaryResponseToViewConverter;
+import ru.mirea.cnoss.service.dictionary.dto.capacity.CapacityDictionaryViewResponse;
+import ru.mirea.cnoss.service.dictionary.dto.client.ClientDictionaryResponse;
+import ru.mirea.cnoss.service.dictionary.dto.node.NodeDictionaryResponse;
 
 
 @BrowserCallable

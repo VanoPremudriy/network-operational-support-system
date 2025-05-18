@@ -3,12 +3,12 @@ package ru.mirea.cnoss.presentation.endpoint;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.BrowserCallable;
 import lombok.RequiredArgsConstructor;
-import ru.mirea.cnoss.model.BaseResponse;
-import ru.mirea.cnoss.model.client.ClientService;
-import ru.mirea.cnoss.model.client.converter.ClientDtoToViewDtoConverter;
-import ru.mirea.cnoss.model.client.dto.*;
-import ru.mirea.cnoss.model.client.dto.request.ClientGetRequest;
-import ru.mirea.cnoss.model.client.dto.request.*;
+import ru.mirea.cnoss.service.BaseResponse;
+import ru.mirea.cnoss.service.client.ClientService;
+import ru.mirea.cnoss.service.client.converter.ClientDtoToViewDtoConverter;
+import ru.mirea.cnoss.service.client.dto.*;
+import ru.mirea.cnoss.service.client.dto.request.ClientGetRequest;
+import ru.mirea.cnoss.service.client.dto.request.*;
 
 import java.util.Set;
 import java.util.UUID;

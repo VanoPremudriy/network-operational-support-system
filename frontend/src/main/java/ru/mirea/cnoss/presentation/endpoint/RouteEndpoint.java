@@ -3,10 +3,10 @@ package ru.mirea.cnoss.presentation.endpoint;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.BrowserCallable;
 import lombok.RequiredArgsConstructor;
-import ru.mirea.cnoss.model.route.RouteService;
-import ru.mirea.cnoss.model.route.converter.RouteResponseConverter;
-import ru.mirea.cnoss.model.route.dto.Route;
-import ru.mirea.cnoss.model.route.dto.RouteResponse;
+import ru.mirea.cnoss.service.route.RouteService;
+import ru.mirea.cnoss.service.route.converter.RouteResponseConverter;
+import ru.mirea.cnoss.service.route.dto.Route;
+import ru.mirea.cnoss.service.route.dto.RouteResponse;
 
 
 @BrowserCallable

@@ -4,7 +4,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.BrowserCallable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
-import ru.mirea.cnoss.model.geodata.GeoDataService;
+import ru.mirea.cnoss.service.geodata.GeoDataService;
 
 import java.io.IOException;
 import java.io.InputStream;

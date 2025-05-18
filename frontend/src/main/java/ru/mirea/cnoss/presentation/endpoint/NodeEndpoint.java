@@ -3,7 +3,7 @@ package ru.mirea.cnoss.presentation.endpoint;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.BrowserCallable;
 import lombok.RequiredArgsConstructor;
-import ru.mirea.cnoss.model.node.NodeService;
+import ru.mirea.cnoss.service.node.NodeService;
 
 @BrowserCallable
 @AnonymousAllowed
