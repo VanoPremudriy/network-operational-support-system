@@ -59,6 +59,7 @@ const ClientsList: React.FC<ClientsListProps> = ({ onUpdate, refreshTrigger, set
           disabled={page === 0}
           className={styles.pageButton}
         >
+          ◀
         </button>
 
         {Array.from({ length: numberOfPages }).map((_, i) => (
@@ -76,6 +77,7 @@ const ClientsList: React.FC<ClientsListProps> = ({ onUpdate, refreshTrigger, set
           disabled={page === numberOfPages - 1}
           className={styles.pageButton}
         >
+          ▶
         </button>
 
       </div>
