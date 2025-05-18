@@ -62,7 +62,7 @@ const Registration = () => {
         <div className={styles.buttons}>
           <CustomButtonColor label={"Регистрация"} onClick={() => {
           }} />
-          <CustomButtonNonColor label={"Авторизация"} onClick={() => {
+          <CustomButtonNonColor label={"Войти"} onClick={() => {
             navigate(RoutePath.AUTH)
           }} />
         </div>
