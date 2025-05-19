@@ -3,6 +3,7 @@ import ClientRow from '../ClientRow/ClientRow';
 import { Client } from 'Frontend/types/Client'
 import styles from "./ClientList.module.css";
 import useClients, { deleteClient } from 'Frontend/services/ClientService';
+import ClientDeleteConfirmation from 'Frontend/components/Client/ClientDeleteConfirmation/ClientDeleteConfirmation';
 
 interface ClientsListProps {
   onUpdate: (client: Client) => void;
@@ -13,11 +14,12 @@ interface ClientsListProps {
 const ClientsList: React.FC<ClientsListProps> = ({ onUpdate, refreshTrigger, setRefreshTrigger }) => {
   const [page, setPage] = useState(0);
   const { clients, numberOfPages, loading, error } = useClients({ page, refreshTrigger });
+  const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
 
-  const handleDelete = async (id?: string) => {
-    if (!id) return;
-
-    const res = await deleteClient(id);
+  const confirmDelete = async () => {
+    if (!clientToDelete?.id) return;
+    const res = await deleteClient(clientToDelete.id);
+    setClientToDelete(null);
     if (res.success) {
       setRefreshTrigger(Date.now());
     } else {
@@ -46,7 +48,7 @@ const ClientsList: React.FC<ClientsListProps> = ({ onUpdate, refreshTrigger, set
               key={client.id}
               client={client}
               onUpdate={onUpdate}
-              onDelete={handleDelete}
+              onDelete={() => setClientToDelete(client)}
             />
           ))}
           </tbody>
@@ -81,7 +83,13 @@ const ClientsList: React.FC<ClientsListProps> = ({ onUpdate, refreshTrigger, set
         </button>
 
       </div>
+      <ClientDeleteConfirmation
+        isOpen={!!clientToDelete}
+        onClose={() => setClientToDelete(null)}
+        onConfirm={confirmDelete}
+      />
     </div>
+
   );
 };
 
