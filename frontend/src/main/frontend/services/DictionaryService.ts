@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
-import ClientDictionaryResponse  from 'Frontend/generated/ru/mirea/cnoss/model/dictionary/dto/client/ClientDictionaryResponse';
+import ClientDictionaryResponse  from 'Frontend/generated/ru/mirea/cnoss/service/dictionary/dto/client/ClientDictionaryResponse';
 import {DictionaryEndpoint} from "Frontend/generated/endpoints";
-import ClientDictionaryDto from 'Frontend/generated/ru/mirea/cnoss/model/dictionary/dto/client/ClientDictionaryDto';
-import NodeDictionaryDto from 'Frontend/generated/ru/mirea/cnoss/model/dictionary/dto/node/NodeDictionaryDto';
-import NodeDictionaryResponse from 'Frontend/generated/ru/mirea/cnoss/model/dictionary/dto/node/NodeDictionaryResponse';
-import CapacityDictionaryViewResponse from 'Frontend/generated/ru/mirea/cnoss/model/dictionary/dto/capacity/CapacityDictionaryViewResponse';
-import CapacityDictionaryViewDto from 'Frontend/generated/ru/mirea/cnoss/model/dictionary/dto/capacity/CapacityDictionaryViewDto';
+import ClientDictionaryDto from 'Frontend/generated/ru/mirea/cnoss/service/dictionary/dto/client/ClientDictionaryDto';
+import NodeDictionaryDto from 'Frontend/generated/ru/mirea/cnoss/service/dictionary/dto/node/NodeDictionaryDto';
+import NodeDictionaryResponse from 'Frontend/generated/ru/mirea/cnoss/service/dictionary/dto/node/NodeDictionaryResponse';
+import CapacityDictionaryViewResponse from 'Frontend/generated/ru/mirea/cnoss/service/dictionary/dto/capacity/CapacityDictionaryViewResponse';
+import CapacityDictionaryViewDto from 'Frontend/generated/ru/mirea/cnoss/service/dictionary/dto/capacity/CapacityDictionaryViewDto';
 
 const token = localStorage.getItem("token");
 

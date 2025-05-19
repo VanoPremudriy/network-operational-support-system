@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { ClientEndpoint } from 'Frontend/generated/endpoints';
-import ClientViewDto from 'Frontend/generated/ru/mirea/cnoss/model/client/dto/ClientViewDto';
+import ClientViewDto from 'Frontend/generated/ru/mirea/cnoss/service/client/dto/ClientViewDto';
 import { Client, ClientGetRequest, UseClientsProps } from 'Frontend/types/Client';
-import ClientCreateRequest from 'Frontend/generated/ru/mirea/cnoss/model/client/dto/request/ClientCreateRequest';
-import ClientUpdateRequest from 'Frontend/generated/ru/mirea/cnoss/model/client/dto/request/ClientUpdateRequest';
+import ClientCreateRequest from 'Frontend/generated/ru/mirea/cnoss/service/client/dto/request/ClientCreateRequest';
+import ClientUpdateRequest from 'Frontend/generated/ru/mirea/cnoss/service/client/dto/request/ClientUpdateRequest';
 
 const useClients = ({ page, refreshTrigger  }: UseClientsProps) => {
   const [clients, setClients] = useState<Client[]>([]);
