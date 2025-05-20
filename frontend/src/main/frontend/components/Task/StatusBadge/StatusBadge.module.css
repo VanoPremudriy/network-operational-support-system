@@ -1,0 +1,40 @@
+.badge {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    display: inline-block;
+    text-align: center;
+    line-height: 1.2;
+    border: 2px solid transparent;
+}
+
+.success {
+    background-color: #a2eac8;
+    color: #0a4d32;
+    border-color: #2db78c;
+}
+
+.failed {
+    background-color: #ffd3d3;
+    color: #b20000;
+    border-color: red;
+}
+
+.inProgress {
+    background-color: #dcdcdc;
+    color: #333;
+    border-color: #666;
+}
+
+.selectionRequired {
+    background-color: #edc6ff;
+    color: #7c00b2;
+    border-color: #b52aff;
+}
+
+.routeDeclined {
+    background-color: #ffd6a6;
+    color: #9e5200;
+    border-color: #ff9b00;
+}
