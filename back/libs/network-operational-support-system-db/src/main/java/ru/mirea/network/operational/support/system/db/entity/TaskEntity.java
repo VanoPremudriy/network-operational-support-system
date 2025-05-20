@@ -1,14 +1,7 @@
 package ru.mirea.network.operational.support.system.db.entity;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -56,6 +49,10 @@ public class TaskEntity {
 
     @Column(name = "task_type", nullable = false)
     private String taskType;
+
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "task_data", nullable = false)

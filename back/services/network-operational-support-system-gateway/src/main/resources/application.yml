@@ -59,6 +59,14 @@ spring:
             - Authentication=true
             - RewritePath=/task/(?<segment>.*), /v1/task/$\{segment}
 
+        - id: task-get-all
+          uri: http://localhost:8089
+          predicates:
+            - Path=/task/**
+          filters:
+            - Authentication=true
+            - RewritePath=/task/(?<segment>.*), /v1/task/$\{segment}
+
         - id: route
           uri: http://localhost:8089
           predicates:

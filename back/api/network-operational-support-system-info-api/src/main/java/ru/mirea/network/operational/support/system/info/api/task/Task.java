@@ -35,4 +35,7 @@ public class Task {
     @Schema(description = "Данные задачи", example = "{\"clientId\": \"f0e5842f-8d2f-44fc-ac7e-3132b49db457\"}")
     private String taskData;
 
+    @Schema(description = "Статус задачи", example = "SUCCESS")
+    private String status;
+
 }

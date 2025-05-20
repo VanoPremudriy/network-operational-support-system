@@ -16,6 +16,7 @@ import ru.mirea.network.operational.support.system.back.exception.TaskException;
 import ru.mirea.network.operational.support.system.back.zookeeper.DistributedLock;
 import ru.mirea.network.operational.support.system.db.dictionary.TaskType;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
+import ru.mirea.network.operational.support.system.db.entity.TaskStatus;
 import ru.mirea.network.operational.support.system.python.api.calculate.CalculateRouteRq;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRq;
 
@@ -39,7 +40,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskEntity createTaskWithLock(UUID clientId, TaskType taskType, Object data) {
         try (DistributedLock ignored = new DistributedLock(curatorFramework, Constant.TASK_LOCK_CODE, waitTime)) {
-            TaskEntity taskEntity = taskRepository.findByActiveFlagTrue();
+            TaskEntity taskEntity = taskRepository.findByActiveFlagTrueAndStatus(TaskStatus.IN_PROGRESS);
             if (taskEntity != null) {
                 throw new TaskException("Найдена активная задача. Попробуйте позже");
             }
@@ -50,7 +51,8 @@ public class TaskServiceImpl implements TaskService {
                     .setExecutionCount(1)
                     .setClientId(clientId)
                     .setTaskType(taskType.name())
-                    .setTaskData(jsonMapper.valueToTree(data)));
+                    .setTaskData(jsonMapper.valueToTree(data))
+                    .setStatus(TaskStatus.IN_PROGRESS));
         } catch (Exception e) {
             log.error("Ошибка при попытке открыть задачу", e);
             throw new TaskException("При попытке открыть задачу произошла ошибка. Попробуйте позже");
@@ -74,11 +76,11 @@ public class TaskServiceImpl implements TaskService {
                     .build();
             taskEntity.setRoutes(calculateRouteService.calculate(taskEntity, calculateRouteRq, rq.getCapacity()));
 
-            saveTask(taskEntity.setResolvedDate(LocalDateTime.now()));
+            saveTask(taskEntity.setResolvedDate(LocalDateTime.now()).setStatus(TaskStatus.SELECTION_IS_REQUIRED));
         } catch (TaskException e) {
             log.error("Ошибка при попытке рассчитать маршрут: {}. Задача не будет выполнена.", e.getMessage(), e);
 
-            saveTask(taskEntity.setActiveFlag(false).setResolvedDate(LocalDateTime.now()));
+            saveTask(taskEntity.setActiveFlag(false).setResolvedDate(LocalDateTime.now()).setStatus(TaskStatus.FAILED));
         } catch (Exception e) {
             log.error("Ошибка при попытке рассчитать маршрут", e);
         }

@@ -12,6 +12,7 @@ import ru.mirea.network.operational.support.system.back.component.service.TaskSe
 import ru.mirea.network.operational.support.system.back.dictionary.Constant;
 import ru.mirea.network.operational.support.system.back.zookeeper.DistributedLock;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
+import ru.mirea.network.operational.support.system.db.entity.TaskStatus;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -38,7 +39,7 @@ public class Scheduler {
     @Scheduled(fixedDelayString = "${scheduler.interval:PT15M}")
     public void process() {
         try (DistributedLock ignored = new DistributedLock(curatorFramework, Constant.SCHEDULE_LOCK_CODE, waitTime)) {
-            TaskEntity taskEntity = taskRepository.findByActiveFlagTrue();
+            TaskEntity taskEntity = taskRepository.findByActiveFlagTrueAndStatus(TaskStatus.IN_PROGRESS);
 
             if (taskEntity == null) {
                 return;
@@ -47,13 +48,16 @@ public class Scheduler {
             if (taskEntity.getExecutionCount() + 1 > maxExecutions) {
                 taskRepository.save(taskEntity
                         .setResolvedDate(LocalDateTime.now())
+                        .setStatus(TaskStatus.FAILED)
                         .setActiveFlag(false));
                 return;
             }
 
             if (taskEntity.getResolvedDate() != null) {
                 if (waitForConfirmedTime.compareTo(Duration.between(taskEntity.getResolvedDate(), LocalDateTime.now())) < 0) {
-                    taskRepository.save(taskEntity.setActiveFlag(false));
+                    taskEntity.setActiveFlag(false);
+                    taskEntity.setStatus(TaskStatus.FAILED);
+                    taskRepository.save(taskEntity);
                 }
                 return;
             }

@@ -38,6 +38,9 @@ controller:
   task:
     get-by-client: /client/{clientId}
     get-by-id: /{id}
+    get-all:
+      endpoint: /
+      pageSize: 8
 #  node:
 #    get-all: /
 #    get-by-id: /{id}

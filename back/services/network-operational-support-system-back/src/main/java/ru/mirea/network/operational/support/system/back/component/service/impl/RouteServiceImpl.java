@@ -20,6 +20,7 @@ import ru.mirea.network.operational.support.system.db.dictionary.TaskType;
 import ru.mirea.network.operational.support.system.db.entity.NodeEntity;
 import ru.mirea.network.operational.support.system.db.entity.RouteEntity;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
+import ru.mirea.network.operational.support.system.db.entity.TaskStatus;
 import ru.mirea.network.operational.support.system.route.api.route.common.RouteInfo;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRq;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRs;
@@ -96,7 +97,7 @@ public class RouteServiceImpl implements RouteService {
 
         nodeRepository.saveAll(nodeEntities);
         routeRepository.save(route.setActiveFlag(true));
-        taskRepository.save(taskEntity.setActiveFlag(false));
+        taskRepository.save(taskEntity.setActiveFlag(false).setStatus(TaskStatus.SUCCESS));
 
     }
 }
