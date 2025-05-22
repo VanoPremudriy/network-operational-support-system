@@ -5,7 +5,7 @@ export type StatusType =
   | 'SUCCESS'
   | 'FAILED'
   | 'IN_PROGRESS'
-  | 'SELECTION_REQUIRED'
+  | 'SELECTION_IS_REQUIRED'
   | 'ROUTE_DECLINED';
 
 interface StatusBadgeProps {
@@ -16,7 +16,7 @@ const statusMap: Record<StatusType, { text: string; className: string }> = {
   SUCCESS: { text: 'Success', className: styles.success },
   FAILED: { text: 'Failed', className: styles.failed },
   IN_PROGRESS: { text: 'IN PROGRESS', className: styles.inProgress },
-  SELECTION_REQUIRED: { text: 'SELECTION\nIS REQUIRED', className: styles.selectionRequired },
+  SELECTION_IS_REQUIRED: { text: 'SELECTION\nIS REQUIRED', className: styles.selectionRequired },
   ROUTE_DECLINED: { text: 'ROUTE\nDECLINED', className: styles.routeDeclined },
 };
 
