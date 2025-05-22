@@ -7,6 +7,8 @@ import ru.mirea.cnoss.service.route.RouteService;
 import ru.mirea.cnoss.service.route.converter.RouteResponseConverter;
 import ru.mirea.cnoss.service.route.dto.Route;
 import ru.mirea.cnoss.service.route.dto.RouteResponse;
+import ru.mirea.cnoss.service.route.dto.createRoute.CreateRouteRequest;
+import ru.mirea.cnoss.service.route.dto.createRoute.CreateRouteResponse;
 
 
 @BrowserCallable
@@ -26,5 +28,10 @@ public class RouteEndpoint {
         RouteResponse routeResponse = routeService.getRoute(token);
 
         return routeResponseConverter.convert(routeResponse);
+    }
+
+    public CreateRouteResponse createRoute(String userToken, CreateRouteRequest request) {
+        String token = BEARER + userToken;
+        return routeService.createRoute(token, request);
     }
 }

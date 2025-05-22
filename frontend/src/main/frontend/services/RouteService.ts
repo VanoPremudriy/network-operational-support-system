@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { RouteEndpoint } from "Frontend/generated/endpoints";
+import CreateRouteRequest from 'Frontend/generated/ru/mirea/cnoss/service/route/dto/createRoute/CreateRouteRequest';
+import CreateRouteResponse from 'Frontend/generated/ru/mirea/cnoss/service/route/dto/createRoute/CreateRouteResponse';
 
 interface Point {
   id: string;
@@ -52,4 +54,21 @@ export const useRouteData = () => {
   }, []);
 
   return data;
+};
+
+
+export const createRoute = async (request: CreateRouteRequest): Promise<CreateRouteResponse | null> => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.error("Токен не найден в localStorage");
+    return null;
+  }
+
+  try {
+    const response = await RouteEndpoint.createRoute(token, request);
+    return response;
+  } catch (error) {
+    console.error("Ошибка при создании маршрута:", error);
+    return null;
+  }
 };
