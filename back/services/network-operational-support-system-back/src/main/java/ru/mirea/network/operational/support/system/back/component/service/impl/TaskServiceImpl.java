@@ -1,6 +1,8 @@
 package ru.mirea.network.operational.support.system.back.component.service.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mirea.network.operational.support.system.back.component.repository.ClientRepository;
 import ru.mirea.network.operational.support.system.back.component.repository.TaskRepository;
 import ru.mirea.network.operational.support.system.back.component.service.CalculateRouteService;
 import ru.mirea.network.operational.support.system.back.component.service.TaskService;
@@ -15,6 +18,7 @@ import ru.mirea.network.operational.support.system.back.dictionary.Constant;
 import ru.mirea.network.operational.support.system.back.exception.TaskException;
 import ru.mirea.network.operational.support.system.back.zookeeper.DistributedLock;
 import ru.mirea.network.operational.support.system.db.dictionary.TaskType;
+import ru.mirea.network.operational.support.system.db.entity.ClientEntity;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
 import ru.mirea.network.operational.support.system.db.entity.TaskStatus;
 import ru.mirea.network.operational.support.system.python.api.calculate.CalculateRouteRq;
@@ -33,6 +37,8 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final CalculateRouteService calculateRouteService;
     private final JsonMapper jsonMapper;
+    private final ClientRepository clientRepository;
+
 
     @Value("${zookeeper.waitTime:PT10M}")
     private final Duration waitTime;
@@ -45,13 +51,20 @@ public class TaskServiceImpl implements TaskService {
                 throw new TaskException("Найдена активная задача. Попробуйте позже");
             }
 
+            ClientEntity client = clientRepository.getReferenceById(clientId);
+            String firstName = client.getFirstName();
+
+            ObjectNode jsonData = jsonMapper.valueToTree(data);
+            jsonData.put("clientName", firstName);
+
+
             return taskRepository.save(new TaskEntity()
                     .setCreatedTime(LocalDateTime.now())
                     .setActiveFlag(true)
                     .setExecutionCount(1)
                     .setClientId(clientId)
                     .setTaskType(taskType.name())
-                    .setTaskData(jsonMapper.valueToTree(data))
+                    .setTaskData(jsonData)
                     .setStatus(TaskStatus.IN_PROGRESS));
         } catch (Exception e) {
             log.error("Ошибка при попытке открыть задачу", e);
