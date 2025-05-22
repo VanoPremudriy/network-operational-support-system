@@ -46,7 +46,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskEntity createTaskWithLock(UUID clientId, TaskType taskType, Object data) {
         try (DistributedLock ignored = new DistributedLock(curatorFramework, Constant.TASK_LOCK_CODE, waitTime)) {
-            TaskEntity taskEntity = taskRepository.findByActiveFlagTrueAndStatus(TaskStatus.IN_PROGRESS);
+            TaskEntity taskEntity = taskRepository.findByActiveFlagTrue();
             if (taskEntity != null) {
                 throw new TaskException("Найдена активная задача. Попробуйте позже");
             }

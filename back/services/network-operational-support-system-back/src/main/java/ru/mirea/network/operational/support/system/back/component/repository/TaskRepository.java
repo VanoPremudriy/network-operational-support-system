@@ -8,7 +8,7 @@ import ru.mirea.network.operational.support.system.db.entity.TaskStatus;
 import java.util.UUID;
 
 public interface TaskRepository extends JpaRepository<TaskEntity, UUID> {
-    TaskEntity findByActiveFlagTrueAndStatus(TaskStatus status);
+    TaskEntity findByActiveFlagTrue();
 
     @Query("select t from TaskEntity t " +
             "left join fetch t.routes " +

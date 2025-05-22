@@ -39,7 +39,7 @@ public class Scheduler {
     @Scheduled(fixedDelayString = "${scheduler.interval:PT15M}")
     public void process() {
         try (DistributedLock ignored = new DistributedLock(curatorFramework, Constant.SCHEDULE_LOCK_CODE, waitTime)) {
-            TaskEntity taskEntity = taskRepository.findByActiveFlagTrueAndStatus(TaskStatus.IN_PROGRESS);
+            TaskEntity taskEntity = taskRepository.findByActiveFlagTrue();
 
             if (taskEntity == null) {
                 return;
