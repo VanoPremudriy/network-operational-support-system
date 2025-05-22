@@ -40,8 +40,8 @@ const Sidebar = ({ selectedPointId, onClose }: SidebarProps) => {
 
     const request: CreateRouteRequest = {
       clientId: selectedClient.id,
-      startingPoint: startNode.label,
-      destinationPoint: endNode.label,
+      startingPoint: startNode.id,
+      destinationPoint: endNode.id,
       capacity: parseFloat(capacity.label),
     };
 
