@@ -3,10 +3,12 @@
     border-radius: 8px;
     font-weight: bold;
     font-size: 14px;
-    display: inline-block;
     text-align: center;
     line-height: 1.2;
     border: 2px solid transparent;
+    width: 140px; /* или 100%, если внутри ячейки */
+    box-sizing: border-box;
+    white-space: pre-line;
 }
 
 .success {

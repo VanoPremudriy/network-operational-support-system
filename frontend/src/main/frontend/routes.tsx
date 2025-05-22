@@ -9,6 +9,7 @@ import MapView from 'Frontend/views/MapView/MapView';
 import AuthGuard from 'Frontend/guards/AuthGuard';
 import PublicGuard from 'Frontend/guards/PublicGuard';
 import ClientView from 'Frontend/views/ClientView/ClientView';
+import TaskView from 'Frontend/views/TaskView/TaskView';
 
 // Объявление путей маршрутов
 export enum RoutePath {
@@ -17,7 +18,8 @@ export enum RoutePath {
   LOGIN = '/auth/login',
   REGISTER = '/auth/registration',
   MAP = '/map',
-  CLIENT = '/client'
+  CLIENT = '/client',
+  TASK = '/task'
 }
 
 // Конфигурация маршрутов
@@ -46,6 +48,7 @@ export const { router, routes } = new RouterConfigurationBuilder()
           children: [
             { path: RoutePath.MAP, element: <MapView /> },
             { path: RoutePath.CLIENT, element: <ClientView />},
+            {path: RoutePath.TASK, element: <TaskView/>},
             { index: true, element: <MapView /> },
           ],
         },

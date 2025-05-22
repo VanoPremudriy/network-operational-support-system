@@ -31,7 +31,7 @@ const menu = () => {
    <div className={styles.menu}>
      <CustomButtonWithIcon label={"Клиенты"} onClick={() => navigate(RoutePath.CLIENT)} icon={<Users size={20}/>} />
      <CustomButtonWithIcon label={"Построение маршрута"} onClick={() => navigate(RoutePath.MAP)} icon={<LineChart size={20}/>} />
-     <CustomButtonWithIcon label={"Задачи"} onClick={() => {}} icon={<RiFlag2Line  size={20}/>} />
+     <CustomButtonWithIcon label={"Задачи"} onClick={() => {navigate(RoutePath.TASK)}} icon={<RiFlag2Line  size={20}/>} />
    </div>
  )
 }
