@@ -149,7 +149,9 @@ public class RouteServiceImpl implements RouteService {
         }
         TaskEntity task = optionalTask.get();
         Page<RouteEntity> page = routeRepository.findByTaskId(rq.getTaskId(), pageRequest);
-        List<RouteEntity> routeEntities = page.get().toList();
+        List<RouteEntity> routeEntities = page.get()
+                .filter(RouteEntity::isActiveFlag)
+                .toList();
 
         List<Route> routes = new ArrayList<>();
 
