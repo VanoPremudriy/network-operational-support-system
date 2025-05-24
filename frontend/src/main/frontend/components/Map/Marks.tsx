@@ -41,8 +41,8 @@ export const Marks = ({ points, edges, zoomScale, clearSelectionTrigger, onPoint
             y1={source.y}
             x2={target.x}
             y2={target.y}
-            stroke="#000"
-            strokeWidth={1 / zoomScale}
+            stroke="#E32636"
+            strokeWidth={2 / zoomScale}
           />
         );
       })}
@@ -53,10 +53,10 @@ export const Marks = ({ points, edges, zoomScale, clearSelectionTrigger, onPoint
           key={point.id}
           cx={point.x}
           cy={point.y}
-          r={4 / zoomScale}
+          r={6 / zoomScale}
           fill="red"
           stroke="#333"
-          strokeWidth={1 / zoomScale}
+          strokeWidth={2 / zoomScale}
           onClick={(e) => {
             e.stopPropagation(); // <-- вот это важно!
             setSelectedPoint(point);

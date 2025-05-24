@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import useTasks from 'Frontend/services/TaskService';
 import styles from './TaskList.module.css';
 import TaskRow from 'Frontend/components/Task/TaskRow/TaskRow';
+import TaskRoutesModal from 'Frontend/components/Task/TaskRoutesModal/TaskRoutesModal';
+import { Task } from 'Frontend/types/Task';
 
 const TaskList = () => {
   const [page, setPage] = useState(0);
-  const {tasks, numberOfPages, loading, error} = useTasks({page});
+  const { tasks, numberOfPages, loading, error, refetch } = useTasks({ page });
+
+
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
 
   return (
@@ -28,11 +33,19 @@ const TaskList = () => {
             <TaskRow
               key={task.id}
               task={task}
-              onShowDetails={() => {}}
+              onShowDetails={setSelectedTask}
             />
           ))}
           </tbody>
         </table>
+
+        {selectedTask && (
+          <TaskRoutesModal
+            task={selectedTask}
+            onClose={() => setSelectedTask(null)}
+            onRouteApplied={refetch} // ✅ передаём функцию обновления
+          />
+        )}
       </div>
 
       <div className={styles.pagination}>
