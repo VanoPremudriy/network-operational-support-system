@@ -11,10 +11,11 @@ import { useNotification } from 'Frontend/components/Notifications/NotificationC
 type SidebarProps = {
   selectedPointId: string | null;
   onClose: () => void;
+  isInfo: boolean
 };
 
 
-const Sidebar = ({ selectedPointId, onClose }: SidebarProps) => {
+const Sidebar = ({ selectedPointId, onClose, isInfo }: SidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedClient, setSelectedClient] = useState<{ id: string; label: string } | null>(null);
   const [startNode, setStartNode] = useState<{ id: string; label: string } | null>(null);
@@ -113,13 +114,14 @@ const Sidebar = ({ selectedPointId, onClose }: SidebarProps) => {
       </button>
       {!isCollapsed && (
         <div className={styles.selectBlock}>
-          {selectedPointId ? (
+          {selectedPointId || isInfo ? (
             <>
+              {!isInfo && (
               <div className={styles.detailsHeader}>
                 <button onClick={onClose}>❌</button>
                 <span>Детали точки: {selectedPointId}</span>
-
               </div>
+              )}
               {/* Здесь будет потом fetch по selectedPointId */}
               <div>Здесь будет информация о точке</div>
             </>

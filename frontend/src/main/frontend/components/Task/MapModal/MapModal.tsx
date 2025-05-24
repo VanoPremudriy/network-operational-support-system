@@ -3,6 +3,7 @@ import styles from './MapModal.module.css';
 import { Map } from 'Frontend/components/Map/Map';
 import { useMapData } from 'Frontend/hooks/useMapData';
 import { useRouteDataByRouteId } from 'Frontend/services/RouteService';
+import Sidebar from 'Frontend/components/Sidebar/Sidebar';
 
 interface MapModalProps {
   routeId: string;
@@ -28,6 +29,7 @@ const MapModal: React.FC<MapModalProps> = ({ routeId, onClose }) => {
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
         <button onClick={onClose} className={styles.closeButton}>×</button>
+        <Sidebar selectedPointId={null} onClose={() => {}} isInfo={true}/>
         <Map
           data={data}
           points={routeData.points}

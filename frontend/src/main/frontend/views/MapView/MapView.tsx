@@ -8,7 +8,7 @@ const MapView = () => {
 
   return (
     <div className={styles.body}>
-        <Sidebar selectedPointId={selectedPointId} onClose={() => setSelectedPointId(null)}/>
+        <Sidebar selectedPointId={selectedPointId} onClose={() => setSelectedPointId(null)} isInfo={false}/>
         <RouteMap onPointClick={setSelectedPointId}/>
     </div>
   );
