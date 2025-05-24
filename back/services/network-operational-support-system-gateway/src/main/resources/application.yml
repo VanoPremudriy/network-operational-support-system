@@ -75,6 +75,22 @@ spring:
             - Authentication=true
             - RewritePath=/network-operational-support-system-api/route, /v1/route
 
+        - id: route-by-id
+          uri: http://localhost:8089
+          predicates:
+            - Path=/network-operational-support-system-api/route/**
+          filters:
+            - Authentication=true
+            - RewritePath=/network-operational-support-system-api/route/(?<segment>.*), /v1/route/$\{segment}
+
+        - id: routes-by-task
+          uri: http://localhost:8089
+          predicates:
+            - Path=/route/task
+          filters:
+            - Authentication=true
+            - RewritePath=/route/task, /v1/route/task
+
         - id: client-delete
           uri: http://localhost:8089
           predicates:

@@ -47,6 +47,7 @@ controller:
   route:
     get-all:
     get-by-id: /{id}
+    get-by-task: /task
   client:
     delete: /delete
     create: /create

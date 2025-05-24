@@ -2,25 +2,31 @@ package ru.mirea.network.operational.support.system.info.service.impl;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import ru.mirea.network.operational.support.system.db.entity.NodeEntity;
 import ru.mirea.network.operational.support.system.db.entity.RouteEntity;
+import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
 import ru.mirea.network.operational.support.system.info.api.route.GetRouteRs;
 import ru.mirea.network.operational.support.system.info.api.route.RouteEdge;
 import ru.mirea.network.operational.support.system.info.api.route.RouteNode;
+import ru.mirea.network.operational.support.system.info.api.task.Route;
+import ru.mirea.network.operational.support.system.info.api.task.TaskRouteRq;
+import ru.mirea.network.operational.support.system.info.api.task.TaskRoutesRs;
 import ru.mirea.network.operational.support.system.info.client.RouteClient;
 import ru.mirea.network.operational.support.system.info.repository.NodeRepository;
 import ru.mirea.network.operational.support.system.info.repository.RouteRepository;
+import ru.mirea.network.operational.support.system.info.repository.TaskRepository;
 import ru.mirea.network.operational.support.system.info.service.RouteService;
 import ru.mirea.network.operational.support.system.python.api.matrix.GetMatrixRs;
 import ru.mirea.network.operational.support.system.route.api.route.common.Node;
 import ru.mirea.network.operational.support.system.route.api.route.common.RouteInfo;
+import ru.mirea.network.operational.support.system.route.api.route.common.TaskInfo;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -31,6 +37,10 @@ public class RouteServiceImpl implements RouteService {
     private final NodeRepository nodeRepository;
     private final RouteRepository routeRepository;
     private List<GetMatrixRs> cachedMatrix;
+    private final TaskRepository taskRepository;
+
+    @Value("${controller.client.get-all.pageSize:8}")
+    private final Integer pageSize;
 
     @Override
     public GetRouteRs getRoute() {
@@ -128,5 +138,50 @@ public class RouteServiceImpl implements RouteService {
                 .nodes(nodes)
                 .edges(edges)
                 .build();
+    }
+
+    @Override
+    public TaskRoutesRs getRoutesByTask(TaskRouteRq rq) {
+        PageRequest pageRequest = PageRequest.of(rq.getPageNumber(), pageSize);
+        Optional<TaskEntity> optionalTask = taskRepository.findById(rq.getTaskId());
+        if (optionalTask.isEmpty()) {
+            throw new RuntimeException("Не найдена задача для получения маршрутов");
+        }
+        TaskEntity task = optionalTask.get();
+        Page<RouteEntity> page = routeRepository.findByTaskId(rq.getTaskId(), pageRequest);
+        List<RouteEntity> routeEntities = page.get().toList();
+
+        List<Route> routes = new ArrayList<>();
+
+        try {
+
+            TaskInfo taskInfo = jsonMapper.treeToValue(task.getTaskData(), TaskInfo.class);
+
+            NodeEntity destinationPoint = nodeRepository.findByNodeIdDetailed(taskInfo.getDestinationPoint());
+            NodeEntity startingPoint = nodeRepository.findByNodeIdDetailed(taskInfo.getStartingPoint());
+
+            for (RouteEntity routeEntity : routeEntities) {
+                RouteInfo routeInfo = jsonMapper.treeToValue(routeEntity.getRouteData(), RouteInfo.class);
+                routes.add(Route.builder()
+                        .id(routeEntity.getId())
+                        .shifts(routeInfo.getShifts())
+                        .distance(routeInfo.getDistance())
+                        .destinationPoint(destinationPoint.getName())
+                        .startingPoint(startingPoint.getName())
+                        .capacity(taskInfo.getCapacity())
+                        .price(routeEntity.getPrice())
+                        .build());
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Не удалось дессириолизовать маршруты", e);
+        }
+
+        return TaskRoutesRs.builder()
+                .routes(routes)
+                .numberOfPages(page.getTotalPages())
+                .success(true)
+                .build();
+
     }
 }

@@ -8,12 +8,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import ru.mirea.network.operational.support.system.common.api.ErrorDTO;
+import ru.mirea.network.operational.support.system.db.entity.NodeEntity;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
 import ru.mirea.network.operational.support.system.info.api.task.*;
 import ru.mirea.network.operational.support.system.info.mapper.EntityMapper;
+import ru.mirea.network.operational.support.system.info.repository.NodeRepository;
 import ru.mirea.network.operational.support.system.info.repository.TaskRepository;
 import ru.mirea.network.operational.support.system.info.service.TaskService;
 import ru.mirea.network.operational.support.system.route.api.route.common.RouteInfo;
+import ru.mirea.network.operational.support.system.route.api.route.common.TaskInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final EntityMapper entityMapper;
     private final JsonMapper mapper;
+    private final NodeRepository nodeRepository;
 
     @Value("${controller.client.get-all.pageSize:8}")
     private final Integer pageSize;
@@ -56,20 +60,32 @@ public class TaskServiceImpl implements TaskService {
         DetailedTask detailedTask = entityMapper.mapDetailed(taskEntity);
         detailedTask.setRoutes(new ArrayList<>());
 
-        if (!CollectionUtils.isEmpty(taskEntity.getRoutes())) {
-            taskEntity.getRoutes().forEach(route -> {
-                try {
-                    RouteInfo routeInfo = mapper.treeToValue(route.getRouteData(), RouteInfo.class);
-                    detailedTask.getRoutes().add(Route.builder()
-                            .id(route.getId())
-                            .distance(routeInfo.getDistance())
-                            .shifts(routeInfo.getShifts())
-                            .price(route.getPrice())
-                            .build());
-                } catch (Exception e) {
-                    throw new RuntimeException("Не удалось десериализовать маршрут", e);
-                }
-            });
+        try {
+            TaskInfo taskInfo = mapper.treeToValue(taskEntity.getTaskData(), TaskInfo.class);
+
+            NodeEntity destinationPoint = nodeRepository.findByNodeIdDetailed(taskInfo.getDestinationPoint());
+            NodeEntity startingPoint = nodeRepository.findByNodeIdDetailed(taskInfo.getStartingPoint());
+
+            if (!CollectionUtils.isEmpty(taskEntity.getRoutes())) {
+                taskEntity.getRoutes().forEach(route -> {
+                    try {
+                        RouteInfo routeInfo = mapper.treeToValue(route.getRouteData(), RouteInfo.class);
+                        detailedTask.getRoutes().add(Route.builder()
+                                .id(route.getId())
+                                .distance(routeInfo.getDistance())
+                                .shifts(routeInfo.getShifts())
+                                .price(route.getPrice())
+                                .startingPoint(startingPoint.getName())
+                                .destinationPoint(destinationPoint.getName())
+                                .capacity(taskInfo.getCapacity())
+                                .build());
+                    } catch (Exception e) {
+                        throw new RuntimeException("Не удалось десериализовать маршрут", e);
+                    }
+                });
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Не удалось десериализовать маршрут", e);
         }
 
         return DetailedTaskRs.builder()

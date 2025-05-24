@@ -22,4 +22,13 @@ public class Route {
 
     @Schema(description = "Количество переключений", example = "2")
     private Integer shifts;
+
+    @Schema(description = "Точка начала", example = "г Москва")
+    private String  startingPoint;
+
+    @Schema(description = "Точка назначения", example = "г Москва")
+    private String destinationPoint;
+
+    @Schema(description = "Скорость", example = "2.32")
+    private BigDecimal capacity;
 }
