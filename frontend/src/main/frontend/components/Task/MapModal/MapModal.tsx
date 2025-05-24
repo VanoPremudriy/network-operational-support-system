@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './MapModal.module.css';
 import { Map } from 'Frontend/components/Map/Map';
 import { useMapData } from 'Frontend/hooks/useMapData';
@@ -13,6 +13,7 @@ interface MapModalProps {
 const MapModal: React.FC<MapModalProps> = ({ routeId, onClose }) => {
   const data = useMapData();
   const routeData = useRouteDataByRouteId(routeId);
+  const [selectedPointId, setSelectedPointId] = useState<string | null>(null);
 
   if (!data || !routeData) {
     return (
@@ -29,12 +30,12 @@ const MapModal: React.FC<MapModalProps> = ({ routeId, onClose }) => {
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
         <button onClick={onClose} className={styles.closeButton}>×</button>
-        <Sidebar selectedPointId={null} onClose={() => {}} isInfo={true}/>
+        <Sidebar selectedPointId={selectedPointId} onClose={() => setSelectedPointId(null)} isInfo={true}/>
         <Map
           data={data}
           points={routeData.points}
           edges={routeData.edges}
-          onPointClick={() => {}}
+          onPointClick={setSelectedPointId}
         />
       </div>
     </div>

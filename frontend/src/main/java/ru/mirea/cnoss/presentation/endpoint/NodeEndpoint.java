@@ -4,6 +4,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.BrowserCallable;
 import lombok.RequiredArgsConstructor;
 import ru.mirea.cnoss.service.node.NodeService;
+import ru.mirea.cnoss.service.node.dto.DetailedNodeResponse;
 
 @BrowserCallable
 @AnonymousAllowed
@@ -12,7 +13,17 @@ public class NodeEndpoint {
 
     private final NodeService nodeService;
 
-    public void getNode(String id, String token) {
-        nodeService.getNodeById(id, token);
+    private final static String BEARER = "Bearer ";
+
+    public DetailedNodeResponse getNode(String id, String token) {
+
+        token = BEARER + token;
+
+        DetailedNodeResponse nodeById = nodeService.getNodeById(id, token);
+
+        System.out.println(nodeById.getBody().getId());
+        System.out.println(nodeById.getBody().getName());
+
+        return nodeById;
     }
 }

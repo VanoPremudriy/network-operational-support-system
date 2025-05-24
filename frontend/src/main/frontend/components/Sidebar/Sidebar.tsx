@@ -1,5 +1,5 @@
 import styles from 'Frontend/components/Sidebar/Sidebar.module.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SelectButton from 'Frontend/components/Buttons/SelectButton/SelectButton';
 import CustomButtonColor from 'Frontend/components/Buttons/CustomButtonColor/CustomButtonColor';
 import CustomButtonNonColor from 'Frontend/components/Buttons/CustomButtonNonColor/CustomButtonNonColor';
@@ -7,6 +7,8 @@ import { useCapacityDictionary, useClientDictionary, useNodeDictionary } from 'F
 import CreateRouteRequest from 'Frontend/generated/ru/mirea/cnoss/service/route/dto/createRoute/CreateRouteRequest';
 import { createRoute } from 'Frontend/services/RouteService';
 import { useNotification } from 'Frontend/components/Notifications/NotificationContext';
+import { getNodeById } from 'Frontend/services/NodeService';
+import DetailedNode from 'Frontend/generated/ru/mirea/cnoss/service/node/dto/DetailedNode';
 
 type SidebarProps = {
   selectedPointId: string | null;
@@ -107,26 +109,100 @@ const Sidebar = ({ selectedPointId, onClose, isInfo }: SidebarProps) => {
     setCapacity(capacity);
   }
 
+  const [detailedNode, setDetailedNode] = useState<DetailedNode | null>(null);
+  const [expandedBaskets, setExpandedBaskets] = useState<Set<string>>(new Set());
+  const [expandedBoards, setExpandedBoards] = useState<Set<string>>(new Set());
+  const [expandedPorts, setExpandedPorts] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    const fetchNode = async () => {
+      if (selectedPointId) {
+        const res = await getNodeById(selectedPointId);
+        setDetailedNode(res.body!);
+      }
+    };
+    fetchNode();
+  }, [selectedPointId]);
+
+  const toggleSetItem = (set: Set<string>, id: string): Set<string> => {
+    const newSet = new Set(set);
+    if (newSet.has(id)) {
+      newSet.delete(id);
+    } else {
+      newSet.add(id);
+    }
+    return newSet;
+  };
+
   return (
     <div className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''}`}>
       <button className={styles.toggleButton} onClick={toggleSidebar}>
         {isCollapsed ? '⮞' : '⮜'}
       </button>
+
       {!isCollapsed && (
-        <div className={styles.selectBlock}>
+        <>
           {selectedPointId || isInfo ? (
             <>
-              {!isInfo && (
-              <div className={styles.detailsHeader}>
-                <button onClick={onClose}>❌</button>
-                <span>Детали точки: {selectedPointId}</span>
-              </div>
+              {detailedNode && (
+                <>
+                  {/* Шапка с названием и кнопкой закрытия */}
+                  <div className={styles.headerFixed}>
+                    <h3 className={styles.nodeName}>Узел: {detailedNode.name}</h3>
+                    {!isInfo && (
+                      <button className={styles.closeButton} onClick={onClose}>❌</button>
+                    )}
+                  </div>
+
+                  {/* Координаты — тоже вне скролла */}
+                  <div className={styles.coordinatesFixed}>
+                    <p>Широта: {detailedNode.latitude?.toString()}</p>
+                    <p>Долгота: {detailedNode.longitude?.toString()}</p>
+                  </div>
+
+                  {/* Вся остальная детальная информация — в скролле */}
+                  <div className={styles.scrollContent}>
+                    {detailedNode?.baskets?.map((basket) =>
+                      basket ? (
+                        <div key={basket.id ?? Math.random().toString()} className={styles.nestedBlock}>
+                          <button onClick={() => setExpandedBaskets(prev => toggleSetItem(prev, basket.id!))}>
+                            {expandedBaskets.has(basket.id!) ? '−' : '+'}
+                          </button>
+                          <strong>Корзина: {basket.name}</strong>
+
+                          {expandedBaskets.has(basket.id!) &&
+                            basket.boards?.map((board) =>
+                              board ? (
+                                <div key={board.id ?? Math.random().toString()} className={styles.innerBlock}>
+                                  <button onClick={() => setExpandedBoards(prev => toggleSetItem(prev, board.id!))}>
+                                    {expandedBoards.has(board.id!) ? '−' : '+'}
+                                  </button>
+                                  <strong>Плата: {board.name}</strong>
+
+                                  {expandedBoards.has(board.id!) &&
+                                    board.ports?.map((port) =>
+                                      port ? (
+                                        <div key={port.id ?? Math.random().toString()} className={styles.innerPort}>
+                                          <button
+                                            onClick={() => setExpandedPorts(prev => toggleSetItem(prev, port.id!))}>
+                                            {expandedPorts.has(port.id!) ? '−' : '+'}
+                                          </button>
+                                          Порт: {port.clientId}, {port.clientName}, {port.capacity?.toString()}
+                                        </div>
+                                      ) : null
+                                    )}
+                                </div>
+                              ) : null
+                            )}
+                        </div>
+                      ) : null
+                    )}
+                  </div>
+                </>
               )}
-              {/* Здесь будет потом fetch по selectedPointId */}
-              <div>Здесь будет информация о точке</div>
             </>
           ) : (
-            <>
+            <div className={styles.selectBlock}>
               <SelectButton
                 label="Город начала"
                 fetchOptions={async (query) => {
@@ -165,16 +241,17 @@ const Sidebar = ({ selectedPointId, onClose, isInfo }: SidebarProps) => {
 
               <div className={styles.buttons}>
                 <CustomButtonColor label={"Построить"} onClick={handleBuildRoute} />
-                <CustomButtonNonColor label={"Отменить"} onClick={() => {}} />
+                <CustomButtonNonColor label={"Отменить"} onClick={() => {
+                }} />
               </div>
-            </>
+            </div>
           )}
-        </div>
+        </>
       )}
     </div>
+
   );
 };
-
 
 
 export default Sidebar;

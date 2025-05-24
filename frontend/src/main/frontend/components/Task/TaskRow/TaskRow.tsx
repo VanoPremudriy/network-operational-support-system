@@ -18,7 +18,7 @@ const TaskRow: React.FC<TaskRowProps> = ({ task, onShowDetails }) => {
       <td className={styles.cell}>{formatDateTime(task.createdTime || '')}</td>
       <td className={styles.cell}><StatusBadge status={task.status as StatusType || 'FAILED'} /></td>
       <td className={`${styles.cell} ${styles.actions}`}>
-        {task.status === 'SELECTION_IS_REQUIRED' || task.status === "SUCCESS" && (
+        {(task.status === 'SELECTION_IS_REQUIRED' || task.status === "SUCCESS") && (
           <UpdateButton label="Посмотреть детали" onClick={() => onShowDetails(task)} />
         )}
       </td>
