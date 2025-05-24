@@ -26,7 +26,7 @@ export const Map = ({ data, points, edges, onPointClick }: MapProps & { onPointC
   const projection = useMemo(() => geoNaturalEarth1(), []);
   const pathGenerator = useMemo(() => geoPath().projection(projection), [projection]);
 
-  const { transform, zoomScale } = useMapZoom(svgRef, gRef, data, zoomIdentity.translate(-2000, 300).scale(3));
+  const { transform, zoomScale } = useMapZoom(svgRef, gRef, data, zoomIdentity.translate(-1500, 300).scale(3));
   const visibleBounds = useVisibleBounds(svgRef, transform, projection);
 
   const mappedPoints = useMemo(() =>
