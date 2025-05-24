@@ -10,6 +10,7 @@ import org.springframework.util.CollectionUtils;
 import ru.mirea.network.operational.support.system.db.entity.NodeEntity;
 import ru.mirea.network.operational.support.system.db.entity.RouteEntity;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
+import ru.mirea.network.operational.support.system.db.entity.TaskStatus;
 import ru.mirea.network.operational.support.system.info.api.route.GetRouteRs;
 import ru.mirea.network.operational.support.system.info.api.route.RouteEdge;
 import ru.mirea.network.operational.support.system.info.api.route.RouteNode;
@@ -142,27 +143,41 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public TaskRoutesRs getRoutesByTask(TaskRouteRq rq) {
-        PageRequest pageRequest = PageRequest.of(rq.getPageNumber(), pageSize);
         Optional<TaskEntity> optionalTask = taskRepository.findById(rq.getTaskId());
         if (optionalTask.isEmpty()) {
             throw new RuntimeException("Не найдена задача для получения маршрутов");
         }
         TaskEntity task = optionalTask.get();
-        Page<RouteEntity> page = routeRepository.findByTaskId(rq.getTaskId(), pageRequest);
-        List<RouteEntity> routeEntities = page.get()
-                .filter(RouteEntity::isActiveFlag)
-                .toList();
+
+        List<RouteEntity> allRoutes = routeRepository.findByTaskId(rq.getTaskId());
+
+        List<RouteEntity> filteredRoutes = allRoutes;
+        if (Objects.equals(task.getStatus(), TaskStatus.SUCCESS)) {
+            filteredRoutes = allRoutes.stream()
+                    .filter(RouteEntity::isActiveFlag)
+                    .toList();
+        }
+
+        int pageNumber = rq.getPageNumber();
+        int pageSize = this.pageSize;
+        int fromIndex = pageNumber * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, filteredRoutes.size());
+
+        List<RouteEntity> pageContent = new ArrayList<>();
+        if (fromIndex < filteredRoutes.size()) {
+            pageContent = filteredRoutes.subList(fromIndex, toIndex);
+        }
+
+        int totalPages = (int) Math.ceil((double) filteredRoutes.size() / pageSize);
 
         List<Route> routes = new ArrayList<>();
 
         try {
-
             TaskInfo taskInfo = jsonMapper.treeToValue(task.getTaskData(), TaskInfo.class);
-
             NodeEntity destinationPoint = nodeRepository.findByNodeIdDetailed(taskInfo.getDestinationPoint());
             NodeEntity startingPoint = nodeRepository.findByNodeIdDetailed(taskInfo.getStartingPoint());
 
-            for (RouteEntity routeEntity : routeEntities) {
+            for (RouteEntity routeEntity : pageContent) {
                 RouteInfo routeInfo = jsonMapper.treeToValue(routeEntity.getRouteData(), RouteInfo.class);
                 routes.add(Route.builder()
                         .id(routeEntity.getId())
@@ -174,16 +189,14 @@ public class RouteServiceImpl implements RouteService {
                         .price(routeEntity.getPrice())
                         .build());
             }
-
         } catch (Exception e) {
             throw new RuntimeException("Не удалось дессириолизовать маршруты", e);
         }
 
         return TaskRoutesRs.builder()
                 .routes(routes)
-                .numberOfPages(page.getTotalPages())
+                .numberOfPages(totalPages)
                 .success(true)
                 .build();
-
     }
 }

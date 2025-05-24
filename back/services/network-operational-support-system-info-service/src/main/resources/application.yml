@@ -41,9 +41,8 @@ controller:
     get-all:
       endpoint: /
       pageSize: 8
-#  node:
-#    get-all: /
-#    get-by-id: /{id}
+  node:
+    get-by-id: /{id}
   route:
     get-all:
     get-by-id: /{id}

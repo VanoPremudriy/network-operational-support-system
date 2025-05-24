@@ -147,6 +147,14 @@ spring:
             - Authentication=true
             - RewritePath=/network-operational-support-system-api/dictionaries/client, /v1/dictionary/client
 
+        - id: node-by-id
+          uri: http://localhost:8089
+          predicates:
+            - Path=/network-operational-support-system-api/node/**
+          filters:
+            - Authentication=true
+            - RewritePath=/network-operational-support-system-api/node/(?<segment>.*), /v1/node/$\{segment}
+
     stream:
       kafka:
         binder:
