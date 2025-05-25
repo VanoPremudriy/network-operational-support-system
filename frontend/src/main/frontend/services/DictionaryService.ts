@@ -7,13 +7,11 @@ import NodeDictionaryResponse from 'Frontend/generated/ru/mirea/cnoss/service/di
 import CapacityDictionaryViewResponse from 'Frontend/generated/ru/mirea/cnoss/service/dictionary/dto/capacity/CapacityDictionaryViewResponse';
 import CapacityDictionaryViewDto from 'Frontend/generated/ru/mirea/cnoss/service/dictionary/dto/capacity/CapacityDictionaryViewDto';
 
-const token = localStorage.getItem("token");
-
 export const useClientDictionary = () => {
 
   return useCallback(async (query: string): Promise<{ fullName: string; id: string }[]> => {
     try {
-      const res: ClientDictionaryResponse = await DictionaryEndpoint.getClientDictionary(token || '', query)
+      const res: ClientDictionaryResponse = await DictionaryEndpoint.getClientDictionary(query)
 
       if (!res.success) {
         throw new Error(res.error?.title || 'Ошибка загрузки словаря');
@@ -36,7 +34,7 @@ export const useNodeDictionary = () => {
 
   return useCallback(async (query: string): Promise<{ name: string; id: string }[]> => {
     try {
-      const res: NodeDictionaryResponse = await DictionaryEndpoint.getNodeDictionary(token || '', query)
+      const res: NodeDictionaryResponse = await DictionaryEndpoint.getNodeDictionary(query)
 
       if (!res.success) {
         throw new Error(res.error?.title || 'Ошибка загрузки словаря');
@@ -59,7 +57,7 @@ export const useCapacityDictionary = () => {
 
   return useCallback(async (query: string): Promise<{ capacity: string }[]> => {
     try {
-      const res: CapacityDictionaryViewResponse = await DictionaryEndpoint.getCapacityDictionary(token || '', query)
+      const res: CapacityDictionaryViewResponse = await DictionaryEndpoint.getCapacityDictionary(query)
 
       if (!res.success) {
         throw new Error(res.error?.title || 'Ошибка загрузки словаря');

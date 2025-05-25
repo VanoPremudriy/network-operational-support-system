@@ -11,22 +11,13 @@ const useClients = ({ page, refreshTrigger  }: UseClientsProps) => {
   const [error, setError] = useState<string | null>(null);
   const [numberOfPages, setNumberOfPages] = useState<number>(0);
 
-  const token = localStorage.getItem("token");
-
   useEffect(() => {
 
-    console.log(token)
+
 
     const fetchClients = async () => {
-      if (!token) {
-        setError('Нет авторизационного токена или ID пользователя');
-        setLoading(false);
-        return;
-      }
-
       try {
         const request: ClientGetRequest = {
-          token: token,
           currentPage: page,
         };
 
@@ -49,7 +40,7 @@ const useClients = ({ page, refreshTrigger  }: UseClientsProps) => {
     };
 
     fetchClients();
-  }, [page, token, refreshTrigger]);
+  }, [page, refreshTrigger]);
 
   return { clients, loading, error, numberOfPages };
 };
@@ -57,14 +48,9 @@ const useClients = ({ page, refreshTrigger  }: UseClientsProps) => {
 export default useClients;
 
 export const deleteClient = async (clientId: string): Promise<{ success: boolean; error?: any }> => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    return { success: false, error: { title: 'Нет токена' } };
-  }
 
   try {
-    const res = await ClientEndpoint.deleteClient({ token, clientId });
+    const res = await ClientEndpoint.deleteClient({clientId });
     return { success: res.success, error: res.error };
   } catch (error) {
     return { success: false, error: { title: 'Ошибка удаления клиента' } };

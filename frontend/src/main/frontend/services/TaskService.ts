@@ -10,19 +10,10 @@ const useTasks = ({page}: UseTasksProps) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [numberOfPages, setNumberOfPages] = useState<number>(0);
 
-  const token = localStorage.getItem("token");
-
   const fetchTasks = useCallback(async () => {
-    if (!token) {
-      setError('Нет авторизационного токена или ID пользователя');
-      setLoading(false);
-      return;
-    }
-
     try {
       setLoading(true);
       const request: TaskGetRequest = {
-        token: token,
         currentPage: page
       };
 
@@ -40,7 +31,7 @@ const useTasks = ({page}: UseTasksProps) => {
     } finally {
       setLoading(false);
     }
-  }, [page, token]);
+  }, [page]);
 
   useEffect(() => {
     fetchTasks();

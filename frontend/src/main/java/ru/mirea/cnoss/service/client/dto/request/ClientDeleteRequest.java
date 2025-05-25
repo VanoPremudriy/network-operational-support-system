@@ -6,6 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ClientDeleteRequest {
-    private String token;
     private String clientId;
 }

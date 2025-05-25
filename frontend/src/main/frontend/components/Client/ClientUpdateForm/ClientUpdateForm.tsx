@@ -25,16 +25,10 @@ const ClientUpdateForm: React.FC<Props> = ({ client, mode, onClose, onSave }) =>
   };
 
   const handleSubmit = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Нет авторизационного токена");
-      return;
-    }
-
     const response =
       mode === 'edit'
-        ? await updateClient({ token, updatedClient: formData })
-        : await createClient({ token, newClient: formData });
+        ? await updateClient({updatedClient: formData })
+        : await createClient({newClient: formData });
 
     if (response.success) {
       setErrors({});

@@ -11,6 +11,7 @@ import { RiLogoutBoxLine } from "react-icons/ri";
 import { RiFlag2Line } from "react-icons/ri";
 import ImageButton from 'Frontend/components/Buttons/ImageButton/ImageButton';
 import avatar from '/public/user/avatar.jpg'
+import { AuthEndpoint } from 'Frontend/generated/endpoints';
 
 const Header =() => {
   return (
@@ -47,9 +48,13 @@ const userMenu = () => {
         src={avatar}
         alt="Пользователь"
       />
-      <IconButton onClick={() => {
-        localStorage.removeItem("token");
-        navigate(RoutePath.AUTH)}} icon={<RiLogoutBoxLine size={25}/>}/>
+      <IconButton
+        onClick={async () => {
+          await AuthEndpoint.logout();
+          navigate(RoutePath.AUTH);
+        }}
+        icon={<RiLogoutBoxLine size={25}/>}
+      />
     </div>
   )
 }

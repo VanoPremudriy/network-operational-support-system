@@ -7,5 +7,4 @@ import lombok.Setter;
 @Setter
 public class TaskGetRequest {
     private Integer currentPage;
-    private String token;
 }

@@ -22,15 +22,13 @@ interface Edge {
   target: string;
 }
 
-const token = localStorage.getItem("token");
-
 export const useRouteData = () => {
   const [data, setData] = useState<{ points: Point[]; edges: Edge[] } | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const route = await RouteEndpoint.getRoute(token || '');
+        const route = await RouteEndpoint.getRoute();
 
         const points = Array.from(route?.nodes ?? [])
           .filter((node): node is Point => node !== undefined)
@@ -65,14 +63,8 @@ export const useRouteData = () => {
 
 
 export const createRoute = async (request: CreateRouteRequest): Promise<CreateRouteResponse | null> => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    console.error("Токен не найден в localStorage");
-    return null;
-  }
-
   try {
-    const response = await RouteEndpoint.createRoute(token, request);
+    const response = await RouteEndpoint.createRoute(request);
     return response;
   } catch (error) {
     console.error("Ошибка при создании маршрута:", error);
@@ -87,19 +79,10 @@ export const getTaskRoutes = ({page, taskId}: TaskRoutesProps) => {
   const [numberOfPages, setNumberOfPages] = useState<number>(0);
 
 
-  const token = localStorage.getItem("token");
-
   useEffect(() => {
     const fetchRoutes = async () => {
-      if (!token) {
-        setError("Нет авторизационного токена");
-        setLoading(false);
-        return;
-      }
-
       try {
         const request = {
-          token,
           taskId,
           pageNumber: page,
         };
@@ -122,7 +105,7 @@ export const getTaskRoutes = ({page, taskId}: TaskRoutesProps) => {
     };
 
     fetchRoutes();
-  }, [taskId, page, token]);
+  }, [taskId, page]);
 
   return { routes, loading, error, numberOfPages};
 }
@@ -134,7 +117,7 @@ export const useRouteDataByRouteId = (id: string) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const route = await RouteEndpoint.getRouteById(token || '', id);
+        const route = await RouteEndpoint.getRouteById(id);
 
         const points = Array.from(route?.nodes ?? [])
           .filter((node): node is Point => node !== undefined)
@@ -169,9 +152,6 @@ export const useRouteDataByRouteId = (id: string) => {
 
 export const useApplyRoute = () => {
   return async (routeId: string): Promise<BaseResponse> => {
-    if (!token) {
-      throw new Error('Пользователь не авторизован');
-    }
-    return await RouteEndpoint.applyRoute(token, routeId);
+    return await RouteEndpoint.applyRoute(routeId);
   };
 };

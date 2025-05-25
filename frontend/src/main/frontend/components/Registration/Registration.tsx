@@ -27,7 +27,7 @@ const Registration = () => {
     e.preventDefault();
     const { success, errors } = await registration(formData);
     if (success) {
-      navigate(RoutePath.ROOT);
+      navigate(RoutePath.AUTH);
     } else {
       setErrors(errors || {});
     }

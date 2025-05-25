@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TaskRouteViewRequest {
-    private String token;
     private String taskId;
     private Integer pageNumber;
 }

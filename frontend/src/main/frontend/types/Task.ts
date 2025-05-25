@@ -17,6 +17,5 @@ export interface UseTasksProps {
 }
 
 export interface TaskGetRequest {
-  token: string;
   currentPage: number;
 }

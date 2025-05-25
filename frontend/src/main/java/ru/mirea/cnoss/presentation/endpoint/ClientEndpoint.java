@@ -3,6 +3,7 @@ package ru.mirea.cnoss.presentation.endpoint;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.BrowserCallable;
 import lombok.RequiredArgsConstructor;
+import ru.mirea.cnoss.presentation.utils.TokenUtils;
 import ru.mirea.cnoss.service.BaseResponse;
 import ru.mirea.cnoss.service.client.ClientService;
 import ru.mirea.cnoss.service.client.converter.ClientDtoToViewDtoConverter;
@@ -22,17 +23,15 @@ public class ClientEndpoint {
     private final ClientService clientService;
     private final ClientDtoToViewDtoConverter converter;
 
-    private static final String BEARER = "Bearer ";
-
     public ClientViewResponse getClients(ClientGetRequest request) {
-        String userToken =  BEARER + request.getToken();
+        String token = TokenUtils.getBearerTokenOrThrow();
         Integer currentPage = request.getCurrentPage();
 
         GetAllClientsRequest rq = GetAllClientsRequest.builder()
                 .pageNumber(currentPage)
                 .build();
 
-        ClientResponse response = clientService.getClients(userToken, rq);
+        ClientResponse response = clientService.getClients(token, rq);
 
         Set<ClientViewDto> clients = response.getClients().stream().map(converter::convert).collect(Collectors.toSet());
 
@@ -46,7 +45,7 @@ public class ClientEndpoint {
     }
 
     public BaseResponse createClient(ClientCreateRequest request) {
-        String userToken = BEARER + request.getToken();
+        String token = TokenUtils.getBearerTokenOrThrow();
         ClientViewDto newClient = request.getNewClient();
         ClientCreateDto newCreateClient = ClientCreateDto.builder()
                 .email(newClient.getEmail())
@@ -55,11 +54,11 @@ public class ClientEndpoint {
                 .middleName(newClient.getMiddleName())
                 .firstName(newClient.getFirstName())
                 .build();
-        return clientService.createClient(userToken, newCreateClient);
+        return clientService.createClient(token, newCreateClient);
     }
 
     public BaseResponse updateClient(ClientUpdateRequest request) {
-        String userToken = BEARER + request.getToken();
+        String token = TokenUtils.getBearerTokenOrThrow();
         ClientViewDto updatedClient = request.getUpdatedClient();
         ClientUpdateDto updateClient = ClientUpdateDto.builder()
                 .id(updatedClient.getId())
@@ -68,12 +67,12 @@ public class ClientEndpoint {
                 .middleName(updatedClient.getMiddleName())
                 .firstName(updatedClient.getFirstName())
                 .build();
-        return clientService.updateClient(userToken, updateClient);
+        return clientService.updateClient(token, updateClient);
     }
 
     public BaseResponse deleteClient(ClientDeleteRequest request) {
-        String userToken = BEARER + request.getToken();
+        String token = TokenUtils.getBearerTokenOrThrow();
         UUID clientId = UUID.fromString(request.getClientId());
-        return clientService.deleteClient(userToken, clientId);
+        return clientService.deleteClient(token, clientId);
     }
 }

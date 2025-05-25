@@ -7,6 +7,5 @@ import ru.mirea.cnoss.service.client.dto.ClientViewDto;
 @Getter
 @Setter
 public class ClientUpdateRequest {
-    private String token;
     private ClientViewDto updatedClient;
 }

@@ -6,6 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ClientGetRequest {
-    private String token;
     private Integer currentPage;
 }

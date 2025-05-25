@@ -1,4 +1,5 @@
 import {AuthEndpoint} from "Frontend/generated/endpoints"
+import { useEffect, useState } from 'react';
 
 export const getAuthToken = async (formData: {
   login: string;
@@ -6,8 +7,7 @@ export const getAuthToken = async (formData: {
 }): Promise<{ success: boolean; errors?: Record<string, string> }> => {
   const response = await AuthEndpoint.auth(formData);
 
-  if (response.success && response.token) {
-    localStorage.setItem("token", response.token);
+  if (response.success) {
     return { success: true };
   } else {
     const infos = response.error?.infos || {};
@@ -33,8 +33,7 @@ export const registration = async (formData: {
 }):Promise<{ success: boolean; errors?: Record<string, string> }> => {
   const response = await AuthEndpoint.register(formData);
 
-  if (response.success && response.token) {
-    localStorage.setItem("token", response.token);
+  if (response.success) {
     return { success: true };
   } else {
     const infos = response.error?.infos || {};
@@ -50,3 +49,15 @@ export const registration = async (formData: {
     return { success: false, errors: filteredInfos };
   }
 }
+
+export const useAuth = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null); // null — значит "ещё не знаем"
+
+  useEffect(() => {
+    AuthEndpoint.isAuthenticated()
+      .then(setIsAuthenticated)
+      .catch(() => setIsAuthenticated(false));
+  }, []);
+
+  return isAuthenticated;
+};

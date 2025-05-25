@@ -26,6 +26,5 @@ export interface UseClientsProps {
 }
 
 export interface ClientGetRequest {
-  token: string;
   currentPage: number;
 }
