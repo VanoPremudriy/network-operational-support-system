@@ -19,8 +19,6 @@ public class AuthEndpoint {
 
         if (result.isSuccess() && result.getToken() != null) {
             TokenUtils.setAuthCookie(result.getToken());
-        } else {
-            throw new RuntimeException("Auth failed");
         }
 
         return result;
