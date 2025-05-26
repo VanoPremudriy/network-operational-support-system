@@ -37,12 +37,11 @@ public class NodeEntity {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @Column(name = "description")
-    private String description;
-
+    @EqualsAndHashCode.Exclude
     @Column(name = "latitude", nullable = false)
     private BigDecimal latitude;
 
+    @EqualsAndHashCode.Exclude
     @Column(name = "longitude", nullable = false)
     private BigDecimal longitude;
 
@@ -50,9 +49,19 @@ public class NodeEntity {
     private String name;
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "node")
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "node")
     @BatchSize(size = 5)
     private Set<BasketEntity> baskets;
+
+    @EqualsAndHashCode.Include
+    private BigDecimal getLatitudeForEquals() {
+        return latitude.stripTrailingZeros();
+    }
+
+    @EqualsAndHashCode.Include
+    private BigDecimal getLongitudeForEquals() {
+        return longitude.stripTrailingZeros();
+    }
 
     public Set<BasketEntity> getBaskets() {
         if (baskets == null) {

@@ -18,8 +18,6 @@ public class Basket {
 
     private BasketModel basketModel;
 
-    private String name;
-
     private UUID linkedBasket;
 
     private UUID node;

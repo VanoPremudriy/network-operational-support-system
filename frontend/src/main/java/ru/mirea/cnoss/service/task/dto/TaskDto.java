@@ -20,4 +20,5 @@ public class TaskDto {
     private String taskType;
     private String taskData;
     private String status;
+    private String clientName;
 }

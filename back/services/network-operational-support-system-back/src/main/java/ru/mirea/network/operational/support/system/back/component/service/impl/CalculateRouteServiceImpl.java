@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import ru.mirea.network.operational.support.system.back.component.client.CalculateRouteClient;
@@ -53,7 +54,9 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
     public Set<RouteEntity> calculate(TaskEntity taskEntity, CalculateRouteRq rq, BigDecimal capacity) {
         List<CalculateRouteRs> rs = calculateRouteClient.calculateRoute(rq);
 
-        PortTypeEntity portType = portTypeRepository.findTopByCapacityOrderByPrice(capacity);
+        PortTypeEntity portType = portTypeRepository.findTopByCapacityGreaterThanEqual(capacity,
+                Sort.by("price").and(Sort.by("capacity"))
+        );
 
         if (portType == null) {
             throw new TaskException("Не найдено портов с ёмкостью [" + capacity + "] ");
@@ -84,15 +87,17 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                 if (i == 0) {
                     UUID nextId = routeRs.getRoute().get(i + 1);
                     NodeEntity nextNode = nodeRepository.findByNodeIdDetailed(nextId);
-                    processFirst(node, nextNode, baseLevel, dto, taskEntity, basketModel, boardModel, portType, basketsByLevel, boardByLevel);
+                    processFirst(node, nextNode, baseLevel, capacity, dto,
+                            taskEntity, basketModel, boardModel, portType, basketsByLevel, boardByLevel);
                     price = price.add(dto.getPrice());
                 } else if (i == routeRs.getRoute().size() - 1) {
-                    processLast(node, baseLevel, dto, taskEntity, boardModel, basketModel, boardByLevel, basketsByLevel, portType);
+                    processLast(node, baseLevel, capacity, dto,
+                            taskEntity, boardModel, basketModel, boardByLevel, basketsByLevel, portType);
                     price = price.add(dto.getPrice());
                 } else {
                     UUID nextId = routeRs.getRoute().get(i + 1);
                     NodeEntity nextNode = nodeRepository.findByNodeIdDetailed(nextId);
-                    processMiddle(node, nextNode, dto, taskEntity, boardByLevel, basketsByLevel, portType);
+                    processMiddle(capacity, node, nextNode, dto, taskEntity, boardByLevel, basketsByLevel, portType);
                     price = price.add(dto.getPrice());
                 }
 
@@ -102,7 +107,7 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
             result.add(RouteEntity.builder()
                     .price(price)
                     .taskId(taskEntity.getId())
-                    .clientId(taskEntity.getClientId())
+                    .clientId(taskEntity.getClient().getId())
                     .activeFlag(false)
                     .routeData(jsonMapper.valueToTree(RouteInfo.builder()
                             .nodes(entityMapper.mapEntity(nodes))
@@ -119,6 +124,7 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
     private void processFirst(NodeEntity node,
                               NodeEntity nextNode,
                               Integer currentLevel,
+                              BigDecimal capacity,
                               CalculateDto dto,
                               TaskEntity taskEntity,
                               BasketModelEntity firstBasketModel,
@@ -136,7 +142,13 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
             board = createClientBoard(dto, basket, List.of(firstBoardModel));
         }
 
-        PortEntity port = createPort(dto, board, taskEntity, portType);
+        PortEntity port = findPort(board, taskEntity, portType);
+
+        if (port == null) {
+            port = createPort(capacity, board, taskEntity, portType);
+        } else {
+            port = updateOrCreatePort(port, capacity, board, taskEntity, portType);
+        }
 
         dto
                 .setBasket(basket)
@@ -158,9 +170,11 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                     linearBoard = createLinerBoard(dto, basketForLinear, boards);
                 }
 
-                PortEntity linerPort = findPort(linearBoard, portType);
+                PortEntity linerPort = findPort(linearBoard, taskEntity, portType);
                 if (linerPort == null) {
-                    linerPort = createPort(dto, linearBoard, taskEntity, portType);
+                    linerPort = createPort(capacity, linearBoard, taskEntity, portType);
+                } else {
+                    linerPort = updateOrCreatePort(linerPort, capacity, linearBoard, taskEntity, portType);
                 }
 
                 dto.getPort().setLinkToTheAssociatedLinearPort(linerPort);
@@ -180,9 +194,14 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                     clientBoard = createClientBoard(dto, clientBasket, boards);
                 }
 
-                PortEntity clientPort = createPort(dto, clientBoard, taskEntity, portType);
+                PortEntity clientPort = findPort(clientBoard, taskEntity, portType);
+                if (clientPort == null) {
+                    clientPort = createPort(capacity, clientBoard, taskEntity, portType);
+                } else {
+                    clientPort = updateOrCreatePort(clientPort, capacity, clientBoard, taskEntity, portType);
+                }
 
-                clientPort.setLinkToTheAssociatedLinearPortFromLowerLevel(linerPort);
+                clientPort.setLinkToTheAssociatedLinearPortFromDifferentLevel(linerPort);
 
                 dto.setBasket(clientBasket)
                         .setPort(clientPort);
@@ -192,6 +211,7 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
 
     private void processLast(NodeEntity node,
                              Integer baseLevel,
+                             BigDecimal capacity,
                              CalculateDto dto,
                              TaskEntity taskEntity,
                              BoardModelEntity lastBoardModel,
@@ -211,7 +231,13 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                 board = createClientBoard(dto, basket, List.of(lastBoardModel));
             }
 
-            createPort(dto, board, taskEntity, portType);
+            PortEntity port = findPort(board, taskEntity, portType);
+
+            if (port == null) {
+                createPort(capacity, board, taskEntity, portType);
+            } else {
+                updateOrCreatePort(port, capacity, board, taskEntity, portType);
+            }
 
             return;
         }
@@ -235,7 +261,13 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
             inBoard = createClientBoard(dto, inBasket, boards);
         }
 
-        PortEntity inPort = createPort(dto, inBoard, taskEntity, portType);
+        PortEntity inPort = findPort(inBoard, taskEntity, portType);
+
+        if (inPort == null) {
+            inPort = createPort(capacity, inBoard, taskEntity, portType);
+        } else {
+            inPort = updateOrCreatePort(inPort, capacity, inBoard, taskEntity, portType);
+        }
 
         Integer currentLevel = 2;
 
@@ -253,12 +285,14 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                 linearBoard = createLinerBoard(dto, basketForLinear, boards);
             }
 
-            PortEntity linerPort = findPort(linearBoard, portType);
+            PortEntity linerPort = findPort(linearBoard, taskEntity, portType);
             if (linerPort == null) {
-                linerPort = createPort(dto, linearBoard, taskEntity, portType);
+                linerPort = createPort(capacity, linearBoard, taskEntity, portType);
+            } else {
+                linerPort = updateOrCreatePort(linerPort, capacity, linearBoard, taskEntity, portType);
             }
 
-            dto.getPort().setLinkToTheAssociatedLinearPortFromLowerLevel(linerPort);
+            dto.getPort().setLinkToTheAssociatedLinearPortFromDifferentLevel(linerPort);
 
             // Заполняем последнюю клиентскую корзину
             if (currentLevel.equals(baseLevel)) {
@@ -272,7 +306,13 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                     board = createClientBoard(dto, basket, List.of(lastBoardModel));
                 }
 
-                createPort(dto, board, taskEntity, portType);
+                PortEntity port = findPort(board, taskEntity, portType);
+
+                if (port == null) {
+                    createPort(capacity, board, taskEntity, portType);
+                } else {
+                    updateOrCreatePort(port, capacity, board, taskEntity, portType);
+                }
             } else {
                 // Заполняем промежуточные клиентские корзины
                 boards = boardByLevel.get(currentLevel);
@@ -288,7 +328,12 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                     clientBoard = createClientBoard(dto, clientBasket, boards);
                 }
 
-                PortEntity clientPort = createPort(dto, clientBoard, taskEntity, portType);
+                PortEntity clientPort = findPort(clientBoard, taskEntity, portType);
+                if (clientPort == null) {
+                    clientPort = createPort(capacity, clientBoard, taskEntity, portType);
+                } else {
+                    clientPort = updateOrCreatePort(clientPort, capacity, clientBoard, taskEntity, portType);
+                }
 
                 clientPort.setLinkToTheAssociatedLinearPort(linerPort);
 
@@ -300,7 +345,8 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
         }
     }
 
-    private void processMiddle(NodeEntity node,
+    private void processMiddle(BigDecimal capacity,
+                               NodeEntity node,
                                NodeEntity nextNode,
                                CalculateDto dto,
                                TaskEntity taskEntity,
@@ -326,7 +372,12 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
             inBoard = createClientBoard(dto, inBasket, boards);
         }
 
-        PortEntity inPort = createPort(dto, inBoard, taskEntity, portType);
+        PortEntity inPort = findPort(inBoard, taskEntity, portType);
+        if (inPort == null) {
+            inPort = createPort(capacity, inBoard, taskEntity, portType);
+        } else {
+            inPort = updateOrCreatePort(inPort, capacity, inBoard, taskEntity, portType);
+        }
 
         // Входящая корзина второго уровня
         baskets = basketsByLevel.get(2);
@@ -342,12 +393,14 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
             inSecondBoard = createLinerBoard(dto, inSecondBasket, boards);
         }
 
-        PortEntity inSecondPort = findPort(inSecondBoard, portType);
+        PortEntity inSecondPort = findPort(inSecondBoard, taskEntity, portType);
         if (inSecondPort == null) {
-            inSecondPort = createPort(dto, inSecondBoard, taskEntity, portType);
+            inSecondPort = createPort(capacity, inSecondBoard, taskEntity, portType);
+        } else {
+            inSecondPort = updateOrCreatePort(inSecondPort, capacity, inSecondBoard, taskEntity, portType);
         }
 
-        inPort.setLinkToTheAssociatedLinearPortFromLowerLevel(inSecondPort);
+        inPort.setLinkToTheAssociatedLinearPortFromDifferentLevel(inSecondPort);
 
         // Исходящая корзина второго уровня
 
@@ -356,14 +409,16 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
             outSecondBasket = createBasket(dto, node, baskets);
         }
 
-        BoardEntity outSecondBoard = findBoard(outSecondBasket, boards, true);
+        BoardEntity outSecondBoard = findBoard(outSecondBasket, inSecondBoard, boards, true);
         if (outSecondBoard == null) {
             outSecondBoard = createLinerBoard(dto, outSecondBasket, boards);
         }
 
-        PortEntity outSecondPort = findPort(outSecondBoard, portType);
+        PortEntity outSecondPort = findPort(outSecondBoard, taskEntity, portType);
         if (outSecondPort == null) {
-            outSecondPort = createPort(dto, outSecondBoard, taskEntity, portType);
+            outSecondPort = createPort(capacity, outSecondBoard, taskEntity, portType);
+        } else {
+            outSecondPort = updateOrCreatePort(outSecondPort, capacity, outSecondBoard, taskEntity, portType);
         }
 
         outSecondPort.setLinkToTheAssociatedLinearPort(inSecondPort);
@@ -383,8 +438,13 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
             outBoard = createClientBoard(dto, outBasket, boards);
         }
 
-        PortEntity outPort = createPort(dto, outBoard, taskEntity, portType);
-        outPort.setLinkToTheAssociatedLinearPortFromLowerLevel(outSecondPort);
+        PortEntity outPort = findPort(outBoard, taskEntity, portType);
+        if (outPort == null) {
+            outPort = createPort(capacity, outBoard, taskEntity, portType);
+        } else {
+            outPort = updateOrCreatePort(outPort, capacity, outBoard, taskEntity, portType);
+        }
+        outPort.setLinkToTheAssociatedLinearPortFromDifferentLevel(outSecondPort);
 
         dto.setBasket(outBasket)
                 .setPort(outPort);
@@ -473,6 +533,19 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                 .orElse(null);
     }
 
+    private BoardEntity findBoard(BasketEntity basket, BoardEntity excluded, List<BoardModelEntity> models, boolean isLiner) {
+        if (CollectionUtils.isEmpty(basket.getBoards())) {
+            return null;
+        }
+        return basket.getBoards().stream()
+                .filter(b -> b.getBoardModel().isLinear() == isLiner
+                        && b != excluded
+                        && models.contains(b.getBoardModel())
+                        && b.getPorts().size() < b.getBoardModel().getNumberOfSlots())
+                .findAny()
+                .orElse(null);
+    }
+
     private BoardEntity findBoard(BasketEntity basket, BoardModelEntity model) {
         if (CollectionUtils.isEmpty(basket.getBoards())) {
             return null;
@@ -494,6 +567,17 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                 .orElse(null);
     }
 
+
+    private PortEntity findPort(BoardEntity board, TaskEntity taskEntity, PortTypeEntity model) {
+        if (CollectionUtils.isEmpty(board.getPorts())) {
+            return null;
+        }
+        return board.getPorts().stream()
+                .filter(b -> b.getPortType().equals(model) && b.getClientId() == taskEntity.getClient().getId())
+                .findAny()
+                .orElse(null);
+    }
+
     private BasketEntity createBasket(CalculateDto dto, NodeEntity node, List<BasketModelEntity> baskets) {
         BasketModelEntity basketModel = baskets.stream()
                 .min(Comparator.comparing(BasketModelEntity::getPrice))
@@ -503,7 +587,6 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                 .id(UUID.randomUUID())
                 .isNew(true)
                 .basketModel(basketModel)
-                .name(basketModel.getName())
                 .node(node)
                 .boards(new HashSet<>())
                 .build();
@@ -525,7 +608,6 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
         BoardEntity board = BoardEntity.builder()
                 .id(UUID.randomUUID())
                 .isNew(true)
-                .name(boardModel.getName())
                 .boardModel(boardModel)
                 .basket(basket)
                 .ports(new HashSet<>())
@@ -549,7 +631,6 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
         BoardEntity board = BoardEntity.builder()
                 .id(UUID.randomUUID())
                 .isNew(true)
-                .name(boardModel.getName())
                 .boardModel(boardModel)
                 .basket(basket)
                 .ports(new HashSet<>())
@@ -561,14 +642,25 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
         return board;
     }
 
-    private PortEntity createPort(CalculateDto dto, BoardEntity board, TaskEntity taskEntity, PortTypeEntity portType) {
+    private PortEntity updateOrCreatePort(PortEntity port, BigDecimal capacity, BoardEntity board, TaskEntity taskEntity, PortTypeEntity portType) {
+        if (portType.getCapacity().compareTo(port.getCapacity().add(capacity)) <= 0) {
+            port.setCapacity(port.getCapacity().add(capacity));
+            return port;
+        }
+        BigDecimal difference = portType.getCapacity().subtract(port.getCapacity());
+        port.setCapacity(portType.getCapacity());
+        return createPort(capacity.subtract(difference), board, taskEntity, portType);
+    }
+
+    private PortEntity createPort(BigDecimal capacity, BoardEntity board, TaskEntity taskEntity, PortTypeEntity portType) {
         PortEntity port = PortEntity.builder()
                 .id(UUID.randomUUID())
                 .isNew(true)
-                .clientId(taskEntity.getClientId())
+                .clientId(taskEntity.getClient().getId())
                 .taskId(taskEntity.getId())
                 .portType(portType)
                 .board(board)
+                .capacity(capacity)
                 .build();
         board.getPorts().add(port);
 

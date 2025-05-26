@@ -18,7 +18,7 @@ public class BoardModel {
     private String name;
     private Integer levelNumber;
     private Integer numberOfSlots;
-    private Boolean canSendToALowerLevel;
+    private Boolean canSendToDifferentLevel;
     @JsonProperty(value = "linear")
     private boolean isLinear;
     private BigDecimal price;

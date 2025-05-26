@@ -16,7 +16,7 @@ import ru.mirea.network.operational.support.system.info.api.dictionary.FindCapac
 import ru.mirea.network.operational.support.system.info.api.dictionary.FindClientRs;
 import ru.mirea.network.operational.support.system.info.api.dictionary.FindNodeRs;
 import ru.mirea.network.operational.support.system.info.api.dictionary.NodeDTOList;
-import ru.mirea.network.operational.support.system.info.mapper.EntityMapper;
+import ru.mirea.network.operational.support.system.info.mapper.DictionaryMapper;
 import ru.mirea.network.operational.support.system.info.repository.ClientRepository;
 import ru.mirea.network.operational.support.system.info.repository.NodeRepository;
 import ru.mirea.network.operational.support.system.info.repository.PortTypeRepository;
@@ -31,21 +31,21 @@ public class DictionaryServiceImpl implements DictionaryService {
     private final NodeRepository nodeRepository;
     private final ClientRepository clientRepository;
     private final PortTypeRepository portTypeRepository;
-    private final EntityMapper entityMapper;
+    private final DictionaryMapper entityMapper;
 
     @Override
     public FindNodeRs findNode(String query) {
         if (StringUtils.isBlank(query)) {
             return FindNodeRs.builder()
                     .body(NodeDTOList.builder()
-                            .nodes(entityMapper.mapNodeDictionary(nodeRepository.findAll()))
+                            .nodes(entityMapper.mapNode(nodeRepository.findAll()))
                             .build())
                     .success(true)
                     .build();
         }
         return FindNodeRs.builder()
                 .body(NodeDTOList.builder()
-                        .nodes(entityMapper.mapNodeDictionary(nodeRepository.findByNameContains(query)))
+                        .nodes(entityMapper.mapNode(nodeRepository.findByNameContains(query)))
                         .build())
                 .success(true)
                 .build();
@@ -57,14 +57,14 @@ public class DictionaryServiceImpl implements DictionaryService {
             return FindCapacityRs.builder()
                     .success(true)
                     .body(CapacityDTOList.builder()
-                            .portTypes(entityMapper.mapCapacityDictionary(portTypeRepository.findAll()))
+                            .portTypes(entityMapper.mapCapacity(portTypeRepository.findAll()))
                             .build())
                     .build();
         }
         return FindCapacityRs.builder()
                 .success(true)
                 .body(CapacityDTOList.builder()
-                        .portTypes(entityMapper.mapCapacityDictionary(portTypeRepository.findAllByQuery(query)))
+                        .portTypes(entityMapper.mapCapacity(portTypeRepository.findAllByQuery(query)))
                         .build())
                 .build();
     }
@@ -74,7 +74,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         if (StringUtils.isBlank(query)) {
             return FindClientRs.builder()
                     .body(ClientDTOList.builder()
-                            .clients(entityMapper.mapClientDictionary(clientRepository.findAllByEmployeeId(employeeId)))
+                            .clients(entityMapper.mapClient(clientRepository.findAllByEmployeeId(employeeId)))
                             .build())
                     .success(true)
                     .build();
@@ -127,7 +127,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 
         return FindClientRs.builder()
                 .body(ClientDTOList.builder()
-                        .clients(entityMapper.mapClientDictionary(clientRepository.findAll(spec)))
+                        .clients(entityMapper.mapClient(clientRepository.findAll(spec)))
                         .build())
                 .success(true)
                 .build();

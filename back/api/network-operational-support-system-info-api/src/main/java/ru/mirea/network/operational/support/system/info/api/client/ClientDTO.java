@@ -1,5 +1,6 @@
 package ru.mirea.network.operational.support.system.info.api.client;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -12,6 +13,7 @@ import lombok.extern.jackson.Jacksonized;
 @Data
 @SuperBuilder
 @Jacksonized
+@JsonIgnoreProperties(ignoreUnknown = true) // игнорируем поле логина
 public class ClientDTO {
     @JsonProperty("first_name")
     @Schema(description = "Имя клиента", example = "firstName")
@@ -37,4 +39,8 @@ public class ClientDTO {
     @Size(max = 50, message = "Допустимый размер поля email 50 символов")
     @Pattern(regexp = "^[-\\w.]+@([A-z0-9][-A-z0-9]+\\.)+[A-z]{2,4}$", message = "Некорректный формат email")
     private String email;
+
+    @Schema(description = "Организация клиента", example = "organization")
+    @Size(max = 50, message = "Допустимый размер поля организации 50 символов")
+    private String organization;
 }

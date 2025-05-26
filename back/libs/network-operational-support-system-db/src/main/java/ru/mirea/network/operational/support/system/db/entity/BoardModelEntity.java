@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Table(schema = "public", name = "board_models")
 public class BoardModelEntity {
     @Id
@@ -36,14 +38,20 @@ public class BoardModelEntity {
     @Column(name = "number_of_slots", nullable = false)
     private Integer numberOfSlots;
 
-    @Column(name = "can_send_to_a_lower_level")
-    private Boolean canSendToALowerLevel;
+    @Column(name = "can_send_to_different_level")
+    private Boolean canSendToDifferentLevel;
 
     @Column(name = "is_linear", nullable = false)
     private boolean isLinear;
 
-    @Column(name = "price")
+    @EqualsAndHashCode.Exclude
+    @Column(name = "price", nullable = false)
     private BigDecimal price;
+
+    @EqualsAndHashCode.Include
+    private BigDecimal getPriceForEquals() {
+        return price.stripTrailingZeros();
+    }
 
     public BigDecimal getPrice() {
         if (price == null) {

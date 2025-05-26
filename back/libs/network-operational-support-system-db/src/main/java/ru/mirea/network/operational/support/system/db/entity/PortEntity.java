@@ -18,6 +18,7 @@ import lombok.Setter;
 import lombok.extern.jackson.Jacksonized;
 import org.springframework.data.domain.Persistable;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -41,6 +42,10 @@ public class PortEntity implements Persistable<UUID> {
     private UUID taskId;
 
     @EqualsAndHashCode.Exclude
+    @Column(name = "capacity", nullable = false)
+    private BigDecimal capacity;
+
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "port_type_id", nullable = false)
     private PortTypeEntity portType;
@@ -52,13 +57,18 @@ public class PortEntity implements Persistable<UUID> {
 
     @EqualsAndHashCode.Exclude
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "link_to_the_associated_linear_port_from_lower_level")
-    private PortEntity linkToTheAssociatedLinearPortFromLowerLevel;
+    @JoinColumn(name = "link_to_the_associated_linear_port_from_different_level")
+    private PortEntity linkToTheAssociatedLinearPortFromDifferentLevel;
 
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "board_id", nullable = false)
     private BoardEntity board;
+
+    @EqualsAndHashCode.Include
+    private BigDecimal getCapacityForEquals() {
+        return capacity.stripTrailingZeros();
+    }
 
     private transient boolean isNew;
 

@@ -1,6 +1,5 @@
 package ru.mirea.network.operational.support.system.info.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import ru.mirea.network.operational.support.system.info.api.task.DetailedTaskRs;
 import ru.mirea.network.operational.support.system.info.api.task.GetAllTasksRq;
 import ru.mirea.network.operational.support.system.info.api.task.GetAllTasksRs;

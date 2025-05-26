@@ -38,23 +38,22 @@ public class BasketModelEntity {
     @Column(name = "number_of_slots", nullable = false)
     private Integer numberOfSlots;
 
-    @Column(name = "allowed_lambda_limit")
+    @Column(name = "allowed_lambda_limit", nullable = false)
     private Integer allowedLambdaLimit;
 
-    @Column(name = "price")
+    @EqualsAndHashCode.Exclude
+    @Column(name = "price", nullable = false)
     private BigDecimal price;
+
+    @EqualsAndHashCode.Include
+    private BigDecimal getPriceForEquals() {
+        return price.stripTrailingZeros();
+    }
 
     public BigDecimal getPrice() {
         if (price == null) {
             return BigDecimal.ZERO;
         }
         return price;
-    }
-
-    public Integer getAllowedLambdaLimit() {
-        if (allowedLambdaLimit == null) {
-            return numberOfSlots;
-        }
-        return allowedLambdaLimit;
     }
 }

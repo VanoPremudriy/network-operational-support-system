@@ -38,4 +38,7 @@ public class Task {
     @Schema(description = "Статус задачи", example = "SUCCESS")
     private String status;
 
+    @Schema(description = "Имя клиента", example = "SUCCESS")
+    private String clientName;
+
 }

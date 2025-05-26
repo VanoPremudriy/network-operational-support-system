@@ -16,8 +16,6 @@ import java.util.UUID;
 public class Node {
     private UUID id;
 
-    private String description;
-
     private BigDecimal latitude;
 
     private BigDecimal longitude;

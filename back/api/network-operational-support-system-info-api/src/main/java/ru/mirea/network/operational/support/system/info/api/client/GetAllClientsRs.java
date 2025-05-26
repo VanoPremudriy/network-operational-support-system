@@ -17,5 +17,5 @@ public class GetAllClientsRs extends BaseRs {
     @Schema(description = "Номер страницы", example = "1")
     private Integer numberOfPages;
 
-    private Set<ClientDTODetailed> clients;
+    private Set<ClientDTOWithId> clients;
 }

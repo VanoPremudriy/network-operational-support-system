@@ -20,7 +20,7 @@ public interface NodeRepository extends JpaRepository<NodeEntity, UUID> {
             left join fetch bo.ports p
             left join fetch p.portType
             left join fetch p.linkToTheAssociatedLinearPort
-            left join fetch p.linkToTheAssociatedLinearPortFromLowerLevel
+            left join fetch p.linkToTheAssociatedLinearPortFromDifferentLevel
             where n.id = :nodeId
             """)
     NodeEntity findByNodeIdDetailed(UUID nodeId);

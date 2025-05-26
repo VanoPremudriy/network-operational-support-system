@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -23,7 +24,9 @@ public class Port {
 
     private UUID linkToTheAssociatedLinearPort;
 
-    private UUID linkToTheAssociatedLinearPortFromLowerLevel;
+    private UUID linkToTheAssociatedLinearPortFromDifferentLevel;
+
+    private BigDecimal capacity;
 
     private UUID board;
 

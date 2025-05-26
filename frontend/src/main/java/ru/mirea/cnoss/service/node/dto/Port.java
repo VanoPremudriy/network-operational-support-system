@@ -18,9 +18,11 @@ public class Port {
     @Nullable
     private UUID linkToTheAssociatedLinearPort;
     @Nullable
-    private UUID linkToTheAssociatedLinearPortFromLowerLevel;
+    private UUID linkToTheAssociatedLinearPortFromDifferentLevel;
     @Nullable
     private UUID portTypeId;
+    @Nullable
+    private String portTypeName;
     @Nullable
     private String clientName;
     @Nullable

@@ -15,12 +15,6 @@ public class Board {
     @Schema(description = "Id платы", example = "f0e5842f-8d2f-44fc-ac7e-3132b49db457")
     private UUID id;
 
-    @Schema(description = "Id модели платы", example = "f0e5842f-8d2f-44fc-ac7e-3132b49db457")
-    private UUID boardModelId;
-
-    @Schema(description = "Id корзины", example = "f0e5842f-8d2f-44fc-ac7e-3132b49db457")
-    private UUID basketId;
-
     @Schema(description = "Название платы", example = "something")
     private String name;
 

@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Table(schema = "public", name = "port_types")
 public class PortTypeEntity {
     @Id
@@ -27,6 +29,7 @@ public class PortTypeEntity {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
+    @EqualsAndHashCode.Exclude
     @Column(name = "capacity", nullable = false)
     private BigDecimal capacity;
 
@@ -36,14 +39,17 @@ public class PortTypeEntity {
     @Column(name = "num_unit", nullable = false)
     private String numUnit;
 
-    @Column(name = "price")
+    @EqualsAndHashCode.Exclude
+    @Column(name = "price", nullable = false)
     private BigDecimal price;
 
-    public BigDecimal getPrice() {
-        if (price == null) {
-            return BigDecimal.ZERO;
-        }
-        return price;
+    @EqualsAndHashCode.Include
+    private BigDecimal getPriceForEquals() {
+        return price.stripTrailingZeros();
     }
 
+    @EqualsAndHashCode.Include
+    private BigDecimal getCapacityForEquals() {
+        return capacity.stripTrailingZeros();
+    }
 }

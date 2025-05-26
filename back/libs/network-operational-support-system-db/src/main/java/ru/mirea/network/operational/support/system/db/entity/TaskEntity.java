@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,9 +36,6 @@ public class TaskEntity {
     @Column(name = "active_flag", nullable = false)
     private boolean activeFlag;
 
-    @Column(name = "client_id", nullable = false)
-    private UUID clientId;
-
     @Column(name = "created_time", nullable = false)
     private LocalDateTime createdTime;
 
@@ -49,6 +47,11 @@ public class TaskEntity {
 
     @Column(name = "task_type", nullable = false)
     private String taskType;
+
+    @EqualsAndHashCode.Exclude
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "client_id", nullable = false)
+    private ClientEntity client;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)

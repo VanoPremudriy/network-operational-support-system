@@ -10,9 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mirea.network.operational.support.system.common.api.BaseRs;
 import ru.mirea.network.operational.support.system.db.entity.ClientEntity;
 import ru.mirea.network.operational.support.system.db.entity.EmployeeToClientEntity;
-import ru.mirea.network.operational.support.system.info.api.client.ClientDTODetailed;
+import ru.mirea.network.operational.support.system.info.api.client.ClientDTO;
 import ru.mirea.network.operational.support.system.info.api.client.ClientDTOWithId;
-import ru.mirea.network.operational.support.system.info.api.client.ClientDTOWithLogin;
 import ru.mirea.network.operational.support.system.info.api.client.GetAllClientsRq;
 import ru.mirea.network.operational.support.system.info.api.client.GetAllClientsRs;
 import ru.mirea.network.operational.support.system.info.mapper.EntityMapper;
@@ -58,7 +57,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional
-    public BaseRs createClient(UUID employeeId, ClientDTOWithLogin client) {
+    public BaseRs createClient(UUID employeeId, ClientDTO client) {
         ClientEntity clientEntity = entityMapper.map(client);
 
         clientEntity = clientRepository.save(clientEntity);
@@ -90,7 +89,7 @@ public class ClientServiceImpl implements ClientService {
     public GetAllClientsRs getAllClients(UUID employeeId, GetAllClientsRq rq) {
         PageRequest pageRequest = PageRequest.of(rq.getPageNumber(), pageSize);
         Page<ClientEntity> clients = clientRepository.findAllByEmployeeIdOrderByFirstName(employeeId, pageRequest);
-        Set<ClientDTODetailed> clientsDTO = clients.get()
+        Set<ClientDTOWithId> clientsDTO = clients.get()
                 .map(entityMapper::map)
                 .collect(Collectors.toSet());
 

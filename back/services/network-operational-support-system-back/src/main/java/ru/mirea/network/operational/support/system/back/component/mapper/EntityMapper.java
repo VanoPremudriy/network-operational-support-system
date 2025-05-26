@@ -54,7 +54,7 @@ public interface EntityMapper {
     NodeEntity mapNoLinks(Node value);
 
     @Mapping(target = "linkToTheAssociatedLinearPort", ignore = true)
-    @Mapping(target = "linkToTheAssociatedLinearPortFromLowerLevel", ignore = true)
+    @Mapping(target = "linkToTheAssociatedLinearPortFromDifferentLevel", ignore = true)
     @Mapping(target = "board", ignore = true)
     PortEntity mapNoLinks(Port value);
 
@@ -96,8 +96,8 @@ public interface EntityMapper {
 
                         portEntity.setLinkToTheAssociatedLinearPort(
                                 (PortEntity) context.get(port.getLinkToTheAssociatedLinearPort()));
-                        portEntity.setLinkToTheAssociatedLinearPortFromLowerLevel(
-                                (PortEntity) context.get(port.getLinkToTheAssociatedLinearPortFromLowerLevel()));
+                        portEntity.setLinkToTheAssociatedLinearPortFromDifferentLevel(
+                                (PortEntity) context.get(port.getLinkToTheAssociatedLinearPortFromDifferentLevel()));
                         portEntity.setBoard((BoardEntity) context.get(port.getBoard()));
                     }
                 }

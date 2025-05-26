@@ -23,6 +23,7 @@ public class TaskDtoToViewDtoConverter {
         viewDto.setExecutionCount(dto.getExecutionCount());
         viewDto.setTaskType(dto.getTaskType());
         viewDto.setStatus(dto.getStatus());
+        viewDto.setClientName(dto.getClientName());
 
         try {
             TaskData taskData = objectMapper.readValue(dto.getTaskData(), TaskData.class);
@@ -31,7 +32,6 @@ public class TaskDtoToViewDtoConverter {
             viewDto.setClientId(taskData.getClientId());
             viewDto.setStartingPoint(taskData.getStartingPoint());
             viewDto.setDestinationPoint(taskData.getDestinationPoint());
-            viewDto.setClientName(taskData.getClientName());
         } catch (Exception e) {
             viewDto.setCapacity(null);
             viewDto.setClientId(null);

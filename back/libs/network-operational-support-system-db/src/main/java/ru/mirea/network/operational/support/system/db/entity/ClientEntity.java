@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Table(schema = "public", name = "clients")
 public class ClientEntity {
     @Id
@@ -32,8 +34,8 @@ public class ClientEntity {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "login", unique = true, updatable = false, nullable = false)
-    private String login;
+    @Column(name = "organization", nullable = false)
+    private String organization;
 
     @Column(name = "middle_name")
     private String middleName;

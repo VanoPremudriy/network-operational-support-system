@@ -187,7 +187,7 @@ const Sidebar = ({ selectedPointId, onClose, isInfo }: SidebarProps) => {
                                             onClick={() => setExpandedPorts(prev => toggleSetItem(prev, port.id!))}>
                                             {expandedPorts.has(port.id!) ? '−' : '+'}
                                           </button>
-                                          Порт: {port.clientId}, {port.clientName}, {port.capacity?.toString()}
+                                          Порт: {port.portTypeName}, {port.clientName}, {port.capacity?.toString()}
                                         </div>
                                       ) : null
                                     )}

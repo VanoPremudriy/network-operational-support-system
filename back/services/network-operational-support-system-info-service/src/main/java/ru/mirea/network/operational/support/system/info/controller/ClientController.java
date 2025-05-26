@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mirea.network.operational.support.system.common.api.BaseRs;
 import ru.mirea.network.operational.support.system.common.dictionary.Constant;
+import ru.mirea.network.operational.support.system.info.api.client.ClientDTO;
 import ru.mirea.network.operational.support.system.info.api.client.ClientDTOWithId;
-import ru.mirea.network.operational.support.system.info.api.client.ClientDTOWithLogin;
 import ru.mirea.network.operational.support.system.info.api.client.GetAllClientsRq;
 import ru.mirea.network.operational.support.system.info.api.client.GetAllClientsRs;
 import ru.mirea.network.operational.support.system.info.service.ClientService;
@@ -42,7 +42,7 @@ public class ClientController {
     @Operation(summary = "Создание клиента")
     @PostMapping(value = "${controller.client.create}")
     public ResponseEntity<BaseRs> createClient(@RequestHeader(Constant.HEADER_ID) UUID employeeId,
-                                               @RequestBody @Valid ClientDTOWithLogin client) {
+                                               @RequestBody @Valid ClientDTO client) {
         return ResponseEntity.ok()
                 .body(clientService.createClient(employeeId, client));
     }

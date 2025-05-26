@@ -38,9 +38,6 @@ public class BasketEntity implements Persistable<UUID> {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "basket_model_id", nullable = false)

@@ -45,20 +45,20 @@ public class Scheduler {
                 return;
             }
 
-            if (taskEntity.getExecutionCount() + 1 > maxExecutions) {
-                taskRepository.save(taskEntity
-                        .setResolvedDate(LocalDateTime.now())
-                        .setStatus(TaskStatus.FAILED)
-                        .setActiveFlag(false));
-                return;
-            }
-
             if (taskEntity.getResolvedDate() != null) {
                 if (waitForConfirmedTime.compareTo(Duration.between(taskEntity.getResolvedDate(), LocalDateTime.now())) < 0) {
                     taskEntity.setActiveFlag(false);
                     taskEntity.setStatus(TaskStatus.FAILED);
                     taskRepository.save(taskEntity);
                 }
+                return;
+            }
+
+            if (taskEntity.getExecutionCount() + 1 > maxExecutions) {
+                taskRepository.save(taskEntity
+                        .setResolvedDate(LocalDateTime.now())
+                        .setStatus(TaskStatus.FAILED)
+                        .setActiveFlag(false));
                 return;
             }
 

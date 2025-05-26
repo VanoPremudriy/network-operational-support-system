@@ -1,15 +1,12 @@
 package ru.mirea.network.operational.support.system.back.component.service.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.mirea.network.operational.support.system.back.component.repository.ClientRepository;
 import ru.mirea.network.operational.support.system.back.component.repository.TaskRepository;
 import ru.mirea.network.operational.support.system.back.component.service.CalculateRouteService;
@@ -54,17 +51,13 @@ public class TaskServiceImpl implements TaskService {
             ClientEntity client = clientRepository.getReferenceById(clientId);
             String firstName = client.getFirstName();
 
-            ObjectNode jsonData = jsonMapper.valueToTree(data);
-            jsonData.put("clientName", firstName);
-
-
             return taskRepository.save(new TaskEntity()
                     .setCreatedTime(LocalDateTime.now())
                     .setActiveFlag(true)
                     .setExecutionCount(1)
-                    .setClientId(clientId)
+                    .setClient(client)
                     .setTaskType(taskType.name())
-                    .setTaskData(jsonData)
+                    .setTaskData(jsonMapper.valueToTree(data))
                     .setStatus(TaskStatus.IN_PROGRESS));
         } catch (Exception e) {
             log.error("Ошибка при попытке открыть задачу", e);
@@ -89,19 +82,13 @@ public class TaskServiceImpl implements TaskService {
                     .build();
             taskEntity.setRoutes(calculateRouteService.calculate(taskEntity, calculateRouteRq, rq.getCapacity()));
 
-            saveTask(taskEntity.setResolvedDate(LocalDateTime.now()).setStatus(TaskStatus.SELECTION_IS_REQUIRED));
+            taskRepository.save(taskEntity.setResolvedDate(LocalDateTime.now()).setStatus(TaskStatus.SELECTION_IS_REQUIRED));
         } catch (TaskException e) {
             log.error("Ошибка при попытке рассчитать маршрут: {}. Задача не будет выполнена.", e.getMessage(), e);
 
-            saveTask(taskEntity.setActiveFlag(false).setResolvedDate(LocalDateTime.now()).setStatus(TaskStatus.FAILED));
+            taskRepository.save(taskEntity.setActiveFlag(false).setResolvedDate(LocalDateTime.now()).setStatus(TaskStatus.FAILED));
         } catch (Exception e) {
             log.error("Ошибка при попытке рассчитать маршрут", e);
         }
     }
-
-    @Transactional
-    private void saveTask(TaskEntity taskEntity) {
-        taskRepository.save(taskEntity);
-    }
-
 }

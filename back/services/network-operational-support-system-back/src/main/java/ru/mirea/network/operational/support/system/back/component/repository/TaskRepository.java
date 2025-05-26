@@ -10,8 +10,11 @@ import java.util.UUID;
 public interface TaskRepository extends JpaRepository<TaskEntity, UUID> {
     TaskEntity findByActiveFlagTrue();
 
-    @Query("select t from TaskEntity t " +
-            "left join fetch t.routes " +
-            "where t.id = :taskId")
+    @Query("""
+            select t from TaskEntity t 
+            left join fetch t.routes 
+            left join fetch t.client 
+            where t.id = :taskId
+            """)
     TaskEntity findByIdWithRoute(UUID taskId);
 }

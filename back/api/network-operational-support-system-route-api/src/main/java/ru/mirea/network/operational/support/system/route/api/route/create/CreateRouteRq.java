@@ -15,5 +15,4 @@ public class CreateRouteRq {
     private String startingPoint;
     private String destinationPoint;
     private BigDecimal capacity;
-    private String clientName;
 }

@@ -18,8 +18,6 @@ public class Board {
 
     private BoardModel boardModel;
 
-    private String name;
-
     private UUID basket;
 
     private List<Port> ports;
