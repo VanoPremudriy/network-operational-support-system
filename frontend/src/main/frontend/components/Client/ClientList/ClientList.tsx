@@ -35,7 +35,7 @@ const ClientsList: React.FC<ClientsListProps> = ({ onUpdate, refreshTrigger, set
         <table className={styles.table}>
           <thead>
           <tr>
-            <th>Логин</th>
+            <th>Организация</th>
             <th>Имя</th>
             <th>Фамилия</th>
             <th>E-mail</th>

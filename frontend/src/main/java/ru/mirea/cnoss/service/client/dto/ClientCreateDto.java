@@ -9,14 +9,12 @@ import lombok.Setter;
 @Setter
 @Builder
 public class ClientCreateDto {
-    @JsonProperty("login")
-    private String login;
+    private String organization;
     @JsonProperty("first_name")
     private String firstName;
     @JsonProperty("last_name")
     private String lastName;
     @JsonProperty("middle_name")
     private String middleName;
-    @JsonProperty("email")
     private String email;
 }

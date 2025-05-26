@@ -19,8 +19,6 @@ public class DictionaryEndpoint {
     private final DictionaryService dictionaryService;
     private final CapacityDictionaryResponseToViewConverter converter;
 
-    private final static String BEARER = "Bearer ";
-
     public ClientDictionaryResponse getClientDictionary(String query) {
         String token = TokenUtils.getBearerTokenOrThrow();
 

@@ -13,7 +13,7 @@ interface ClientRowProps {
 const ClientRow: React.FC<ClientRowProps> = ({ client, onUpdate, onDelete }) => {
   return (
     <tr className={styles.row}>
-      <td className={styles.cell}>{client.login}</td>
+      <td className={styles.cell}>{client.organization}</td>
       <td className={styles.cell}>{client.firstName}</td>
       <td className={styles.cell}>{client.lastName}</td>
       <td className={styles.cell}>{client.email}</td>

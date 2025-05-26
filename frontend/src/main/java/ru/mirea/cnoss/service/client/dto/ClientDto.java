@@ -7,11 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ClientDto {
-    @JsonProperty("id")
+
     private String id;
 
-    @JsonProperty("login")
-    private String login;
+    private String organization;
 
     @JsonProperty("first_name")
     private String firstName;
@@ -22,6 +21,5 @@ public class ClientDto {
     @JsonProperty("middle_name")
     private String middleName;
 
-    @JsonProperty("email")
     private String email;
 }

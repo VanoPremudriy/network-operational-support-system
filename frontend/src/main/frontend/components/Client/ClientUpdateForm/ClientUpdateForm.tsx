@@ -14,7 +14,7 @@ interface Props {
 
 const ClientUpdateForm: React.FC<Props> = ({ client, mode, onClose, onSave }) => {
   const [formData, setFormData] = useState<Client>(() =>
-    client ?? { id: '', login: '', firstName: '', lastName: '', middleName: '', email: '' }
+    client ?? { id: '', organization: '', firstName: '', lastName: '', middleName: '', email: '' }
   );
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -46,15 +46,12 @@ const ClientUpdateForm: React.FC<Props> = ({ client, mode, onClose, onSave }) =>
     <div className={styles.overlay}>
       <div className={styles.modal}>
         <h2>{mode === 'edit' ? 'Редактирование клиента' : 'Создание нового клиента'}</h2>
-        {mode === 'create' && (
-          <>
-            <label>Логин</label>
-            <input name="login" value={formData.login} onChange={handleChange} />
-            <div className={`${styles.error} ${errors.login || errors.text ? styles.visible : ''}`}>
-              {errors.login || errors.text || ''}
-            </div>
-          </>
-        )}
+
+        <label>Организация</label>
+        <input name="organization" value={formData.organization} onChange={handleChange} />
+        <div className={`${styles.error} ${errors.login || errors.text ? styles.visible : ''}`}>
+          {errors.login || errors.text || ''}
+        </div>
 
         <label>Имя</label>
         <input name="firstName" value={formData.firstName} onChange={handleChange} />

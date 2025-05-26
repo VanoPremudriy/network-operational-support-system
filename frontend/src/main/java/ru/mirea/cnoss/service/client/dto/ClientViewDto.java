@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class ClientViewDto {
     private String id;
-    private String login;
+    private String organization;
     private String firstName;
     private String lastName;
     private String middleName;

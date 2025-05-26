@@ -10,7 +10,7 @@ public class ClientDtoToViewDtoConverter {
     public ClientViewDto convert(ClientDto dto) {
         ClientViewDto viewDto = new ClientViewDto();
         viewDto.setId(dto.getId());
-        viewDto.setLogin(dto.getLogin());
+        viewDto.setOrganization(dto.getOrganization());
         viewDto.setFirstName(dto.getFirstName());
         viewDto.setLastName(dto.getLastName());
         viewDto.setEmail(dto.getEmail());

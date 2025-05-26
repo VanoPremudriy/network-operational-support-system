@@ -49,10 +49,11 @@ public class ClientEndpoint {
         ClientViewDto newClient = request.getNewClient();
         ClientCreateDto newCreateClient = ClientCreateDto.builder()
                 .email(newClient.getEmail())
-                .login(newClient.getLogin())
+                .organization(newClient.getOrganization())
                 .lastName(newClient.getLastName())
                 .middleName(newClient.getMiddleName())
                 .firstName(newClient.getFirstName())
+                .organization(newClient.getOrganization())
                 .build();
         return clientService.createClient(token, newCreateClient);
     }
@@ -66,6 +67,7 @@ public class ClientEndpoint {
                 .lastName(updatedClient.getLastName())
                 .middleName(updatedClient.getMiddleName())
                 .firstName(updatedClient.getFirstName())
+                .organization(updatedClient.getOrganization())
                 .build();
         return clientService.updateClient(token, updateClient);
     }

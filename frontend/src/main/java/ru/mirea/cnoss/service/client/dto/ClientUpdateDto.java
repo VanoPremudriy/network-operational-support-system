@@ -9,8 +9,10 @@ import lombok.Setter;
 @Setter
 @Builder
 public class ClientUpdateDto {
-    @JsonProperty("id")
+
     private String id;
+
+    private String organization;
 
     @JsonProperty("first_name")
     private String firstName;
@@ -21,6 +23,5 @@ public class ClientUpdateDto {
     @JsonProperty("middle_name")
     private String middleName;
 
-    @JsonProperty("email")
     private String email;
 }
