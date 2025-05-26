@@ -45,11 +45,17 @@ public class PortTypeEntity {
 
     @EqualsAndHashCode.Include
     private BigDecimal getPriceForEquals() {
+        if (price == null){
+            return null;
+        }
         return price.stripTrailingZeros();
     }
 
     @EqualsAndHashCode.Include
     private BigDecimal getCapacityForEquals() {
+        if (capacity == null){
+            return null;
+        }
         return capacity.stripTrailingZeros();
     }
 }

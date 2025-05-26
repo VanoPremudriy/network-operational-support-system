@@ -55,11 +55,17 @@ public class NodeEntity {
 
     @EqualsAndHashCode.Include
     private BigDecimal getLatitudeForEquals() {
+        if (latitude == null){
+            return null;
+        }
         return latitude.stripTrailingZeros();
     }
 
     @EqualsAndHashCode.Include
     private BigDecimal getLongitudeForEquals() {
+        if (longitude == null){
+            return null;
+        }
         return longitude.stripTrailingZeros();
     }
 

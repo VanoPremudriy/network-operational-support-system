@@ -47,6 +47,9 @@ public class BasketModelEntity {
 
     @EqualsAndHashCode.Include
     private BigDecimal getPriceForEquals() {
+        if (price == null){
+            return null;
+        }
         return price.stripTrailingZeros();
     }
 

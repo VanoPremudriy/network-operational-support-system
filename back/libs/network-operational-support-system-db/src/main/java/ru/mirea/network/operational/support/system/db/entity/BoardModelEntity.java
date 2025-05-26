@@ -50,6 +50,9 @@ public class BoardModelEntity {
 
     @EqualsAndHashCode.Include
     private BigDecimal getPriceForEquals() {
+        if (price == null){
+            return null;
+        }
         return price.stripTrailingZeros();
     }
 

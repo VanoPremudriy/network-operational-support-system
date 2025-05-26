@@ -67,6 +67,9 @@ public class PortEntity implements Persistable<UUID> {
 
     @EqualsAndHashCode.Include
     private BigDecimal getCapacityForEquals() {
+        if (capacity == null){
+            return null;
+        }
         return capacity.stripTrailingZeros();
     }
 
