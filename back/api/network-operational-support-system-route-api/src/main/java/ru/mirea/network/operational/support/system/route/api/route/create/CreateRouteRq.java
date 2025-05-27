@@ -14,5 +14,6 @@ public class CreateRouteRq {
     private UUID clientId;
     private String startingPoint;
     private String destinationPoint;
+    private String routeBuildingAlgorithm;
     private BigDecimal capacity;
 }

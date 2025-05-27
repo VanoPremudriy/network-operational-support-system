@@ -35,9 +35,12 @@ controller:
   create-route: /route/create
 
 client:
-  calculate-route:
+  python:
     url: http://localhost:8000
-    endpoint: /api/routes/create_routes
+    create-route:
+      endpoint: /api/routes/create_routes
+    create-maxflow-route:
+      endpoint: /api/routes/create_maxflow_route
 
 zookeeper:
   url: zookeeper:2181

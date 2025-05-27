@@ -15,6 +15,7 @@ import ru.mirea.network.operational.support.system.back.component.repository.Boa
 import ru.mirea.network.operational.support.system.back.component.repository.NodeRepository;
 import ru.mirea.network.operational.support.system.back.component.repository.PortTypeRepository;
 import ru.mirea.network.operational.support.system.back.component.service.CalculateRouteService;
+import ru.mirea.network.operational.support.system.back.dictionary.Algorithm;
 import ru.mirea.network.operational.support.system.back.exception.TaskException;
 import ru.mirea.network.operational.support.system.db.entity.BasketEntity;
 import ru.mirea.network.operational.support.system.db.entity.BasketModelEntity;
@@ -27,11 +28,13 @@ import ru.mirea.network.operational.support.system.db.entity.RouteEntity;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
 import ru.mirea.network.operational.support.system.python.api.calculate.CalculateRouteRq;
 import ru.mirea.network.operational.support.system.python.api.calculate.CalculateRouteRs;
+import ru.mirea.network.operational.support.system.python.api.calculate.EdgeLoad;
 import ru.mirea.network.operational.support.system.route.api.route.common.RouteInfo;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +54,24 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
     private final JsonMapper jsonMapper;
 
     @Override
-    public Set<RouteEntity> calculate(TaskEntity taskEntity, CalculateRouteRq rq, BigDecimal capacity) {
-        List<CalculateRouteRs> rs = calculateRouteClient.calculateRoute(rq);
+    public Set<RouteEntity> calculate(TaskEntity taskEntity,
+                                      Algorithm algorithm,
+                                      String startingPoint,
+                                      String destinationPoint,
+                                      BigDecimal capacity) {
+        Set<EdgeLoad> edges = prepareEdges();
+
+        CalculateRouteRq rq = CalculateRouteRq.builder()
+                .city1(startingPoint)
+                .city2(destinationPoint)
+                .edgeLoad(edges)
+                .build();
+
+        List<CalculateRouteRs> rs = switch (algorithm) {
+            case null -> calculateRouteClient.createRoute(rq);
+            case ROUTE_SEARCH_MAXFLOW -> calculateRouteClient.createMaxflowRoute(rq);
+            case ROUTE_SEARCH -> calculateRouteClient.createRoute(rq);
+        };
 
         PortTypeEntity portType = portTypeRepository.findTopByCapacityGreaterThanEqual(capacity,
                 Sort.by("price").and(Sort.by("capacity"))
@@ -119,6 +138,44 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
         }
 
         return result;
+    }
+
+    private Set<EdgeLoad> prepareEdges() {
+        List<NodeEntity> nodes = nodeRepository.findByNodeIdDetailed();
+
+        List<BasketEntity> baskets = nodes.stream()
+                .filter(n -> !CollectionUtils.isEmpty(n.getBaskets()))
+                .flatMap(n -> n.getBaskets().stream())
+                .filter(b -> b.getBasketModel().getLevelNumber() == 1 && b.getLinkedBasket() != null)
+                .toList();
+
+        if (CollectionUtils.isEmpty(baskets)) {
+            return Set.of();
+        }
+
+        Map<EdgeLoad, BigDecimal> edges = new HashMap<>();
+
+        for (BasketEntity basket : baskets) {
+            EdgeLoad edge = EdgeLoad.builder().build();
+
+            edge.addEdge(basket.getNode().getId());
+            edge.addEdge(basket.getLinkedBasket().getNode().getId());
+
+            edges.put(edge,
+                    edges.computeIfAbsent(edge, k -> BigDecimal.ZERO)
+                            .add(basket.getBoards().stream()
+                                    .flatMap(b -> b.getPorts().stream())
+                                    .map(PortEntity::getCapacity)
+                                    .reduce(BigDecimal.ZERO, BigDecimal::add))
+            );
+        }
+
+        return edges.entrySet().stream()
+                .map(e -> {
+                    e.getKey().setCapacity(e.getValue());
+                    return e.getKey();
+                })
+                .collect(Collectors.toSet());
     }
 
     private void processFirst(NodeEntity node,

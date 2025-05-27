@@ -11,6 +11,7 @@ import ru.mirea.network.operational.support.system.back.component.repository.Cli
 import ru.mirea.network.operational.support.system.back.component.repository.TaskRepository;
 import ru.mirea.network.operational.support.system.back.component.service.CalculateRouteService;
 import ru.mirea.network.operational.support.system.back.component.service.TaskService;
+import ru.mirea.network.operational.support.system.back.dictionary.Algorithm;
 import ru.mirea.network.operational.support.system.back.dictionary.Constant;
 import ru.mirea.network.operational.support.system.back.exception.TaskException;
 import ru.mirea.network.operational.support.system.back.zookeeper.DistributedLock;
@@ -18,7 +19,6 @@ import ru.mirea.network.operational.support.system.db.dictionary.TaskType;
 import ru.mirea.network.operational.support.system.db.entity.ClientEntity;
 import ru.mirea.network.operational.support.system.db.entity.TaskEntity;
 import ru.mirea.network.operational.support.system.db.entity.TaskStatus;
-import ru.mirea.network.operational.support.system.python.api.calculate.CalculateRouteRq;
 import ru.mirea.network.operational.support.system.route.api.route.create.CreateRouteRq;
 
 import java.time.Duration;
@@ -76,11 +76,12 @@ public class TaskServiceImpl implements TaskService {
     private void calculateRoute(TaskEntity taskEntity) {
         try {
             CreateRouteRq rq = jsonMapper.treeToValue(taskEntity.getTaskData(), CreateRouteRq.class);
-            CalculateRouteRq calculateRouteRq = CalculateRouteRq.builder()
-                    .city1(rq.getStartingPoint())
-                    .city2(rq.getDestinationPoint())
-                    .build();
-            taskEntity.setRoutes(calculateRouteService.calculate(taskEntity, calculateRouteRq, rq.getCapacity()));
+
+            taskEntity.setRoutes(calculateRouteService.calculate(taskEntity,
+                    Algorithm.of(rq.getRouteBuildingAlgorithm()),
+                    rq.getStartingPoint(),
+                    rq.getDestinationPoint(),
+                    rq.getCapacity()));
 
             taskRepository.save(taskEntity.setResolvedDate(LocalDateTime.now()).setStatus(TaskStatus.SELECTION_IS_REQUIRED));
         } catch (TaskException e) {
