@@ -9,7 +9,7 @@ const PublicGuard = () => {
     return <div>Загрузка...</div>; // или спиннер
   }
 
-  return !isAuthenticated ? <Outlet /> : <Navigate to={RoutePath.LOGIN} replace />;
+  return !isAuthenticated ? <Outlet /> : <Navigate to={RoutePath.ROOT} replace />;
 };
 
 export default PublicGuard;
