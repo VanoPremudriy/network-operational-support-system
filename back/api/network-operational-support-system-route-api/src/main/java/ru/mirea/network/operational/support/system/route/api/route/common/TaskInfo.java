@@ -16,4 +16,5 @@ public class TaskInfo {
     private UUID startingPoint;
     private UUID destinationPoint;
     private String clientName;
+    private String routeBuildingAlgorithm;
 }
