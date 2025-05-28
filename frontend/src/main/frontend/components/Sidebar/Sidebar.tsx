@@ -23,6 +23,7 @@ const Sidebar = ({ selectedPointId, onClose, isInfo }: SidebarProps) => {
   const [startNode, setStartNode] = useState<{ id: string; label: string } | null>(null);
   const [endNode, setEndNode] = useState<{ id: string; label: string } | null>(null);
   const [capacity, setCapacity] = useState<{ id: string; label: string } | null>(null);
+  const [algorithm, setAlgorithm] = useState<{ id: string; label: string } | null>(null);
 
   const toggleSidebar = () => {
     setIsCollapsed(prev => !prev);
@@ -36,7 +37,7 @@ const Sidebar = ({ selectedPointId, onClose, isInfo }: SidebarProps) => {
 
 
   const handleBuildRoute = async () => {
-    if (!selectedClient || !startNode || !endNode || !capacity) {
+    if (!selectedClient || !startNode || !endNode || !capacity || !algorithm) {
       showNotification("error", "Ошибка при построении", "Заполните все поля перед построением маршрута");
       return;
     }
@@ -46,6 +47,7 @@ const Sidebar = ({ selectedPointId, onClose, isInfo }: SidebarProps) => {
       startingPoint: startNode.id,
       destinationPoint: endNode.id,
       capacity: parseFloat(capacity.label),
+      routeBuildingAlgorithm: algorithm.id
     };
 
     try {
@@ -108,6 +110,11 @@ const Sidebar = ({ selectedPointId, onClose, isInfo }: SidebarProps) => {
     console.log('Выбрана скорость:', capacity);
     setCapacity(capacity);
   }
+
+  const handleSelectAlgorithm = (algo: { id: string; label: string }) => {
+    console.log('Выбран алгоритм:', algo);
+    setAlgorithm(algo);
+  };
 
   const [detailedNode, setDetailedNode] = useState<DetailedNode | null>(null);
   const [expandedBaskets, setExpandedBaskets] = useState<Set<string>>(new Set());
@@ -237,6 +244,15 @@ const Sidebar = ({ selectedPointId, onClose, isInfo }: SidebarProps) => {
                   return raw.map((c) => ({ id: c.id, label: c.fullName }));
                 }}
                 onSelect={handleSelectClient}
+              />
+
+              <SelectButton
+                label="Алгоритм"
+                fetchOptions={async () => [
+                  { id: 'routeSearch', label: 'Поиск маршрута' },
+                  { id: 'routeSearchMaxflow', label: 'Максимальный поток' }
+                ]}
+                onSelect={handleSelectAlgorithm}
               />
 
               <div className={styles.buttons}>
