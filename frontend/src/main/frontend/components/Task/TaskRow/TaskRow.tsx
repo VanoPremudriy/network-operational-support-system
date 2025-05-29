@@ -4,13 +4,15 @@ import UpdateButton from 'Frontend/components/Buttons/UpdateButton/UpdateButton'
 import { Task } from 'Frontend/types/Task';
 import StatusBadge, { StatusType } from 'Frontend/components/Task/StatusBadge/StatusBadge';
 import { formatDateTime } from 'Frontend/hooks/formatDateTime';
+import DeleteButton from 'Frontend/components/Buttons/DeleteButton/DeleteButton';
 
 interface TaskRowProps {
   task: Task;
   onShowDetails: (task: Task) => void;
+  onRejectTask: (task: Task) => void;
 }
 
-const TaskRow: React.FC<TaskRowProps> = ({ task, onShowDetails }) => {
+const TaskRow: React.FC<TaskRowProps> = ({ task, onShowDetails, onRejectTask }) => {
   return (
     <tr className={styles.row}>
       <td className={styles.cell}>{task.id}</td>
@@ -20,6 +22,9 @@ const TaskRow: React.FC<TaskRowProps> = ({ task, onShowDetails }) => {
       <td className={`${styles.cell} ${styles.actions}`}>
         {(task.status === 'SELECTION_IS_REQUIRED' || task.status === "SUCCESS") && (
           <UpdateButton label="Посмотреть детали" onClick={() => onShowDetails(task)} />
+        )}
+        {(task.status ==='SELECTION_IS_REQUIRED') && (
+        <DeleteButton  label={"Отклонить маршруты"} onClick={() => onRejectTask(task)}/>
         )}
       </td>
     </tr>

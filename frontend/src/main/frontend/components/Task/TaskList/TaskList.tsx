@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import useTasks from 'Frontend/services/TaskService';
+import useTasks, { useRejectTask } from 'Frontend/services/TaskService';
 import styles from './TaskList.module.css';
 import TaskRow from 'Frontend/components/Task/TaskRow/TaskRow';
 import TaskRoutesModal from 'Frontend/components/Task/TaskRoutesModal/TaskRoutesModal';
 import { Task } from 'Frontend/types/Task';
+import { useNotification } from 'Frontend/components/Notifications/NotificationContext';
 
 const TaskList = () => {
   const [page, setPage] = useState(0);
@@ -11,6 +12,45 @@ const TaskList = () => {
 
 
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+
+  const rejectTask = useRejectTask();
+
+  const { showNotification } = useNotification();
+
+  const handleRejectTask = async (taskId: string) => {
+    try {
+      const response = await rejectTask(taskId);
+      if (response.success) {
+        showNotification(
+          'success',
+          'Маршруты отклонены.',
+          'Маршруты задачи отклонены.'
+        );
+
+        await refetch();
+      } else if (response?.error) {
+        const title = response.error.title || 'Ошибка отклонения маршрута';
+        let message = 'Произошла неизвестная ошибка';
+
+        if (response.error.infos) {
+          const infosValues = Object.values(response.error.infos);
+          if (infosValues.length > 0 && typeof infosValues[0] === 'string') {
+            message = infosValues[0];
+          }
+        }
+
+        showNotification('error', title, message);
+      } else {
+        showNotification(
+          'error',
+          'Ошибка',
+          'Не удалось отклонить маршруты: неизвестный ответ от сервера'
+        );
+      }
+    } catch (e) {
+      showNotification('error', 'Сетевая ошибка', 'Не удалось связаться с сервером');
+    }
+  };
 
 
   return (
@@ -34,6 +74,7 @@ const TaskList = () => {
               key={task.id}
               task={task}
               onShowDetails={setSelectedTask}
+              onRejectTask={() => handleRejectTask(task.id || '')}
             />
           ))}
           </tbody>

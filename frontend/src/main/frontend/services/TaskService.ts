@@ -2,6 +2,7 @@ import { Task, TaskGetRequest, UseTasksProps } from 'Frontend/types/Task';
 import { useCallback, useEffect, useState } from 'react';
 import { TaskEndpoint } from 'Frontend/generated/endpoints';
 import TaskViewDto from 'Frontend/generated/ru/mirea/cnoss/service/task/dto/TaskViewDto';
+import BaseResponse from 'Frontend/generated/ru/mirea/cnoss/service/BaseResponse';
 
 
 const useTasks = ({page}: UseTasksProps) => {
@@ -38,6 +39,12 @@ const useTasks = ({page}: UseTasksProps) => {
   }, [fetchTasks]);
 
   return { tasks, loading, error, numberOfPages, refetch: fetchTasks };
+};
+
+export const useRejectTask = () => {
+  return async (taskId: string): Promise<BaseResponse> => {
+    return await TaskEndpoint.rejectTask(taskId);
+  };
 };
 
 export default useTasks;

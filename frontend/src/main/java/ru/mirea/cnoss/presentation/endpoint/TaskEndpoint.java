@@ -4,6 +4,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.BrowserCallable;
 import lombok.RequiredArgsConstructor;
 import ru.mirea.cnoss.presentation.utils.TokenUtils;
+import ru.mirea.cnoss.service.BaseResponse;
 import ru.mirea.cnoss.service.task.TaskService;
 import ru.mirea.cnoss.service.task.converter.TaskResponseToViewConverter;
 import ru.mirea.cnoss.service.task.dto.GetAllTasksRequest;
@@ -29,5 +30,11 @@ public class TaskEndpoint {
         GetAllTasksResponse response = taskService.getTasks(token, rq);
 
         return converter.convert(response);
+    }
+
+    public BaseResponse rejectTask(String taskId) {
+        String token = TokenUtils.getBearerTokenOrThrow();
+
+        return taskService.rejectTask(taskId, token);
     }
 }
