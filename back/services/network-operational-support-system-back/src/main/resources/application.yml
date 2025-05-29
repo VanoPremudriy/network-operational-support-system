@@ -39,6 +39,7 @@ scheduler:
 
 controller:
   apply-route: /route/apply/{id}
+  reject-task: /task/reject/{id}
   create-route: /route/create
 
 client:

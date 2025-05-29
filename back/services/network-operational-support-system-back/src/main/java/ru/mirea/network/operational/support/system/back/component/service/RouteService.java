@@ -9,4 +9,6 @@ public interface RouteService {
     CreateRouteRs createRoute(CreateRouteRq rq);
 
     void applyRoute(UUID id);
+
+    void rejectTask(UUID id);
 }

@@ -57,7 +57,7 @@ public class Scheduler {
             if (taskEntity.getExecutionCount() + 1 > maxExecutions) {
                 taskRepository.save(taskEntity
                         .setResolvedDate(LocalDateTime.now())
-                        .setStatus(TaskStatus.FAILED)
+                        .setStatus(TaskStatus.ROUTE_DECLINED)
                         .setActiveFlag(false));
                 return;
             }

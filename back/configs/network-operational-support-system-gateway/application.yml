@@ -34,6 +34,14 @@ spring:
             - Authentication=true
             - RewritePath=/route/apply/(?<segment>.*), /v1/route/apply/$\{segment}
 
+        - id: reject-task
+          uri: http://localhost:8080
+          predicates:
+            - Path=/task/reject/**
+          filters:
+            - Authentication=true
+            - RewritePath=/task/reject/(?<segment>.*), /v1/task/reject/$\{segment}
+
         - id: tasks-by-client-id
           uri: http://info-service:8089
           predicates:

@@ -40,4 +40,12 @@ public class RouteController {
 
         return BaseRs.builder().success(true).build();
     }
+
+
+    @PostMapping(value = "${controller.reject-task}")
+    public BaseRs rejectTask(@PathVariable("id") UUID id) {
+        routeService.rejectTask(id);
+
+        return BaseRs.builder().success(true).build();
+    }
 }
