@@ -106,6 +106,7 @@ public class RouteServiceImpl implements RouteService {
         TaskEntity taskEntity = taskRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Не найдена задача с ID: " + id));
 
-        taskRepository.save(taskEntity.setStatus(TaskStatus.ROUTE_DECLINED));
+        taskRepository.save(taskEntity.setStatus(TaskStatus.ROUTE_DECLINED).setActiveFlag(false));
+
     }
 }
