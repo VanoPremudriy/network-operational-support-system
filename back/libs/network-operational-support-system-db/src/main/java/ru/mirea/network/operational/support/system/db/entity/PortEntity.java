@@ -73,6 +73,7 @@ public class PortEntity implements Persistable<UUID> {
         return capacity.stripTrailingZeros();
     }
 
+    @EqualsAndHashCode.Exclude
     private transient boolean isNew;
 
     @Override

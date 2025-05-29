@@ -58,6 +58,7 @@ public class BasketEntity implements Persistable<UUID> {
     @BatchSize(size = 5)
     private Set<BoardEntity> boards;
 
+    @EqualsAndHashCode.Exclude
     private transient boolean isNew;
 
     @Override

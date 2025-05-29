@@ -52,6 +52,7 @@ public class BoardEntity implements Persistable<UUID> {
     @BatchSize(size = 5)
     private Set<PortEntity> ports;
 
+    @EqualsAndHashCode.Exclude
     private transient boolean isNew;
 
     @Override

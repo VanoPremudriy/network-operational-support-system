@@ -121,6 +121,7 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                 }
 
                 nodes.add(node);
+                dto.setPrice(BigDecimal.ZERO);
             }
 
             result.add(RouteEntity.builder()
@@ -209,11 +210,7 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
 
         dto
                 .setBasket(basket)
-                .setPort(port)
-                .setPrice(dto.getPrice()
-                        .add(firstBoardModel.getPrice())
-                        .add(firstBasketModel.getPrice())
-                        .add(portType.getPrice()));
+                .setPort(port);
 
         if (currentLevel != 1) {
             while (currentLevel != 1) {
@@ -337,7 +334,7 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
 
             BasketEntity basketForLinear = dto.getBasket();
 
-            BoardEntity linearBoard = findBoard(inBasket, boards, true);
+            BoardEntity linearBoard = findBoard(basketForLinear, boards, true);
             if (linearBoard == null) {
                 linearBoard = createLinerBoard(dto, basketForLinear, boards);
             }
@@ -380,7 +377,7 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
                     clientBasket = createBasket(dto, node, baskets);
                 }
 
-                BoardEntity clientBoard = findBoard(clientBasket, lastBoardModel);
+                BoardEntity clientBoard = findBoard(clientBasket, boards, false);
                 if (clientBoard == null) {
                     clientBoard = createClientBoard(dto, clientBasket, boards);
                 }
@@ -513,7 +510,7 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
         }
         return node.getBaskets().stream()
                 .filter(
-                        b -> b.getBasketModel() == model
+                        b -> b.getBasketModel().equals(model)
                                 && b.getBoards().size() < b.getBasketModel().getAllowedLambdaLimit()
                 )
                 .findAny()
@@ -540,7 +537,7 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
         }
         return node.getBaskets().stream()
                 .filter(
-                        b -> b.getBasketModel() == model
+                        b -> b.getBasketModel().equals(model)
                                 && b.getBoards().size() < b.getBasketModel().getAllowedLambdaLimit() &&
                                 (b.getLinkedBasket() == null
                                         || b.getLinkedBasket().getNode().equals(nextNode)
@@ -608,18 +605,8 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
             return null;
         }
         return basket.getBoards().stream()
-                .filter(b -> b.getBoardModel() == model
+                .filter(b -> b.getBoardModel().equals(model)
                         && b.getPorts().size() < b.getBoardModel().getNumberOfSlots())
-                .findAny()
-                .orElse(null);
-    }
-
-    private PortEntity findPort(BoardEntity board, PortTypeEntity model) {
-        if (CollectionUtils.isEmpty(board.getPorts())) {
-            return null;
-        }
-        return board.getPorts().stream()
-                .filter(b -> b.getPortType() == model)
                 .findAny()
                 .orElse(null);
     }
@@ -630,7 +617,7 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
             return null;
         }
         return board.getPorts().stream()
-                .filter(b -> b.getPortType().equals(model) && b.getClientId() == taskEntity.getClient().getId())
+                .filter(b -> b.getPortType().equals(model) && b.getClientId().equals(taskEntity.getClient().getId()))
                 .findAny()
                 .orElse(null);
     }
@@ -700,7 +687,7 @@ public class CalculateRouteServiceImpl implements CalculateRouteService {
     }
 
     private PortEntity updateOrCreatePort(PortEntity port, BigDecimal capacity, BoardEntity board, TaskEntity taskEntity, PortTypeEntity portType) {
-        if (portType.getCapacity().compareTo(port.getCapacity().add(capacity)) <= 0) {
+        if (portType.getCapacity().compareTo(port.getCapacity().add(capacity)) >= 0) {
             port.setCapacity(port.getCapacity().add(capacity));
             return port;
         }
