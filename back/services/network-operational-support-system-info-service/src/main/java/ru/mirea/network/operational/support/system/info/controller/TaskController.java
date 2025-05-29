@@ -42,7 +42,7 @@ public class TaskController {
     }
 
     @PostMapping(value = "${controller.task.get-all.endpoint}")
-    public ResponseEntity<GetAllTasksRs> getAllClients(@RequestHeader(Constant.HEADER_ID) UUID employeeId,
+    public ResponseEntity<GetAllTasksRs> getAllTasks(@RequestHeader(Constant.HEADER_ID) UUID employeeId,
                                                        @RequestBody @Valid GetAllTasksRq rq) {
         return ResponseEntity.ok()
                 .body(taskService.getAllTasks(employeeId, rq));
