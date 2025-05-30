@@ -10,6 +10,7 @@ export interface Task {
   capacity?: number,
   startingPoint?: string,
   destinationPoint?: string
+  routeBuildingAlgorithm?: string
 }
 
 export interface UseTasksProps {

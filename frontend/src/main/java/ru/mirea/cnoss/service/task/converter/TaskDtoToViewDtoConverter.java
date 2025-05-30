@@ -32,12 +32,14 @@ public class TaskDtoToViewDtoConverter {
             viewDto.setClientId(taskData.getClientId());
             viewDto.setStartingPoint(taskData.getStartingPoint());
             viewDto.setDestinationPoint(taskData.getDestinationPoint());
+            viewDto.setRouteBuildingAlgorithm(taskData.getRouteBuildingAlgorithm());
         } catch (Exception e) {
             viewDto.setCapacity(null);
             viewDto.setClientId(null);
             viewDto.setStartingPoint(null);
             viewDto.setDestinationPoint(null);
             viewDto.setClientName(null);
+            viewDto.setRouteBuildingAlgorithm(null);
         }
 
         return viewDto;
