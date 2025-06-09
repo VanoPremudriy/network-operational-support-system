@@ -65,6 +65,7 @@
     "rollup-plugin-visualizer": "5.12.0",
     "strip-css-comments": "5.0.0",
     "transform-ast": "2.4.4",
+    "ts-node": "^10.9.2",
     "typescript": "5.6.3",
     "vite": "5.4.11",
     "vite-plugin-checker": "0.8.0",
@@ -132,7 +133,7 @@
       "workbox-core": "7.3.0",
       "workbox-precaching": "7.3.0"
     },
-    "hash": "921d8d7fcc6173c82081baed1acbd2287b91890c09d9bbdf4c3cae7897e7674c"
+    "hash": "ad7603514df3cc0bfc826e9aca6429546ff2576260fdc39c141b290c4b57a60f"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",

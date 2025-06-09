@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- Hilla project from https://github.com/vaadin/skeleton-starter-hilla-react -->
     <groupId>com.example.application</groupId>
-    <artifactId>frontend</artifactId>
-    <name>skeleton-starter-hilla-react</name>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>cnoss-app</artifactId>
+    <name>cnoss-app</name>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <properties>
